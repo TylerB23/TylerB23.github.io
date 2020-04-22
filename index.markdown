@@ -4,5 +4,3 @@
 
 layout: home
 ---
-
-So, if I edit this markdown file, will it update the website?

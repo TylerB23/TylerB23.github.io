@@ -46,6 +46,12 @@ I've found that when I forget to add those lines to .bashrc and source it,
 I get an error like: "WARNING: You don't have /home/tylerb/.gem/ruby/2.7.0/bin in your
 PATH, gem executables will not run", which, as you might imagine, means that
 the gem executables won't run and we can't install and use jekyll and bundler.
+I fix that by running
+{% highlight bash%}
+export PATH="/home/tylerb/.gem/ruby/2.7.0/bin:$PATH"
+{% endhighlight %}
+Obviously, change my directory path to whatever yours is in the error message.
+
 
 Bundler is a Ruby package manager which tracks and installs the gems necessary to
 do your work. It wraps our Jekyll functions and makes sure Ruby is set up behind

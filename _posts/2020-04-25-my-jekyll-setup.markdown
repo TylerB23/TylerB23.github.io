@@ -3,6 +3,10 @@ layout: post
 title: "My Jekyll Setup"
 date: 2020-04-25
 categories: website
+excerpt: ""
+header:
+  overlay_image: assets/configyml.png
+  overlay_filter: 0.1
 ---
 A friend of mine introduced me to [github.io] a few back and showed me some of
 the personal projects he has on his blog.
@@ -50,8 +54,9 @@ I fix that by running
 {% highlight bash%}
 export PATH="/home/tylerb/.gem/ruby/2.7.0/bin:$PATH"
 {% endhighlight %}
-Obviously, change my directory path to whatever yours is in the error message.
-
+Obviously, change my directory path to whatever yours is in the error message. I
+ended up adding this to my .bashrc at a later date when the error persisted
+following reboots.
 
 Bundler is a Ruby package manager which tracks and installs the gems necessary to
 do your work. It wraps our Jekyll functions and makes sure Ruby is set up behind

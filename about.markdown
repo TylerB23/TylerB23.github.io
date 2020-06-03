@@ -1,7 +1,8 @@
 ---
-layout: page
+layout: single
 title: About
 permalink: /about/
+author_profile: true
 ---
 I'm an udergraduate studying Applied Mathematics at 
 Case Western Reserve University in Cleveland, Ohio.
@@ -26,16 +27,13 @@ favorite artists include Kendrick Lamar, Radiohead, Kanye, Vulfpeck, Kamasi Wash
 Thundercat.
 
 I've conducted research in data science at the [Solar Durability and Lifetime
-Extension](https://engineering.case.edu/centers/sdle/), where I helpd write and package several R
-packages for the analysis of photovoltaic system long-term performance. In the process, I've learned
+Extension Center](https://engineering.case.edu/centers/sdle/), where I assisted
+in  writing and packaging several R packages for the analysis of 
+photovoltaic system long-term performance. In the process, I've learned
 a lot about the R programming language and software packaging in general.
 
 This website is hosted by github pages from my github repo (link in the footer).
 It  makes use of the base Jekyll theme. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at [jekyllrb.com](https://jekyllrb.com/)
-
-You can find the source code for Minima at GitHub:
-[jekyll][jekyll-organization] /
-[minima](https://github.com/jekyll/minima)
 
 You can find the source code for Jekyll at GitHub:
 [jekyll][jekyll-organization] /

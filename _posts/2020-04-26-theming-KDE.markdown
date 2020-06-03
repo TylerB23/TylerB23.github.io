@@ -3,9 +3,13 @@ layout: post
 title: "Theming KDE"
 date: 2020-04-26
 categories: workflow
+excerpt: "I was about 13 when I built my first PC..."
+header: 
+  overlay_image: /assets/konsole.png
+  overlay_filter: 0
 ---
 ## Introduction ##
-I was about 13 years old when I built my first PC with a combination of savings,
+I was about 13 when I built my first PC with a combination of savings,
 birthday and christmas money, and help from a copious number of Youtube
 tutorials. I still remember my panic when the internet didn't immediately work, and
 I had to run out to TigerDirect to buy a WiFi adapter (whoops!). Since then I've

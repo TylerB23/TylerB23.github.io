@@ -3,6 +3,10 @@ layout: post
 title: "Translating the Gillespie Algorithm from Python to Ocaml, pt. 1"
 date: 2020-05-13
 categories: python ocaml coding
+excerpt: "First, let's explain the algorithm and implementing it in Python."
+header:
+  overlay_image: assets/tubes.jpg
+  overlay_filter: 0
 ---
 ## Introduction ##
 This semester, I took a class called "Applied Probability and Stochastic

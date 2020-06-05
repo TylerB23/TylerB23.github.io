@@ -51,7 +51,7 @@ author:
 
 # Plugins
 plugins:
-  jekyll-include-cache # needed to use remote themes
+  - jekyll-include-cache # needed to use remote themes
 
 
 footer:

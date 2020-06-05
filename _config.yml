@@ -49,6 +49,10 @@ author:
   email: tjb152@case.edu
   location: "Cleveland, OH"
 
+# Plugins
+plugins:
+  jekyll-include-cache # needed to use remote themes
+
 
 footer:
   links:

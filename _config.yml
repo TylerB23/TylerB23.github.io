@@ -34,7 +34,7 @@ twitter_username: burleysontyler
 github_username:  TylerB23
 
 # Build settings
-theme: minimal-mistakes-jekyll
+remote_theme: "mmistakes/minimal-mistakes@4.19.2"
 minimal_mistakes_skin: "default"
 markdown: kramdown
 plugins:

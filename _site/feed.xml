@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-06-05T15:32:32-04:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Tyler’s Blog</title><subtitle>Welcome! | Tyler's Blog</subtitle><author><name>Tyler Burleyson</name><email>tjb152@case.edu</email></author><entry><title type="html">Translating the Gillespie Algorithm from Python to Ocaml, pt. 1</title><link href="http://localhost:4000/python/ocaml/coding/2020/05/13/OCAML-Gillespie-alg.html" rel="alternate" type="text/html" title="Translating the Gillespie Algorithm from Python to Ocaml, pt. 1" /><published>2020-05-13T00:00:00-04:00</published><updated>2020-05-13T00:00:00-04:00</updated><id>http://localhost:4000/python/ocaml/coding/2020/05/13/OCAML-Gillespie-alg</id><content type="html" xml:base="http://localhost:4000/python/ocaml/coding/2020/05/13/OCAML-Gillespie-alg.html">&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;This semester, I took a class called “Applied Probability and Stochastic
+Processes for Biology”, which is cross-listed across seven departments. The
+class was a mixture of undergrads and graduate students. That’s always a fun
+time – graduate students tend to be less shy about asking questions than
+undergrads, and in a class as interdisciplinary as this one, I doubt anyone but
+the professor came in with all of the helpful background.&lt;/p&gt;
+
+&lt;p&gt;Anyways, one of the departments this class was listed under was Electrical
+Engineering and Computer Science, largely because of its emphasis on numerical
+simulation tools. The most elementary of these is the &lt;a href=&quot;https://doi.org/10.1021/j100540a008&quot;&gt;Gillespie Algorithm&lt;/a&gt;,
+introduced by Daniel Gillespie in his 1977 paper &lt;em&gt;Exact Stochastic Simulation of
+Coupled Chemical Reactions&lt;/em&gt;. The basic idea is this:&lt;/p&gt;
+
+&lt;p&gt;Chemical reactions occur when the right combination of molecules bump into each
+other in the correct orientation with sufficient speed. If we had an incredibly
+powerful computer, we could simulate the exact movements, orientations, and
+speeds of all the molecules in an area and get an exact, deterministic
+simulation of the system. This, however, is unfeasible for a system of any level
+of complexity. Instead, the most common approach is to approximate these
+reactions by simplifying our simulation.&lt;/p&gt;
+
+&lt;p&gt;For very, very large systems, we don’t care very much about the individual
+reactions occuring at any point in time. Instead we care about the general rate
+at which the system reacts and the overall time it takes to complete. If you’ve
+taken introductory chemistry or differential equations, you may be familiar with
+rate laws used to describe reactions in such large systems. As an overview, 
+consider a reaction $aA + bB \rightarrow P$, where $P$ is a stand-in for 
+reaction products. The rate law is
+$rate = k[A]^x[B]^y$, where $x$ and $y$ are the order with respect to
+species A and B, respectively. The order is experimentally determined, and can
+be an integer or a non-integer depending on the complexity of the system.
+Chemical kinetics are a complex field – there’s a nice overview at
+&lt;a href=&quot;https://chem.libretexts.org/Bookshelves/Physical_and_Theoretical_Chemistry_Textbook_Maps/Supplemental_Modules_(Physical_and_Theoretical_Chemistry)/Kinetics/Rate_Laws/The_Rate_Law/Reaction_Order&quot;&gt;libretexts&lt;/a&gt;. The rate law becomes a system of coupled differential equations
+that look something like&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\begin{gather*}
+    \frac{dA}{dt} = f_A(A,B) \\
+    \frac{dB}{dt} = f_B(A,B)
+\end{gather*}&lt;/script&gt;
+
+&lt;p&gt;As Gillespie notes in the abstract of his paper, this is not as physically
+meaningful as a stochastic formulation, where individual reactions are tracked
+and occur with randomly distributed rates. To make this formulation tractable, 
+Gillespie provides a wonderful, relatively simple to follow derivation of his
+algorithm in the paper linked above. I’ll skip over the fine details and present
+you with the Wikipedia version:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;Initialise the number of species, the total time to run the simulation,
+and your random number generator (if need be).&lt;/li&gt;
+  &lt;li&gt;For each reaction, compute a time interval and choose a reaction. This is
+done based upon the hazard functions of the individual reactions, which
+are similar to their rate laws (though not exactly the same).&lt;/li&gt;
+  &lt;li&gt;Update the species counts and the time.&lt;/li&gt;
+  &lt;li&gt;Repeat until the time allotted runs out or no reactions are possible (go back
+to step 2).&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;The algorithm is exact and stochastic in that it draws a time between reactions
+and a specific reaction from a probability distribution based on the hazard
+functions, which describe how likely an individual reaction is to occur. 
+While expensive, this was a major step forward in stochastic
+simulations of such systems. It can be used to approximate any system which
+resembles chemical reactions – in class, we used it to represent population
+dynamics like Lotka-Volterra, and epidemic models like the SIR model, for
+example.&lt;/p&gt;
+
+&lt;h2 id=&quot;python-implementation&quot;&gt;Python Implementation&lt;/h2&gt;
+
+&lt;p&gt;The best way to understand the algorithm is to see an implementation. Let’s
+consider a simple dimerisation, where two species react to form a dimer which
+can decompose back into the species.&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\begin{gather}
+    A + B \xrightarrow{h_1} C \\
+    C \xrightarrow{h_2} A + B
+\end{gather}&lt;/script&gt;
+
+&lt;p&gt;Where $h_1 = k_1 A B$ and $h_2 = k_2 C$ are the hazard functions of their
+respective reactions. I’ve implemented the algorithm in Python as a
+demonstration:
+&lt;a href=&quot;/assets/gillespie_example.py&quot;&gt;python code&lt;/a&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;numpy&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;random&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;uniform&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;matplotlib.pyplot&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;gillespie&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;N_a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;N_b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;N_c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;k1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;k2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;# N_i are the initial counts of A, B, and C
+&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;# T is the toal time to run the simulation
+&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;#k1 and k2 are the hazard constants
+&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;# Initialisations
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;A&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;N_a&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;B&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;N_b&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;C&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;N_c&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;particles&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;B&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;C&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)]&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# array captures system state at time t as tuple
+&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;# Iterations
+&lt;/span&gt;    &lt;span class=&quot;k&quot;&gt;while&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;# Calculate hazards
+&lt;/span&gt;        &lt;span class=&quot;n&quot;&gt;h1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;k1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;A&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;B&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;h2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;k2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;C&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;htotal&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;h1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;h2&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;# Draw wait time
+&lt;/span&gt;        &lt;span class=&quot;n&quot;&gt;w&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;uniform&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;t_wait&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;htotal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;w&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;# Choose reaction
+&lt;/span&gt;        &lt;span class=&quot;n&quot;&gt;pvec&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;h1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;h2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;htotal&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# normalised probability vector
+&lt;/span&gt;        &lt;span class=&quot;n&quot;&gt;rxn&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;random&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;binomial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pvec&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rxn&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;A&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;A&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;B&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;B&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;C&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;C&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;elif&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rxn&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;A&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;A&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;B&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;B&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;C&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;C&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;# Iterate counters
+&lt;/span&gt;        &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;t_wait&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;particles&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;append&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;B&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;C&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;particles&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;So here’s the idea: while I spend the month of May waiting to begin my summer
+plans, I thought it would be fun to learn some OCaml. OCaml is a general purpose
+programming language with a nice type system which helps prevent errors and
+makes code ‘safer’ in that it can be quickly written with fewer errors. A lot of
+big companies including Facebook and Citrix use it, as well as financial groups
+like Bloomberg and Jane Street. I looked at some tutorials on the language a few
+weeks back, and was struck by how odd looking it was compared to what I’m used
+to working in. Since the Gillespie algorithm is fresh in my head, I thought it
+would be a more fun place to start than the typical searching-and-sorting fare.
+So this will be the first in a series of blog posts, as I learn more about
+OCaml, try to translate that on here, and then begin to implement some of my
+past Python projects from Stochastics class into OCaml. Stay tuned!&lt;/p&gt;</content><author><name>Tyler Burleyson</name><email>tjb152@case.edu</email></author><summary type="html">First, let's explain the algorithm and implementing it in Python.</summary></entry><entry><title type="html">Theming KDE</title><link href="http://localhost:4000/workflow/2020/04/26/theming-KDE.html" rel="alternate" type="text/html" title="Theming KDE" /><published>2020-04-26T00:00:00-04:00</published><updated>2020-04-26T00:00:00-04:00</updated><id>http://localhost:4000/workflow/2020/04/26/theming-KDE</id><content type="html" xml:base="http://localhost:4000/workflow/2020/04/26/theming-KDE.html">&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;I was about 13 when I built my first PC with a combination of savings,
+birthday and christmas money, and help from a copious number of Youtube
+tutorials. I still remember my panic when the internet didn’t immediately work, and
+I had to run out to TigerDirect to buy a WiFi adapter (whoops!). Since then I’ve
+built about a dozen or so systems for family and friends, and found out I
+wasn’t alone - it seems to be a common beginner mistake to assume once you have
+all the parts put together, the machine should just work like a prebuilt.&lt;/p&gt;
+
+&lt;p&gt;The other side of this is the $100 cost for a Windows installation disk. Turns
+out there’s no better way to turn a 13 year old into a Linux user than to ask
+him for even more money after he’s made the biggest purchase of his life. While
+I eventually turned over the Microsoft tax (since Linux gaming support wasn’t exactly
+the best in 2013), I spent several weeks on Ubuntu 16.04 LTS, with the Gnome
+desktop environment.&lt;/p&gt;
+
+&lt;p&gt;This first foray into Linux and FOSS was pretty huge for me. While I didn’t
+understand what I was doing then, using the command line to install drivers and
+solving my own problems (while creating a good amount too!) was magical to me.
+When I left for college and got my first laptop, I immediately dual-booted it
+with Ubuntu 18.04 and Gnome.&lt;/p&gt;
+
+&lt;p&gt;This worked great for a while, and I steadily used Windows 10 less and less as I
+got more used to the configurability and ease of use of Ubuntu and gnome. When I
+started doing data science research with the Solar Durability and Lifetime
+Extension center on campus, being familiar with Linux was a huge bonus. All of
+the graduate students and PI’s used Ubuntu and KDE, and the Raspberry Pi’s we
+primarily used to connect to the University’s HPC were configured with Raspbian.&lt;/p&gt;
+
+&lt;p&gt;My laptop had a touchscreen, so I thought I was smart to be using Gnome with
+its larger UI and (in my mind) more elegant design compared to the slow,
+cluttered KDE environments I used on the HPC. But a friend of mine in the lab
+showed me his XFCE setup and how deeply customized he had made it. It was around
+this time that I switched to Manjaro just for the sake of more frequent updates
+and better driver support on my Razer Blade Stealth, and I decided to make the
+jump to KDE as well.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-setup&quot;&gt;The Setup&lt;/h2&gt;
+&lt;h3 id=&quot;global-themeplasma-style&quot;&gt;Global Theme/Plasma Style&lt;/h3&gt;
+&lt;p&gt;I use &lt;a href=&quot;https://draculatheme.com/&quot;&gt;Dracula&lt;/a&gt; as my global theme. It’s a fantastic dark color scheme, with a
+lot of nice purples and greens, but perhaps most importantly, it exists for a
+ton of applications. The dracula theme is consistent across my desktop
+environment, my firefox top bar, my vim and konsole colors, etc. For the global
+theme, I opened system settings -&amp;gt; Appearance -&amp;gt; Global Themes -&amp;gt; Get New Global
+Themes.. and searched for it. I use it for my window decorations and Plasma
+style as well, both in the Appearance tab as well in KDE’s system settings.
+&lt;img src=&quot;/assets/Screenshot_20200426_175508.png&quot; alt=&quot;global theme&quot; /&gt;
+I’ve also tried out &lt;a href=&quot;https://github.com/EliverLara/Nordic&quot;&gt;Nordic&lt;/a&gt;, which is a gorgeous, more matte option. I prefer
+Dracula, but I have no qualms recommending that one as well.&lt;/p&gt;
+
+&lt;h3 id=&quot;icons&quot;&gt;Icons&lt;/h3&gt;
+&lt;p&gt;For Icons, I use &lt;a href=&quot;https://github.com/vinceliuice/Tela-icon-theme&quot;&gt;Tela&lt;/a&gt;. I really like how well the colors here pair with
+Dracula. You can follow the link to the github for installation instructions,
+but I just went from system settings -&amp;gt; Icons -&amp;gt; Get New Icons… since that was
+easy.&lt;/p&gt;
+
+&lt;h3 id=&quot;other-fun-stuff&quot;&gt;Other Fun Stuff&lt;/h3&gt;
+&lt;p&gt;I love using virtual desktops to keep some semblance of order between my various
+assignments and classes throughout the day. Often I’ll have 4 desktops: one for
+editing assignments and reading them from Canvas, one for textbook PDF’s and
+other reference material, one for reserve/putting other classwork out of mind,
+and one for Spotify and whatever else is running in the background. I already
+use hotkeys to open applications and for whatever is running, so having keys to
+switch between desktops can get tricky. I much prefer the MacOS approach of
+having decent touchpad support, but this isn’t built into KDE/Manjaro.&lt;/p&gt;
+
+&lt;p&gt;I use &lt;a href=&quot;https://github.com/bulletmark/libinput-gestures&quot;&gt;libinput-gestures&lt;/a&gt; for this. Simply put, it lets you configure your
+touchpad to recognize gesture inputs however you’d like. I followed it’s install
+guide to a T, installing the library from the AUR. I just use the defaults to
+3-finger swipe between virtual desktops, but there’s a ton of config options
+detailed on the github.&lt;/p&gt;
+
+&lt;p&gt;On the desktop, I use &lt;a href=&quot;https://github.com/KDE/latte-dock&quot;&gt;latte-dock&lt;/a&gt;, and specifically the Plasma layout. I’ve
+tried it at the top and bottom, and prefer having as small a GUI as possible to
+help me focus on whatever I’m working on. The bar is the least intrusive, most
+intuitive metaphor for me, since I often find using pop-up panels gets annoying
+when mousing around the screen. YMMV, of course.&lt;/p&gt;
+
+&lt;h4 id=&quot;command-line-goodies&quot;&gt;Command Line Goodies&lt;/h4&gt;
+&lt;p&gt;I really, really love the aesthetic and convenience of [yakuake]. It comes by
+default on Manjaro KDE and makes interacting with the command line super easy. I
+use Ctrl + Tab to bring it up, and F12 to fullscreen it (both set in System
+Settings -&amp;gt; Shortcuts). If I’m coding alongside a tutorial or something like
+that, I’ll split screen with Konsole, but usually I prefer the drop-down.&lt;/p&gt;
+
+&lt;p&gt;Within the console, I use &lt;a href=&quot;https://github.com/tmux/tmux&quot;&gt;tmux&lt;/a&gt; to organize my workspace. Tmux is a terminal
+multiplexer, which basically lets you interact with multiple instances of the
+command line in one window. I might use 10% of its capabilities – it’s a hugely
+useful app – but I can’t get by without it now. Ham Vocke has an awesome intro
+to it on &lt;a href=&quot;https://www.hamvocke.com/blog/a-quick-and-easy-guide-to-tmux/&quot;&gt;his website&lt;/a&gt; detailing how useful it is to him as a full-time
+programmer. I’d strongly suggest that post and his follow-ups as an intro to
+using the app. Here’s a link to my current config file, which is largely poached
+from various Reddit users and public github repos: 
+&lt;a href=&quot;/assets/tmux.conf&quot;&gt;.tmux.conf&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Within the command line, I replaced my prompt with &lt;a href=&quot;https://starship.rs/&quot;&gt;starship.rs&lt;/a&gt;, which is
+wonderfully customizable. It lets me customize what the prompt looks like and
+what information is included with it each time a command runs. I use it to
+remind me what virtual environment I might be on, what git branch I’m on and
+whether it’s updated remotely, and get rough timings of commands.
+&lt;img src=&quot;/assets/Screenshot_20200426_182710.png&quot; alt=&quot;tmux and starship&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;And here’s a link to my configuration file: &lt;a href=&quot;/assets/starship.toml&quot;&gt;config&lt;/a&gt; I
+only use a small portion of the languages it can recognize. Checkout the
+website for more!&lt;/p&gt;
+
+&lt;p&gt;Lastly, it’s worth mentioning that I’ve themed out my Vim, Konsole, Firefox, and
+tmux with the &lt;a href=&quot;https://draculatheme.com/&quot;&gt;Dracula&lt;/a&gt; theme. Check out their documentation for installation of
+each of these. Unfortunately, since the theme supports so many platforms, the
+documentation is very general and I found myself going through a fair amount of
+stackoverflow threads looking for small fixes (including spending about 20
+minutes looking for a hidden file! fun times all around). Joking aside, I’ll
+link my .bashrc and .vimrc below for your utility/amusement:
+&lt;a href=&quot;/assets/bashrc&quot;&gt;.bashrc&lt;/a&gt;
+&lt;a href=&quot;/assets/vimrc&quot;&gt;.vimrc&lt;/a&gt;&lt;/p&gt;</content><author><name>Tyler Burleyson</name><email>tjb152@case.edu</email></author><summary type="html">I was about 13 when I built my first PC...</summary></entry><entry><title type="html">My Jekyll Setup</title><link href="http://localhost:4000/website/2020/04/25/my-jekyll-setup.html" rel="alternate" type="text/html" title="My Jekyll Setup" /><published>2020-04-25T00:00:00-04:00</published><updated>2020-04-25T00:00:00-04:00</updated><id>http://localhost:4000/website/2020/04/25/my-jekyll-setup</id><content type="html" xml:base="http://localhost:4000/website/2020/04/25/my-jekyll-setup.html">&lt;p&gt;A friend of mine introduced me to &lt;a href=&quot;https://github.io/&quot;&gt;github.io&lt;/a&gt; a few back and showed me some of
+the personal projects he has on his blog.
+My curiosity was piqued, so I set up a github repo, added a “hello, world!” 
+html file, and… left it at that for about 6 months.
+Now that I’m quarantined at home with nothing to do except study for finals,
+I figured it’s the perfect time to figure this all out.&lt;/p&gt;
+
+&lt;p&gt;A quick note: this isn’t meant to be a full tutorial (for that, see the official
+documentation linked further down!) but hopefully an interesting overview of my
+usecase and workflow. If you want to follow along, first go to github.io and follow
+their guide on creating the repo, cloning it locally, writing your first html file,
+and then pushing it up.&lt;/p&gt;
+
+&lt;p&gt;Anyways, I went back to the github repo and tried to view my website. Nothing
+but a mono plain text “hello, world!”, which while riveting, doesn’t exactly
+fulfill my original vision. I pulled the repo to my new desktop
+(I’ve switched to KDE Manjaro after a little bit too much time on &lt;a href=&quot;https://reddit.com/r/unixporn/&quot;&gt;r/unixporn&lt;/a&gt;)
+and set out to install Jekyll. Here’s the series of commands I used, keeping in mind
+that Manjaro is an Arch-based distro:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# Install a full ruby environment&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;pacman &lt;span class=&quot;nt&quot;&gt;-S&lt;/span&gt; ruby base-devel
+
+&lt;span class=&quot;c&quot;&gt;# Install ruby gems to ~/gems by adding lines to our .bashrc&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'# Install Ruby Gems to ~/gems'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt;  ~/.bashrc
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'export GEM_HOME=&quot;$HOME/gems&quot; &amp;gt;&amp;gt; ~/.bashrc
+echo export PATH=&quot;$HOME/gems/bin:$PATH&quot;'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; ~/.bashrc
+
+&lt;span class=&quot;c&quot;&gt;# source our .bashrc so the gems are properly set up in the PATH&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;source&lt;/span&gt; ~/.bashrc
+
+&lt;span class=&quot;c&quot;&gt;# Now we get to install Jekyll (and bundler!)&lt;/span&gt;
+gem &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;jekyll bundler&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;I’ve found that when I forget to add those lines to .bashrc and source it,
+I get an error like: “WARNING: You don’t have /home/tylerb/.gem/ruby/2.7.0/bin in your
+PATH, gem executables will not run”, which, as you might imagine, means that
+the gem executables won’t run and we can’t install and use jekyll and bundler.
+I fix that by running&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;/home/tylerb/.gem/ruby/2.7.0/bin:&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$PATH&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Obviously, change my directory path to whatever yours is in the error message. I
+ended up adding this to my .bashrc at a later date when the error persisted
+following reboots.&lt;/p&gt;
+
+&lt;p&gt;Bundler is a Ruby package manager which tracks and installs the gems necessary to
+do your work. It wraps our Jekyll functions and makes sure Ruby is set up behind
+the scenes. If you want more in-depth information on all of this, check out
+the official documentation on &lt;a href=&quot;https://jekyllrb.com/docs/&quot;&gt;jekyll doc&lt;/a&gt; and &lt;a href=&quot;https://help.github.com/en/github/working-with-github-pages/setting-up-a-github-pages-site-with-jekyll&quot;&gt;github.io doc&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;After that’s all set up, we type into the command line:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# build your site!&lt;/span&gt;
+bundle &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;jekyll build
+bundle &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;jekyll serve&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;This will host your website from the command line on your computer. Look
+at the output to see something like “Server address: http://127.0.0.1:4000/”.
+Type that into your web browser, and you’ll see your local build!&lt;/p&gt;
+
+&lt;p&gt;Alternatively, go to &lt;a href=&quot;http://localhost:4000]&quot;&gt;http://localhost:4000&lt;/a&gt;, which always works.&lt;/p&gt;
+
+&lt;p&gt;Building your website locally like this is the best way to test it and write your posts.
+Changes pushed to your github repo will take some time to appear on the live version.&lt;/p&gt;
+
+&lt;p&gt;So, a bit more on my workflow. I use &lt;a href=&quot;https://wiki.archlinux.org/index.php/Yakuake&quot;&gt;Yakuake&lt;/a&gt; and &lt;a href=&quot;https://github.com/tmux/tmux&quot;&gt;tmux&lt;/a&gt; for anything
+command-line-intensive. I really like writing in &lt;a href=&quot;https://www.vim/org&quot;&gt;Vim&lt;/a&gt;, if only because it scratches
+that little-kid itch to feel like a hacker. Here’s a screenshot of me editing this document:
+&lt;img src=&quot;/assets/Screenshot_20200425_151631.png&quot; alt=&quot;Yakuake Setup&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The top right is where the local build is running from. Below it is the default
+‘Welcome to Jekyll!’ post created when we built the website. I keep
+this open for reference on adding code blocks and stuff like that. To the top left is my
+Vim window where I’m writing the post, and below that is an extra spot to run
+commands (I’m running ytop here to keep an eye on system resources). I use the 
+&lt;a href=&quot;https://draculatheme.com/&quot;&gt;Dracula&lt;/a&gt; theme for my KDE, tmux, and vim setups, which is where
+the colors and HUD along the bottom bar come from. In the future, I’ll make a 
+post about my .vimrc, .bashrc, and .tmux.conf files.&lt;/p&gt;
+
+&lt;p&gt;It’s also worth mentioning that I use &lt;a href=&quot;https://starship.rs/&quot;&gt;Starship&lt;/a&gt; as my shell prompt. Again,
+for another post.&lt;/p&gt;
+
+&lt;p&gt;The generic Jekyll post outlines how to create a post. I did:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;repo_directory_here/_posts
+vim YEAR-MONTH-DAY-title.markdown&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;To create a new blog post in markdown. It’s important to have the date right
+and title the document exactly like this so Jekyll recognizes it! Add your front matter
+and type your post. here’s a direct link to this post’s markdown for the interested:
+&lt;a href=&quot;/assets/2020-04-25-my-jekyll-setup.txt&quot;&gt;markdown document&lt;/a&gt;
+The front matter is commented out to prevent Jekyll from processing it and
+turning it into html so it’s more readable for you.&lt;/p&gt;
+
+&lt;p&gt;I follow the Jekyll documentation advice and add YAML front matter to every
+document, which looks something like this:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-markdown&quot; data-lang=&quot;markdown&quot;&gt;&lt;span class=&quot;nn&quot;&gt;---&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# front matter goes here!&lt;/span&gt;
+&lt;span class=&quot;nn&quot;&gt;---&lt;/span&gt;
+&lt;span class=&quot;gh&quot;&gt;# the document goes here!&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;I also put things like images, document links, and datasets into an /assets/
+folder in the main directory. Then I can link to anything and be sure it’s
+accessible via the online github repo without worrying about links breaking or
+assets disappearing. As long as the site is being hosted, all those things in
+the /assets/ folder should stay there.&lt;/p&gt;
+
+&lt;p&gt;Whenever I’m done writing a post, I push the changes up to my repo with some
+variation of the following:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# pushing up changes&lt;/span&gt;
+git add &lt;span class=&quot;nt&quot;&gt;--all&lt;/span&gt;
+git commit &lt;span class=&quot;nt&quot;&gt;-m&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'a meaningful commit message'&lt;/span&gt;
+git push&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Keep in mind that all has to be done from the directory of your local branch.
+For the non-git initiated, I’ll recommend the documentation at &lt;a href=&quot;https://git-scm.com/docs&quot;&gt;git-scm&lt;/a&gt;.
+There’s a nice cheat sheet at the top that explains the basic commands, and
+it should be more than fine for any solo github project.&lt;/p&gt;
+
+&lt;p&gt;This is about the extent of my workflow for now. In the future if I decide to
+get more fancy with it, I’ll write an update to this post and fill you in. For
+now, I’m enjoying how quick and easy it is to write in markdown, and the themes
+in jekyll suit me nicely enough to not bother messing around with html and css
+files all day. My next planned post will describe some more of my KDE
+customizations, theming, and workflow: stay tuned for that!&lt;/p&gt;</content><author><name>Tyler Burleyson</name><email>tjb152@case.edu</email></author></entry></feed>

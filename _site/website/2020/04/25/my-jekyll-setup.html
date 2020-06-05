@@ -1,0 +1,574 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.19.2 by Michael Rose
+  Copyright 2013-2019 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>My Jekyll Setup - Tyler’s Blog</title>
+<meta name="description" content="               Welcome!       Tyler’s Blog          ">
+
+
+  <meta name="author" content="Tyler Burleyson">
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Tyler's Blog">
+<meta property="og:title" content="My Jekyll Setup">
+<meta property="og:url" content="http://localhost:4000/website/2020/04/25/my-jekyll-setup.html">
+
+
+  <meta property="og:description" content="               Welcome!       Tyler’s Blog          ">
+
+
+
+  <meta property="og:image" content="http://localhost:4000/assets/configyml.png">
+
+
+
+
+
+  <meta property="article:published_time" content="2020-04-25T00:00:00-04:00">
+
+
+
+
+
+
+<link rel="canonical" href="http://localhost:4000/website/2020/04/25/my-jekyll-setup.html">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Tyler Burleyson",
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Tyler's Blog Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--post wide">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          Tyler's Blog
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li><li class="masthead__menu-item">
+              <a href="/reading-list/">What I'm Reading</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+  
+
+
+
+
+
+
+
+<div class="page__hero--overlay"
+  style=" background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), url('/assets/configyml.png');"
+>
+  
+    <div class="wrapper">
+      <h1 id="page-title" class="page__title" itemprop="headline">
+        
+          My Jekyll Setup
+
+        
+      </h1>
+      
+        <p class="page__lead">
+</p>
+      
+      
+      
+      
+    </div>
+  
+  
+</div>
+
+
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Tyler Burleyson</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        <p>Student interested in too many things at once</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">Cleveland, OH</span>
+        </li>
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:tjb152@case.edu">
+            <meta itemprop="email" content="tjb152@case.edu" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span>
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="My Jekyll Setup">
+    <meta itemprop="description" content="">
+    <meta itemprop="datePublished" content="2020-04-25T00:00:00-04:00">
+    
+
+    <div class="page__inner-wrap">
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p>25 Apr 2020</p>
+
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+
+<script type="text/x-mathjax-config">
+
+    MathJax.Hub.Config({
+
+    tex2jax: {
+
+    inlineMath: [['$','$'], ['\\(','\\)']],
+
+    processEscapes: true},
+
+    jax: ["input/TeX","input/MathML","input/AsciiMath","output/CommonHTML"],
+
+    extensions:
+    ["tex2jax.js","mml2jax.js","asciimath2jax.js","MathMenu.js","MathZoom.js","AssistiveMML.js",
+    "[Contrib]/a11y/accessibility-menu.js"],
+
+    TeX: {
+
+    extensions: ["AMSmath.js","AMSsymbols.js","noErrors.js","noUndefined.js"],
+
+    equationNumbers: {
+
+    autoNumber: "AMS"
+
+    }
+
+    }
+
+    });
+
+</script>
+
+
+
+
+<p>A friend of mine introduced me to <a href="https://github.io/">github.io</a> a few back and showed me some of
+the personal projects he has on his blog.
+My curiosity was piqued, so I set up a github repo, added a “hello, world!” 
+html file, and… left it at that for about 6 months.
+Now that I’m quarantined at home with nothing to do except study for finals,
+I figured it’s the perfect time to figure this all out.</p>
+
+<p>A quick note: this isn’t meant to be a full tutorial (for that, see the official
+documentation linked further down!) but hopefully an interesting overview of my
+usecase and workflow. If you want to follow along, first go to github.io and follow
+their guide on creating the repo, cloning it locally, writing your first html file,
+and then pushing it up.</p>
+
+<p>Anyways, I went back to the github repo and tried to view my website. Nothing
+but a mono plain text “hello, world!”, which while riveting, doesn’t exactly
+fulfill my original vision. I pulled the repo to my new desktop
+(I’ve switched to KDE Manjaro after a little bit too much time on <a href="https://reddit.com/r/unixporn/">r/unixporn</a>)
+and set out to install Jekyll. Here’s the series of commands I used, keeping in mind
+that Manjaro is an Arch-based distro:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c"># Install a full ruby environment</span>
+<span class="nb">sudo </span>pacman <span class="nt">-S</span> ruby base-devel
+
+<span class="c"># Install ruby gems to ~/gems by adding lines to our .bashrc</span>
+<span class="nb">echo</span> <span class="s1">'# Install Ruby Gems to ~/gems'</span> <span class="o">&gt;&gt;</span>  ~/.bashrc
+<span class="nb">echo</span> <span class="s1">'export GEM_HOME="$HOME/gems" &gt;&gt; ~/.bashrc
+echo export PATH="$HOME/gems/bin:$PATH"'</span> <span class="o">&gt;&gt;</span> ~/.bashrc
+
+<span class="c"># source our .bashrc so the gems are properly set up in the PATH</span>
+<span class="nb">source</span> ~/.bashrc
+
+<span class="c"># Now we get to install Jekyll (and bundler!)</span>
+gem <span class="nb">install </span>jekyll bundler</code></pre></figure>
+
+<p>I’ve found that when I forget to add those lines to .bashrc and source it,
+I get an error like: “WARNING: You don’t have /home/tylerb/.gem/ruby/2.7.0/bin in your
+PATH, gem executables will not run”, which, as you might imagine, means that
+the gem executables won’t run and we can’t install and use jekyll and bundler.
+I fix that by running</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="s2">"/home/tylerb/.gem/ruby/2.7.0/bin:</span><span class="nv">$PATH</span><span class="s2">"</span></code></pre></figure>
+
+<p>Obviously, change my directory path to whatever yours is in the error message. I
+ended up adding this to my .bashrc at a later date when the error persisted
+following reboots.</p>
+
+<p>Bundler is a Ruby package manager which tracks and installs the gems necessary to
+do your work. It wraps our Jekyll functions and makes sure Ruby is set up behind
+the scenes. If you want more in-depth information on all of this, check out
+the official documentation on <a href="https://jekyllrb.com/docs/">jekyll doc</a> and <a href="https://help.github.com/en/github/working-with-github-pages/setting-up-a-github-pages-site-with-jekyll">github.io doc</a>.</p>
+
+<p>After that’s all set up, we type into the command line:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c"># build your site!</span>
+bundle <span class="nb">exec </span>jekyll build
+bundle <span class="nb">exec </span>jekyll serve</code></pre></figure>
+
+<p>This will host your website from the command line on your computer. Look
+at the output to see something like “Server address: http://127.0.0.1:4000/”.
+Type that into your web browser, and you’ll see your local build!</p>
+
+<p>Alternatively, go to <a href="http://localhost:4000]">http://localhost:4000</a>, which always works.</p>
+
+<p>Building your website locally like this is the best way to test it and write your posts.
+Changes pushed to your github repo will take some time to appear on the live version.</p>
+
+<p>So, a bit more on my workflow. I use <a href="https://wiki.archlinux.org/index.php/Yakuake">Yakuake</a> and <a href="https://github.com/tmux/tmux">tmux</a> for anything
+command-line-intensive. I really like writing in <a href="https://www.vim/org">Vim</a>, if only because it scratches
+that little-kid itch to feel like a hacker. Here’s a screenshot of me editing this document:
+<img src="/assets/Screenshot_20200425_151631.png" alt="Yakuake Setup" /></p>
+
+<p>The top right is where the local build is running from. Below it is the default
+‘Welcome to Jekyll!’ post created when we built the website. I keep
+this open for reference on adding code blocks and stuff like that. To the top left is my
+Vim window where I’m writing the post, and below that is an extra spot to run
+commands (I’m running ytop here to keep an eye on system resources). I use the 
+<a href="https://draculatheme.com/">Dracula</a> theme for my KDE, tmux, and vim setups, which is where
+the colors and HUD along the bottom bar come from. In the future, I’ll make a 
+post about my .vimrc, .bashrc, and .tmux.conf files.</p>
+
+<p>It’s also worth mentioning that I use <a href="https://starship.rs/">Starship</a> as my shell prompt. Again,
+for another post.</p>
+
+<p>The generic Jekyll post outlines how to create a post. I did:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">cd </span>repo_directory_here/_posts
+vim YEAR-MONTH-DAY-title.markdown</code></pre></figure>
+
+<p>To create a new blog post in markdown. It’s important to have the date right
+and title the document exactly like this so Jekyll recognizes it! Add your front matter
+and type your post. here’s a direct link to this post’s markdown for the interested:
+<a href="/assets/2020-04-25-my-jekyll-setup.txt">markdown document</a>
+The front matter is commented out to prevent Jekyll from processing it and
+turning it into html so it’s more readable for you.</p>
+
+<p>I follow the Jekyll documentation advice and add YAML front matter to every
+document, which looks something like this:</p>
+
+<figure class="highlight"><pre><code class="language-markdown" data-lang="markdown"><span class="nn">---</span>
+<span class="c1"># front matter goes here!</span>
+<span class="nn">---</span>
+<span class="gh"># the document goes here!</span></code></pre></figure>
+
+<p>I also put things like images, document links, and datasets into an /assets/
+folder in the main directory. Then I can link to anything and be sure it’s
+accessible via the online github repo without worrying about links breaking or
+assets disappearing. As long as the site is being hosted, all those things in
+the /assets/ folder should stay there.</p>
+
+<p>Whenever I’m done writing a post, I push the changes up to my repo with some
+variation of the following:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c"># pushing up changes</span>
+git add <span class="nt">--all</span>
+git commit <span class="nt">-m</span> <span class="s1">'a meaningful commit message'</span>
+git push</code></pre></figure>
+
+<p>Keep in mind that all has to be done from the directory of your local branch.
+For the non-git initiated, I’ll recommend the documentation at <a href="https://git-scm.com/docs">git-scm</a>.
+There’s a nice cheat sheet at the top that explains the basic commands, and
+it should be more than fine for any solo github project.</p>
+
+<p>This is about the extent of my workflow for now. In the future if I decide to
+get more fancy with it, I’ll write an update to this post and fill you in. For
+now, I’m enjoying how quick and easy it is to write in markdown, and the themes
+in jekyll suit me nicely enough to not bother messing around with html and css
+files all day. My next planned post will describe some more of my KDE
+customizations, theming, and workflow: stay tuned for that!</p>
+
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2020-04-25T00:00:00-04:00">April 25, 2020</time></p>
+        
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="#" class="pagination--pager disabled">Previous</a>
+    
+    
+      <a href="/workflow/2020/04/26/theming-KDE.html" class="pagination--pager" title="Theming KDE
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+          <li><a href="https://twitter.com/BurleysonTyler" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+        
+      
+        
+          <li><a href="https://github.com/TylerB23" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> Github</a></li>
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2020 Tyler Burleyson. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script src="https://kit.fontawesome.com/4eee35f757.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+
+  </body>
+</html>

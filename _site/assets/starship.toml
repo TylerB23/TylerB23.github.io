@@ -1,0 +1,21 @@
+# Don't print new line at the start of the prompt
+add_newline = false
+scan_timeout = 2_000
+
+[conda]
+style = "dimmed green"
+
+[git_branch]
+disabled = false
+
+[python]
+disabled = false
+style = "bold yellow"
+symbol = "python "
+scan_for_pyfiles = true
+
+[line_break]
+disabled = true
+
+[ruby]
+symbol = "ruby "

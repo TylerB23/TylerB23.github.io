@@ -16,4 +16,10 @@ var store = [{
         "tags": [],
         "url": "http://localhost:4000/python/ocaml/coding/2020/05/13/OCAML-Gillespie-alg.html",
         "teaser": null
+      },{
+        "title": "Translating the Gillespie Algorithm from Python to OCaml, pt. 2",
+        "excerpt":"Learning OCaml Believe it or not, translating code between languages with entirely different paradigms is easier said than done. That goes doubly so when adapting to an entirely new one, as is my case with OCaml. Regardless, I’ve had a fun time learning the basics of the language. It was...","categories": ["python","ocaml","coding"],
+        "tags": [],
+        "url": "http://localhost:4000/python/ocaml/coding/2020/05/14/learning-ocaml.html",
+        "teaser": null
       }]

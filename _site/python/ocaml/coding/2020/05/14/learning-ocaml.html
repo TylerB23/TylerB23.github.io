@@ -1,0 +1,560 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.19.2 by Michael Rose
+  Copyright 2013-2019 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Translating the Gillespie Algorithm from Python to OCaml, pt. 2 - Tyler’s Blog</title>
+<meta name="description" content="Believe it or not, translating code between paradigms is easier said than done. ">
+
+
+  <meta name="author" content="Tyler Burleyson">
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Tyler's Blog">
+<meta property="og:title" content="Translating the Gillespie Algorithm from Python to OCaml, pt. 2">
+<meta property="og:url" content="http://localhost:4000/python/ocaml/coding/2020/05/14/learning-ocaml.html">
+
+
+  <meta property="og:description" content="Believe it or not, translating code between paradigms is easier said than done. ">
+
+
+
+  <meta property="og:image" content="http://localhost:4000/assets/dictyostelium.jpg">
+
+
+
+
+
+  <meta property="article:published_time" content="2020-05-14T00:00:00-04:00">
+
+
+
+
+
+
+<link rel="canonical" href="http://localhost:4000/python/ocaml/coding/2020/05/14/learning-ocaml.html">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Tyler Burleyson",
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Tyler's Blog Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--post wide">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          Tyler's Blog
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li><li class="masthead__menu-item">
+              <a href="/reading-list/">What I'm Reading</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+  
+
+
+
+
+
+
+
+<div class="page__hero--overlay"
+  style=" background-image: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url('/assets/dictyostelium.jpg');"
+>
+  
+    <div class="wrapper">
+      <h1 id="page-title" class="page__title" itemprop="headline">
+        
+          Translating the Gillespie Algorithm from Python to OCaml, pt. 2
+
+        
+      </h1>
+      
+        <p class="page__lead">Believe it or not, translating code between paradigms is easier said than done.
+</p>
+      
+      
+      
+      
+    </div>
+  
+  
+</div>
+
+
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Tyler Burleyson</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        <p>A student interested in too many things at once. This blog documents my side projects and random thoughts on everything from mathematics to computer science to music.</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">Cleveland, OH</span>
+        </li>
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:tjb152@case.edu">
+            <meta itemprop="email" content="tjb152@case.edu" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span>
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Translating the Gillespie Algorithm from Python to OCaml, pt. 2">
+    <meta itemprop="description" content="Believe it or not, translating code between paradigms is easier said than done.">
+    <meta itemprop="datePublished" content="2020-05-14T00:00:00-04:00">
+    
+
+    <div class="page__inner-wrap">
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p>14 May 2020</p>
+
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+
+<script type="text/x-mathjax-config">
+
+    MathJax.Hub.Config({
+
+    tex2jax: {
+
+    inlineMath: [['$','$'], ['\\(','\\)']],
+
+    processEscapes: true},
+
+    jax: ["input/TeX","input/MathML","input/AsciiMath","output/CommonHTML"],
+
+    extensions:
+    ["tex2jax.js","mml2jax.js","asciimath2jax.js","MathMenu.js","MathZoom.js","AssistiveMML.js",
+    "[Contrib]/a11y/accessibility-menu.js"],
+
+    TeX: {
+
+    extensions: ["AMSmath.js","AMSsymbols.js","noErrors.js","noUndefined.js"],
+
+    equationNumbers: {
+
+    autoNumber: "AMS"
+
+    }
+
+    }
+
+    });
+
+</script>
+
+
+
+
+<h2 id="learning-ocaml">Learning OCaml</h2>
+<p>Believe it or not, translating code between languages with entirely different
+paradigms is easier said than done. That goes doubly so when adapting to an
+entirely new one, as is my case with OCaml. Regardless, I’ve had a fun time
+learning the basics of the language. It was hard at first to come to terms with
+the “let… in” syntax, but as I read more of the theory behind OCaml and
+functional programming in general, I began to appreciate the elegance of the
+approach.</p>
+
+<p>That process started on OCaml’s <a href="(https://ocaml.org/learn/)">website</a>, which has some of the better intro
+tutorials I’ve read (though that may just be a byproduct of my increasing
+comfort with reading and writing code). I also liked the guide on
+<a href="(https://learnxinyminutes.com/docs/ocaml/)">learnxinyminutes</a> for quicker reference material. That was where I first heard
+mention of the Hindley-Milner algorithm that OCaml uses for typing. The
+<a href="(https://en.wikipedia.org/wiki/Hindley%E2%80%93Milner_type_system)">Wikipedia page</a> on that is remarkably clear in its description of the problems
+typing systems attempt to address, the aims of type inference, and the HM type
+system as a whole.</p>
+
+<h3 id="the-naive-approach">The Naive Approach</h3>
+<p>The tools familiar to me (easily mutable variables, while loops, and vector
+operations with NumPy) sort of, kind of exist in OCaml, but are not the
+preferred way to do things.
+For example, recursion and loops: the tutorials linked above refer to loops as ‘second
+class citizens’ in OCaml, with relatively weak implementation and a number of
+caveats. The naive approach would be to directly recreate each part of the
+python script in OCaml, references and while loops alike. However, this might be
+trickier than just trying to implement the algorithm in a more “OCaml-y” way,
+using recursion and avoiding updating an array at each step.</p>
+
+<h3 id="what-functions-do-we-need">What functions do we need?</h3>
+<p>There’s a few basic elements of the Gillespie algorithm:</p>
+<ol>
+  <li>Calculate hazard functions to describe the probability of each reaction in
+the system. Also, add these to get a total hazard (the chance at any moment
+for any reaction to occur). Parameters include constants and the count of
+each reactant.</li>
+  <li>Draw a wait time. This uses the total hazard as a parameter, and requires a
+uniform distribution draw, which should be accomplishable with base.Stats in
+OCaml.</li>
+  <li>Choose a reaction. This takes as a parameter a probability vector with
+entries being the hazards of each reaction. It makes use of a multinomial
+distribution, and outputs an integer array. In this case, we only need to
+choose one reaction, so we don’t really need the array, but that’s what the
+function returns.</li>
+  <li>Execute the reaction. Using Python, this step is just adjusting the variables
+for each reactant’s counts. In OCaml, an implementation using a while loop
+should probably do the same. However, the recursive version would likely pass
+the updated reactant counts back into the function.</li>
+</ol>
+
+<p>On a side note: this represents a departure from the planning stage when I first
+implemented the algorithm in Python. There, I first determined what parameters
+needed to be set for the entire function; then I initialized all the necessary
+variables; then I set up the while loop; and finally, I printed the results and
+(optionally) generated the plot. Doing all of that in one function body is
+intuitive at this point to me, but not at all how OCaml does things. Instead of
+building the program top-down, so to speak, I’m instead building it bottom-up:
+asking myself, what are the most basic operations needed? How do these fit
+together? What operations are codependent, passing or requiring each other’s
+outputs? And so on and so forth.</p>
+
+<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span class="c">(*Generate Hazards*)</span>
+<span class="k">let</span> <span class="n">h1</span> <span class="n">k1</span> <span class="n">a</span> <span class="n">b</span> <span class="o">=</span>
+    <span class="n">k1</span> <span class="o">*.</span> <span class="n">a</span> <span class="o">*.</span> <span class="n">b</span><span class="p">;</span>
+<span class="k">let</span> <span class="n">h2</span> <span class="n">k2</span> <span class="n">c</span> <span class="o">=</span> 
+    <span class="n">k2</span> <span class="o">*.</span> <span class="n">c</span><span class="p">;</span>
+<span class="k">let</span> <span class="n">htot</span> <span class="n">h1</span> <span class="n">h2</span> <span class="o">=</span> 
+    <span class="n">h1</span> <span class="o">+.</span> <span class="n">h2</span><span class="p">;</span>
+    
+<span class="c">(*Draw Wait Time*)</span>
+<span class="k">let</span> <span class="n">t_wait</span> <span class="n">htot</span> <span class="o">=</span>
+    <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="o">.</span> <span class="o">/.</span> <span class="n">htot</span><span class="p">)</span> <span class="o">*.</span> <span class="p">(</span><span class="n">log</span> <span class="p">(</span><span class="mi">1</span><span class="o">.</span> <span class="o">-.</span> <span class="p">(</span><span class="nn">Stats</span><span class="p">.</span><span class="n">uniform_rvs</span> <span class="mi">0</span><span class="o">.</span> <span class="mi">1</span><span class="o">.</span><span class="p">)));</span>
+
+<span class="c">(*Choose a Reaction*)</span>
+<span class="k">let</span> <span class="n">rxn</span> <span class="n">h1</span> <span class="n">h2</span> <span class="o">=</span>
+   <span class="k">if</span> <span class="p">(</span><span class="nn">Stats</span><span class="p">.</span><span class="n">uniform_rvs</span> <span class="mi">0</span><span class="o">.</span> <span class="p">(</span><span class="n">htot</span> <span class="n">h1</span> <span class="n">h2</span><span class="p">))</span> <span class="o">&gt;=</span> <span class="n">h1</span> <span class="k">then</span> <span class="mi">2</span> <span class="k">else</span> <span class="mi">1</span><span class="p">;</span></code></pre></figure>
+
+<h3 id="tail-recursion">Tail Recursion</h3>
+<p>The issue with recursion (as I was taught) was its memory expense. Adding
+all those function calls to the stack quickly grows, since each must be
+‘collapsed down’, so to speak, at the end in order to get your result. Luckily,
+OCaml uses compiler magic to avoid this issue. This requires using tail
+recursion – where the last call in a recursive function is to the function.
+This can be less obvious than it seems. To borrow an example directly from the
+OCaml tutorials:</p>
+
+<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span class="k">let</span> <span class="k">rec</span> <span class="n">range</span> <span class="n">a</span> <span class="n">b</span> <span class="o">=</span>
+  <span class="k">if</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="n">b</span> <span class="k">then</span> <span class="bp">[]</span>
+  <span class="k">else</span> <span class="n">a</span> <span class="o">::</span> <span class="n">range</span> <span class="p">(</span><span class="n">a</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="n">b</span><span class="p">;;</span></code></pre></figure>
+
+<p>While the recursive call is in the last line, it isn’t the last operation
+completed:</p>
+<ol>
+  <li>(a+1)</li>
+  <li>range (a+1) b</li>
+  <li>a :: range (a+1) b</li>
+</ol>
+
+<p>This results in the typical recursion memory issue. tail recursion is of the
+following form:</p>
+
+<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span class="k">let</span> <span class="k">rec</span> <span class="n">loop</span> <span class="bp">()</span> <span class="o">=</span>
+  <span class="c">(*loop contents*)</span>
+  <span class="n">loop</span> <span class="bp">()</span><span class="p">;;</span></code></pre></figure>
+
+<p>The compiler basically turns that syntax into a while loop. There’s a great
+Computerphile video about tail recursion on <a href="(https://www.youtube.com/watch?v=_JtPhF8MshA)">YouTube</a>, if you’re interested.</p>
+
+<h2 id="part-2-conclusion">Part 2 Conclusion</h2>
+<p>This was an especially hard post to write, in particular because I wanted to get
+my info right and relevant to what the final product will be. This isn’t meant
+to be so much a tutorial as a dive into my thought process in my first attempt
+at functional programming. Part 3, which’ll include and analyze some final code,
+will come soon!</p>
+
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2020-05-14T00:00:00-04:00">May 14, 2020</time></p>
+        
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/python/ocaml/coding/2020/05/13/OCAML-Gillespie-alg.html" class="pagination--pager" title="Translating the Gillespie Algorithm from Python to Ocaml, pt. 1
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+          <li><a href="https://twitter.com/BurleysonTyler" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+        
+      
+        
+          <li><a href="https://github.com/TylerB23" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> Github</a></li>
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2020 Tyler Burleyson. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script src="https://kit.fontawesome.com/4eee35f757.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+
+  </body>
+</html>

@@ -45,7 +45,7 @@ include: ["pages"]
 # Author Info
 author:
   name: "Tyler Burleyson"
-  bio: "Student interested in too many things at once"
+  bio: "A student interested in too many things at once. This blog documents my side projects and random thoughts on everything from mathematics to computer science to music."
   email: tjb152@case.edu
   location: "Cleveland, OH"
 

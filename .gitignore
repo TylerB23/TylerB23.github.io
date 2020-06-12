@@ -2,3 +2,7 @@
 .jekyll-cache
 .jekyll-metadata
 vendor
+assets/bin
+assets/lib
+assets/pyvenv.cfg
+assets/_build

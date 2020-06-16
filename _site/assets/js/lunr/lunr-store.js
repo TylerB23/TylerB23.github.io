@@ -22,4 +22,10 @@ var store = [{
         "tags": [],
         "url": "http://localhost:4000/python/ocaml/coding/2020/05/14/learning-ocaml.html",
         "teaser": null
+      },{
+        "title": null,
+        "excerpt":"The below is an email I sent to my fraternity chapter last semester, during the period where we fould ourselves stuck at home. I am the Director of Member Development, in charge of programming related to ‘development’, in all the forms that that takes, and a member of the executive...","categories": [],
+        "tags": null,
+        "url": "http://localhost:4000/2020/06/16/2020-06-16-time-management-square.html",
+        "teaser": null
       }]

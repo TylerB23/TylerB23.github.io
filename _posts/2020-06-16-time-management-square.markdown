@@ -1,8 +1,7 @@
 ---
 layout: post
-title: "Time Management Strategies: Eisenhower Square
+title: Time Management Strategies - The Eisenhower Square
 date: 2020-06-16
-categories: fraternity, 'time management'
 ---
 The below is an email I sent to my fraternity chapter last semester, during the
 period where we fould ourselves stuck at home. I am the Director of Member
@@ -37,26 +36,26 @@ Once you've done that, fill out the square:
 ![eisenhower](/assets/eisenhower.png)
 
 1. Right Now (RN)
-  - Do this stuff right now! The *quick win* of acomplishing something will prep
+  - Do this stuff right now! The **quick win** of acomplishing something will prep
     you to succeed all day long
 2. Important and Urgent (IU)
-  - This stuff should be your *Top Priority*
+  - This stuff should be your **Top Priority**
 3. Not Important, but Urgent (nIU)
-  - Once the stuff above is done, evaluate these items. Can they be *delegated*
-    or *postponed*?
+  - Once the stuff above is done, evaluate these items. Can they be **delegated**
+    or **postponed**?
   - If not, get them done now, too. If you get daily, small assignments for
     example, they'll
     probably land here.
 4. Important, but not Urgent (InU)
   - If you have extra time today, you might get to this stuff. But if not, don't
     sweat it!
-  - What's most valuable is to *set a schedule* for when you will get these
+  - What's most valuable is to **set a schedule** for when you will get these
     things done. Keep in mind due dates and size of the task.
 5. Not Important and Not Urgent (nInU)
-  - *Re-evaluate* why this stuff made it on your list at all. Is there any value
+  - **Re-evaluate** why this stuff made it on your list at all. Is there any value
     here?
-  - Identify what value exists, and determine if this is something to *scrap*,
-    something to *schedule*, or something to *reconsider* in some other way.
+  - Identify what value exists, and determine if this is something to **scrap**,
+    something to **schedule**, or something to **reconsider** in some other way.
 
 Here's my list for today. Next to each item, I indicate with I/nI, U/nU, or RN
 for right now.

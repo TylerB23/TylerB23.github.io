@@ -1,0 +1,123 @@
+---
+layout: post
+title: "What I'm Reading this Week, Vol. 1"
+date: 2020-07-17
+categories: readings
+
+---
+## Quick Forward ##
+As part of a personal challenge to write and reflect more often, I've decided to
+start sharing some of the more interesting articles and what-not I've read
+recently. Revisiting all of these should ideally help me stew in the ideas more,
+since it's all too easy to read and move on. My high school chemistry teacher
+used to talk about how learning anything requires multiple exposures -- for her,
+that was a justification for constant homework and quizzes, but then she was one
+of our best science teachers. "Lifelong Learning" is a buzzword, but one I
+believe in wholeheartedly.
+
+Without further ado, let's get to it.
+
+### _What's the Use of Being a Boy: An interview with Douglas A. Martin_ ###
+#### By Spencer Quong ####
+
+I first came across _the Paris Review_ from Sarah Kay's Poetry Rx series of
+posts. She was the convocation speaker my freshman year at Case, and I've been
+loosely following what she writes since. When I was in middle school we had
+about 3-4 authors visit each year, by some miracle work of our librarian. When I
+was younger I always thought I'd be an author one day, whether that would be my
+career or something I do after retirement. Reading the _Review_ has helped me
+keep up those interests even as I pursue a STEM degree at an incredibly
+pre-profesional school. But then, that's another topic entirely.
+
+The author, Douglas Martin, is as thoroughly fascinating in this interview as
+everyone with the stroke of practiced brilliance and dedication that any great
+writer has. The impulse to write following being exposed to the news cycle
+around the events which inspired to book is amazing to me - too often, I feel
+stretched in response to encountering something impactful. It's often easier to
+lean away rather than into discomfort, but Martin describes doing exactly that.
+
+Perhaps as a product of being fortunate enough to encounter so many writers at a
+young age, I love hearing about their process. Martin's musings over giving his
+characters names is wonderfully tasteful and high level. His ultimate decision
+to prioritise relationships -- "I want to look at some supposed roles within
+these positions" -- seems to, in some capacity, define the book. The
+interviewer, Spencer Quong, dives into this further by asking about the use of
+the word "boy" throughout the text. Given the current discourse I find myself in
+surrounding what it means to be masculine, hearing this perspective of the
+precursive condition of boyhood was elucidating and freeing.
+
+Read the article [here].
+
+### The Partially Examined Life, ep. 235: Judith Butler's _Gender Trouble_ ###
+#### Partially Examined Life Podcast ####
+
+I first began listening to PEL some time in high school, when I had a much more
+difficult time interpreting any of what they were saying. The podcast attempts
+to make philosophy accessible to their listeners, but never compromising real
+discussion of the material at hand. In other words, you don't need a PhD in
+Philosophy to follow, but some background and intentional listening is needed.
+
+I first encountered _Gender Trouble_ in a University Seminar class, *Many Ways
+to be a Woman*. That was my first real introduction to feminism outside of what
+exists on Twitter, and it was incredibly eye-opening. My conception of many
+ideas about equality were expanded and given new legs by that class. Nowadays, I
+get frustrated by old friends who still make jokes about Gender Studies as
+though it isn't a legitimate, necessary field with a role to play in our
+society. I'm begining to digress.
+
+I've relistened to this podcast a few times, gleaning more at each go-around.
+The question of what structures we take for granted are socially constructed
+(and what the heck that actually means) are endlessly fascinating and
+informative. By rooting my understanding of what it means to be a man or a woman
+or to identify as neither in philosophical soil, it has become entrenched in a
+much more meaningful way. It isn't just a matter of what you can and cannot say
+or think, but of identifying the impact of your words or actions in the greater
+context of our culture. While Butler is often criticized for failing to offer
+concrete action of any kind, the podcast's hosts argue that her seminal work is
+often overinterpreted. It is not that Butler wouldn't fight for women's
+suffrage, for example, but that she believes that is not enough to make
+meaningful change in the face of the social constructions that define how we
+interact with each other.
+
+Listen at the [link].
+
+
+### "The Dark Power of Fraternities", _The Atlantic_ ###
+#### By Caitlin Flanagan ####
+
+I've been leading a reading group within my fraternity this summer to read and
+talk about social justice issues. There's two parts to my motivation here:
+firstly, to move beyond just talking about inequality and dig into some
+writings; and secondly, to get the guys most interested in this sort of thing to
+spend more time on it and get comfortable talking to each other about it.
+Ideally, this will have a trickle-down effect in our chapter culture -- if
+there's 10 guys who will feel empowered by their knowledge and previous
+conversations to call out bad behavior or explain a concept to someone, that
+betters our whole community.
+
+This article in particular is an absolutely amazing deep dive into the forces
+and politics at play in Greek Life on college campuses. Some of what Flanagan
+discusses, like the FIPG's and the complicated web of insurance-related policies
+that exist in the fraternity world, are realities we have grown too comfortable
+with on our campus. An excellent quote from the article:
+> Are fraternities acting in an ethical manner, requiring good behavior and
+> punishing poor decisions? Or are they keeping a cool distance from the mayhem,
+> knowing full well that it occurs with regularity?
+
+This is especially vital reading for me as a member of my fraternity's national
+leadership. There is a great deal of work to be done for our members, but there
+is also a great deal of awareness to be raised and actions to be taken for the
+campus communities that greek chapters exist within.
+
+I've been dealing with a lot of personal reckonings lately, from my academic
+and career aspirations to my myriad associations and personal beliefs which are
+growing increasingly tenuous in our current world. I am growing increasingly
+aware by the day of the breadth and depth of work necessary if I am to be the
+kind of person I have always wanted and believed to be. It's both a
+nervewracking and exciting experience, as difficult as anything worth doing is. 
+
+I strongly recommend reading this [one].
+
+[here]: https://www.theparisreview.org/blog/2020/07/14/whats-the-use-of-being-a-boy-an-interview-with-douglas-a-martin/
+[link]: https://partiallyexaminedlife.com/2020/02/03/ep235-1-butler-gender-trouble/
+[one]: https://www.theatlantic.com/magazine/archive/2014/03/the-dark-power-of-fraternities/357580/

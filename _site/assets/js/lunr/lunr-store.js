@@ -28,4 +28,10 @@ var store = [{
         "tags": [],
         "url": "http://localhost:4000/2020/06/16/time-management-square.html",
         "teaser": null
+      },{
+        "title": "What I'm Reading this Week, Vol. 1",
+        "excerpt":"Quick Forward As part of a personal challenge to write and reflect more often, I’ve decided to start sharing some of the more interesting articles and what-not I’ve read recently. Revisiting all of these should ideally help me stew in the ideas more, since it’s all too easy to read...","categories": ["readings"],
+        "tags": [],
+        "url": "http://localhost:4000/readings/2020/07/17/readings.html",
+        "teaser": null
       }]

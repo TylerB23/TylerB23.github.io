@@ -4,11 +4,12 @@ title: What I'm Reading
 permalink: /reading-list/
 author_profile: true
 ---
-## Books and Magazines ##
+## Books ##
 - _The Idiot_, by Fyodor Dostoevsky
 - _Black Beauty_, by Anna Sewell
-- _How to Be an Antiracist_, by Ibram X. Kendi
+- _How to Be an Antiracist_, by Dr. Ibram X. Kendi
 
-## Math and Biology ##
+## Textbooks ##
 - _Branching Processes in Biology_, Volume 19, Kimmel and Axelrod
-- _Probability and Random Processes_, Grimmett and Stirzaker
+- _Control Theory and Systems Biology_, Iglesias and Ingalls
+- _Option Volatility and Pricing_, Sheldon Natenberg

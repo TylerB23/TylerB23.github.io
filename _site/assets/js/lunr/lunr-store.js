@@ -34,4 +34,10 @@ var store = [{
         "tags": [],
         "url": "http://localhost:4000/readings/2020/07/17/readings.html",
         "teaser": null
+      },{
+        "title": "What I'm Reading this Week, Vol. 2",
+        "excerpt":"(Similarly Quick) Forward I set out to write a post like this every Friday, so of course the second week in I had a massive influx of work topped by about 6 hours in Zoom meetings. Oh well! One of the perks of a personal project is that it’s totally...","categories": ["readings"],
+        "tags": [],
+        "url": "http://localhost:4000/readings/2020/07/26/readings2.html",
+        "teaser": null
       }]

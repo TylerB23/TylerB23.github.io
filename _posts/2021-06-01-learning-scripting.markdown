@@ -168,7 +168,6 @@ grep -v \#\'
 
 # Match only nested functions
 grep -rn '<- function(.*' | sed 's/<-.*$//' | sed 's/^.*:.*://' | grep \^[[:space:]]
-{% highlight bash %}
 ```
 
 This eventually became:

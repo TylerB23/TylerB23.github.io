@@ -30,7 +30,6 @@ locale: "en-US"
 timezone: America/New_York
 
 # Social Medias
-twitter_username: burleysontyler
 github_username:  TylerB23
 
 # Build settings

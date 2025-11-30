@@ -79,7 +79,8 @@ $$
 
 These equations can be represented as matrix multiplication. Let $b$ be the
 vector of revenues $R_i$, and let $x$ be the vector of principal amounts we're
-solving for, $P_i$. Then we construct the matrix $A$ as follows:
+solving for, $P_i$. Creating the bond model means identifying the matrix $A$
+satisfying $Ax=b$. We construct the matrix $A$ as follows:
 
 $$
 \begin{aligned}
@@ -128,11 +129,13 @@ The script assumes revenues (1) start right away and (2) are level. That's
 reasonable for a municipality issuing a General Obligation bond; most cities
 want to start paying down their debt immediately, and it's standard to have
 level annual payments (similar to a mortgage). However, those assumptions are
-rarely the case in a project finance context.
+rarely the case in a project finance context. The Python function should be
+generalized to accept any revenue curve $R$. 
 
-You can't pay back negative principal, so every element of our $x$ vector
+Setting that aside, the model won't always give us a reasonable solution for a
+real-world bond model. You can't pay back negative principal, so every element of our $x$ vector
 must be nonnegative. There are plenty of examples of revenue curves which might
-resolve in a naive solution giving us negative principal payments - for example,
+result in a naive solution giving us negative principal payments - for example,
 suppose a 3-period model with zero revenue in the first two years and \\$1
 million in revenue in the last year.
 
@@ -145,7 +148,7 @@ There are legal and practical limitations on how much capitalized interest we ca
 set aside, however.
 
 A more interesting example is a high growth rate in the revenues; just by
-playing around in Excel, it's easy to find examples here that don't work.
+playing around in Excel, it's easy to find examples that don't work.
 Consider a revenue curve which is zero for the first two years 
 and then grows at 5% annually
 from years three through fourty. There will be so much revenue in the later years
@@ -156,24 +159,7 @@ lowering the growth in the revenue curve; the reduced capitalized interest is
 both possible/legal to sell, and often results in more net proceeds for the
 client.
 
-That specific example is actually easy to handle; we would just set aside funds
-from the bond sale to pay interest in the first two years (referred to as
-capitalized interest). There are legal and practical limitations on how much
-capitalized interest we can set aside, however.
-
-A more interesting example is a high growth rate in the revenues; just by
-playing around in Excel, it's easy to find examples here that don't work.
-Consider a revenue curve which is zero for the first two years (this is common
-for real estate projects with construction times) and then grows at 5% annually
-from year three through fourty. There will be so much revenue in the later years
-compared to what's available to pay interest in the early years that we'll
-inevitably run past a realistic amount of capitalized interest to fund. In
-situations like this, we often propose either shortening the bond maturity or
-lowering the growth in the revenue curve; the reduced capitalized interest is
-both possible/legal to sell, and often results in more net proceeds for the
-client.
-
 It'd be nice to develop some heuristics around what kinds of revenue curves
 result in "nice" bond models, where we don't need too much capitalized interest
 and we're able to make efficient use of the revenues. That will be the subject
-of a future blog post.
+of future blog posts.

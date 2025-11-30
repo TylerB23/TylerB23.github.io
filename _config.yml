@@ -44,20 +44,15 @@ include: ["pages"]
 # Author Info
 author:
   name: "Tyler Burleyson"
-  bio: "A student interested in too many things at once. This blog documents my side projects and random thoughts on everything from mathematics to computer science to music."
-  email: tjb152@case.edu
+  email: "tylerburleyson23@gmail.com"
   location: "Cleveland, OH"
 
 # Plugins
 plugins:
   - jekyll-include-cache # needed to use remote themes
 
-
 footer:
   links:
-    - label: "Twitter"
-      icon: "fab fa-fw fa-twitter-square"
-      url: "https://twitter.com/BurleysonTyler"
     - label: "Github"
       icon: "fab fa-fw fa-github"
       url: "https://github.com/TylerB23"

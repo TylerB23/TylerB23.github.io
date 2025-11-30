@@ -1,0 +1,1267 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-11-30T13:39:35-05:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Tyler’s Blog</title><subtitle>Welcome! | Tyler&apos;s Blog</subtitle><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><entry><title type="html">Using Linear Algebra for Bond Math</title><link href="http://localhost:4000/2025/11/30/LA-Bond-Math.html" rel="alternate" type="text/html" title="Using Linear Algebra for Bond Math" /><published>2025-11-30T00:00:00-05:00</published><updated>2025-11-30T00:00:00-05:00</updated><id>http://localhost:4000/2025/11/30/LA-Bond-Math</id><content type="html" xml:base="http://localhost:4000/2025/11/30/LA-Bond-Math.html">&lt;p&gt;I’m training two new analysts at work, which means introducing them to bond
+math. This can be a steep learning curve for some new hires since it often isn’t
+covered in their finance classes as undergrads. Luckily it’s not too difficult,
+and Excel really is an excellent tool for both doing it and building intuition
+around it.&lt;/p&gt;
+
+&lt;p&gt;When I was first hired, I spent a fair bit of time building my intuition around
+it. In particular, I realized I could represent our usual bond models with
+linear algebra. I’m currently taking a refresher course on linear algebra from U
+Chicago (their &lt;a href=&quot;https://finmath.uchicago.edu/admissions/quant-foundation-series/&quot;&gt;Quant Foundation Series
+course&lt;/a&gt;), which frames the subject around
+solving problems like $Ax=b$. I thought it’d be a good exercise to write up the
+investment banking bond math I’m teaching our new guys in a more math-y format.&lt;/p&gt;
+
+&lt;p&gt;First, I should note a few conventions around municipal bonds to prevent
+confusion. The most important thing to note is that almost all munis amortize
+completely over time; there’s rarely a balloon payment at the end, and while
+it’s common for issuers to refinance existing debt, bonds are almost always set up so
+that’s not necessary. That’s a key difference from corporate bonds, which
+typically pay interest until their maturity date when all the principal comes
+due. Typically, munis are denominated in \$5,000 increments (though this
+can vary). It’s also worth mentioning that by default, munis pay out interest
+semiannually and principal annually. We talk about rates (coupons, yields, etc.)
+in annual terms to keep things comparable. So for example, a 5% coupon on a \$1
+million bond will pay two coupon payments of \$25 thousand each year.&lt;/p&gt;
+
+&lt;h2 id=&quot;setting-up-the-matrix&quot;&gt;Setting Up the Matrix&lt;/h2&gt;
+
+&lt;p&gt;I work on the Project Finance team, so most of our bond models start with a
+projected revenue curve and end with a par amount and net proceeds. The problem
+is to fit debt service and fees under the revenue curve, leaving as little gap
+as possible so we raise as much debt as possible for the client.&lt;/p&gt;
+
+&lt;p&gt;Let $R_n$ be the revenue available in period $n$, which we’ll say is the last
+period. For now, we’ll keep things simple and assume annual payments of
+principal and interest, so $n$ is the total number of years the bonds will be
+outstanding. Let 
+$P_n$ be the principal due and $I_n$ be the interest due. For purposes of
+calculating the interest, let $r$ be the coupon rate. The interest due on $P$
+principal after a year is $rP$.&lt;/p&gt;
+
+&lt;p&gt;We need $R_n \geq D_n$, where $D_n$ is the debt service due in year $n$.
+Clearly, $D_n = P_n + I_n = P_n + rP_n$. Isolate $P_n$ by writing $D_n =
+P_n(1+r)$. Remember we are given $R_n$ and will come up with an appropriate
+coupon rate, $r$. We’re solving for $P_n$: $P_n \leq \frac{R_n}{1+r}$.&lt;/p&gt;
+
+&lt;p&gt;Great, that’s the last period’s principal payment figured out. You may be
+wondering why we started from the last year. The reason is that the interest due
+in any given year is a function of the principal that’s outstanding at that
+time, which is equal to the sum of all future principal payments. By starting
+from the last year, we can use our calculated $P_l$ to find constraints on
+earlier principal payments.&lt;/p&gt;
+
+&lt;p&gt;So, we’ll get:&lt;/p&gt;
+
+\[P_n \leq \frac{R_n}{1+r} \\
+P_{n-1} \leq \frac{R_{n-1}-rP_n}{1+r} \\
+P_{n-2} \leq \frac{R_{n-2}-rP_n-rP_{n-1}}{1+r}\]
+
+&lt;p&gt;And so on. This is what I showed to our new analysts to help them put together a
+basic Excel document for computing a bond model. For this blog post, I’m getting
+a step ahead of myself; see below the equations before rearranging them:&lt;/p&gt;
+
+\[R_n \geq P_n(1+r)\\
+R_{n-1} \geq P_{n-1}(1+r) + rP_n\\
+\cdots \\
+R_i \geq P_i(1+r) + \sum_{l &amp;gt; i}^n rP_l\]
+
+&lt;p&gt;These equations can be represented as matrix multiplication. Let $b$ be the
+vector of revenues $R_i$, and let $x$ be the vector of principal amounts we’re
+solving for, $P_i$. Then we construct the matrix $A$ as follows:&lt;/p&gt;
+
+\[\begin{aligned}
+ A &amp;amp;= \left( \begin{array}{ccc}
+      1+r &amp;amp; \cdots &amp;amp; r \\
+      \vdots &amp;amp; \ddots &amp;amp; \vdots \\
+      0 &amp;amp; \cdots &amp;amp; 1+r 
+    \end{array} \right)
+\end{aligned}\]
+
+&lt;p&gt;This is a pretty nice matrix; it’s upper triangular and invertible, so we can
+always solve the equation. See below a quick python script which solves this
+problem as we’ve laid it out:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;numpy&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;pandas&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pd&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;basic_solve&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;R&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;# n is the number of periods
+&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;# R is the annual revenue constraint
+&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;# r is the coupon rate
+&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;# First, create coefficients matrix
+&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;A&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;eye&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;triu&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ones&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]),&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;# Next, create vector R of revenues
+&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;R&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;R&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ones&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;# Next, solve
+&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;Soln&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;linalg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;solve&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;R&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    
+    &lt;span class=&quot;c1&quot;&gt;# Lastly, round down to nearest $5,000
+&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;floor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Soln&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5000&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h2 id=&quot;discussion&quot;&gt;Discussion&lt;/h2&gt;
+
+&lt;p&gt;The script assumes revenues (1) start right away and (2) are level. That’s
+reasonable for a municipality issuing a General Obligation bond; most cities
+want to start paying down their debt immediately, and it’s standard to have
+level annual payments (similar to a mortgage). However, those assumptions are
+rarely the case in a project finance context.&lt;/p&gt;
+
+&lt;p&gt;You can’t pay back negative principal, so every element of our $x$ vector
+must be nonnegative. There are plenty of examples of revenue curves which might
+resolve in a naive solution giving us negative principal payments - for example,
+suppose a 3-period model with zero revenue in the first two years and \$1
+million in revenue in the last year.&lt;/p&gt;
+
+&lt;p&gt;That specific example is actually easy to handle; we would just set aside funds
+from the bond sale to pay interest in the first two years (referred to as
+capitalized interest). The majority of the projects we work on use this concept,
+usually because the project has a 12-24 month construction period before it’ll
+generate any meaningful revenue.
+There are legal and practical limitations on how much capitalized interest we can
+set aside, however.&lt;/p&gt;
+
+&lt;p&gt;A more interesting example is a high growth rate in the revenues; just by
+playing around in Excel, it’s easy to find examples here that don’t work.
+Consider a revenue curve which is zero for the first two years 
+and then grows at 5% annually
+from years three through fourty. There will be so much revenue in the later years
+compared to what’s available to pay interest in the early years that we’ll
+inevitably run past a realistic amount of capitalized interest to fund. In
+situations like this, we often propose either shortening the bond maturity or
+lowering the growth in the revenue curve; the reduced capitalized interest is
+both possible/legal to sell, and often results in more net proceeds for the
+client.&lt;/p&gt;
+
+&lt;p&gt;That specific example is actually easy to handle; we would just set aside funds
+from the bond sale to pay interest in the first two years (referred to as
+capitalized interest). There are legal and practical limitations on how much
+capitalized interest we can set aside, however.&lt;/p&gt;
+
+&lt;p&gt;A more interesting example is a high growth rate in the revenues; just by
+playing around in Excel, it’s easy to find examples here that don’t work.
+Consider a revenue curve which is zero for the first two years (this is common
+for real estate projects with construction times) and then grows at 5% annually
+from year three through fourty. There will be so much revenue in the later years
+compared to what’s available to pay interest in the early years that we’ll
+inevitably run past a realistic amount of capitalized interest to fund. In
+situations like this, we often propose either shortening the bond maturity or
+lowering the growth in the revenue curve; the reduced capitalized interest is
+both possible/legal to sell, and often results in more net proceeds for the
+client.&lt;/p&gt;
+
+&lt;p&gt;It’d be nice to develop some heuristics around what kinds of revenue curves
+result in “nice” bond models, where we don’t need too much capitalized interest
+and we’re able to make efficient use of the revenues. That will be the subject
+of a future blog post.&lt;/p&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><summary type="html">I’m training two new analysts at work, which means introducing them to bond math. This can be a steep learning curve for some new hires since it often isn’t covered in their finance classes as undergrads. Luckily it’s not too difficult, and Excel really is an excellent tool for both doing it and building intuition around it.</summary></entry><entry><title type="html">Learning to Script</title><link href="http://localhost:4000/2021/06/01/learning-scripting.html" rel="alternate" type="text/html" title="Learning to Script" /><published>2021-06-01T00:00:00-04:00</published><updated>2021-06-01T00:00:00-04:00</updated><id>http://localhost:4000/2021/06/01/learning-scripting</id><content type="html" xml:base="http://localhost:4000/2021/06/01/learning-scripting.html">&lt;p&gt;I’m pretty sure I first got interested in linux around the same time Edward
+Snowden fled the US. I was 13 years old and captivated by how much one could
+determine from the metadata and other stuff the NSA was collecting. There was also
+some part of me that really, really hated the idea that someone out there knew
+what I was doing on the computer (again, I was 13, so that was mostly downloading
+Minecraft mods). While exploring ways to be more private online, I
+was introduced to the open source community and Linux.&lt;/p&gt;
+
+&lt;p&gt;I put Ubuntu on the first computer I built myself later that year,
+and after failing to figure out wireless card drivers, caved and bought Windows.
+The fascination with Linux remained, and today, it’s all I use
+on my personal computer.&lt;/p&gt;
+
+&lt;p&gt;So of course, when I saw a special topics course in the CS department titled
+“Linux Scripting”, I signed up right away. Like any Linux user I’d tried to use
+the terminal before, and figured out some basics, but generally avoided it where
+I could. And like most math majors, I was really excited to take a class where
+I’d learn stuff I could use on a daily basis. While no doubt run-of-the-mill
+for the engineers in the class, I found it really cool that everything we did was
+something I could reasonably see myself doing with my own machine. The
+assignments were wonderfully open-ended: we got to build whatever we
+wanted with the scripting language we had talked about that week, and record a
+short video talking about what we built.&lt;/p&gt;
+
+&lt;p&gt;The course went over half a dozen languages, including PHP, Perl, Javascript,
+Bash, TCL, Python, awk, and while it’s not a language, we spent a lot of time
+on regular expressions. Of these, I’d only written extensively in Python and by
+chance a few times in Bash.&lt;/p&gt;
+
+&lt;p&gt;To my surprise, the current maintainer of Bash,
+&lt;a href=&quot;https://tiswww.case.edu/php/chet/&quot;&gt;Chet Ramey&lt;/a&gt; works at CWRU. Including Bash
+under ‘My Projects’ on a personal website has got to be one of the biggest FOSS
+flexes I’ve ever seen, personally. He came into our class to talk about how he
+got involved on the project and some of the challenges of maintaining support
+for very old code.&lt;/p&gt;
+
+&lt;p&gt;Anyway, I thought it would be fun to write up some of my favorite projects from that
+class. Writing Bash feels like such a pure form of coding to me, in that it’s a
+lot of frustration and things not working until I find the exact issue or just
+the right way to do something, and then it all falls into place in a rush of
+satisfaction.&lt;/p&gt;
+
+&lt;p&gt;(A quick digression: a friend once pointed out to me that code
+will work on the first try if you write it correctly. I doubt I’ve ever been so
+annoyed in my life).&lt;/p&gt;
+
+&lt;p&gt;There are many, many definitions of what a ‘scripting language’ is, and that was
+a source of great discussion in class. I don’t want to attempt to retread the
+same ground you can find on a million different blogs and stackoverflows, so
+I’ll summarise here how I use scripting: either for something very simple, or
+very temporary.&lt;/p&gt;
+
+&lt;p&gt;I have some startup scripts that run every time a program is
+opened or I log into my computer, and those scripts do very simple things:
+launching a program or changing the appearance of Vim, for example. I also
+sometimes write one-liners to do quick-and-dirty operations, like finding uses
+of a particular command in a set of R files. That’s about the amount of
+programming/computing I do that I consider ‘scripting’. That said, I really
+enjoy this hacky approach to problem-solving: it sort of represents 
+the can-do spirit I like about Linux and open source. Anyways.&lt;/p&gt;
+
+&lt;h3 id=&quot;cleaning-up-file-names&quot;&gt;Cleaning up File Names&lt;/h3&gt;
+&lt;p&gt;The PI in charge of the lab I’ve been part of since freshman year tells
+everyone in the group, over and over, never to give a file a name with spaces in
+it. When I was on Windows, I always did this since it looked nicer in the
+Explorer window. On Linux, as well as any system with a lot of similarly named
+files, that’s an awful way to do things because of how annoying whitespace is
+to parse. On the command line, if a file or folder name has spaces, it needs to
+be enclosed in single quotes like so:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;# the following doesn&apos;t work&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;folder with spaces
+&lt;span class=&quot;c&quot;&gt;# this line does&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;folder with spaces&apos;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;For my first video assignment in Bash, I thought it’d be useful to have a script
+which removes spaces from file names and replaces them with underlines. The
+basic functions here (listing file names and editing strings) are very
+well-suited to Bash and scripting in general. I ended up running this over my
+entire home directory, which fixed some files I had named with spaces on
+accident, some oddly-named downloads, and a few crash logs from Matlab.&lt;/p&gt;
+
+&lt;p&gt;Here’s the code I turned in:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nb&quot;&gt;ls&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-R&lt;/span&gt; | &lt;span class=&quot;k&quot;&gt;while &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;read &lt;/span&gt;line&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do
+    if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[[&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;line&lt;/span&gt;:&lt;span class=&quot;p&quot;&gt;(-1)&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;:&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then
+        &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;directory&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;line&lt;/span&gt;::&lt;span class=&quot;p&quot;&gt;(-1)&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;fi
+    if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[[&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$line&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;~ &lt;span class=&quot;o&quot;&gt;[[&lt;/span&gt;:space:]] &lt;span class=&quot;o&quot;&gt;]]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then
+        &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;mv&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$directory&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$line&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$directory&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;line&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;// /_&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;fi
+done&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;So much fun stuff there. The &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;|&lt;/code&gt; character is a pipe, which gives the output of
+the first command to the following command as input. The Unix Philosophy of
+having many utilities that do one thing very well is so satisfying to me: it’s
+‘clean’ in some way that I have a hard time describing.&lt;/p&gt;
+
+&lt;p&gt;By the way, I don’t intend this to be a tutorial on Bash or anything like that.
+If you’re curious and want to learn more, try the manual pages accessed in the
+terminal with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;man ls&lt;/code&gt;, for example. I also really like the &lt;a href=&quot;https://www.howtogeek.com/438882/how-to-use-pipes-on-linux/&quot;&gt;How-To
+Geek&lt;/a&gt; guides on
+individual Linux commands, written by Dave McKay.&lt;/p&gt;
+
+&lt;p&gt;The double bracket notation for conditionals, combined with the parameter
+expansions, were my professor’s favorite part of Bash. I’ve come to appreciate
+them too for how powerful they are (especially that 6th line),
+but the notation still feels needlessly concise to me, as do so many 
+conventions from the era when memory and storage were not cheap. These are the
+sorts of things that make a friend of mine call the early Unix utility devs 
+wizards. It builds into this sense of lore that I think many people in my 
+generation get when we play with older tools.&lt;/p&gt;
+
+&lt;h3 id=&quot;finding-functions-in-r-files&quot;&gt;Finding Functions in R files&lt;/h3&gt;
+&lt;p&gt;My last project for the class could have been done in Python or Javascript, but
+I was really enjoying getting used to Bash and I had a good problem for the
+language. I maintain an R package for my lab,
+&lt;a href=&quot;https://cran.r-project.org/package=SunsVoc&quot;&gt;SunsVoc&lt;/a&gt;, which provides a way for
+photovoltaics researchers to create artificial IV curves from outdoor time
+series data. Our lab collects IV curves from freshly built solar panels with an
+indoor testing machine called Suns-Voc, so the package provides a great way to
+compare the attributes of the panel after exposure and weathering.&lt;/p&gt;
+
+&lt;p&gt;R packages have relatively simple structure, including an “R” folder which
+contains all the package functions. A common frustration when working on these
+packages is having to change how one function works, then having to track down
+each occurence of it to see where it may cause issues. No doubt there are better
+ways to write the code to ensure future changes don’t create future issues, but
+our lab develops this code mostly by having one or two researchers prototype the
+code, then once a paper is published on the concept, the same researchers and
+others work on packaging the code for others to use. So best software
+engineering practices are usually of secondary concern to developing the core
+functions.&lt;/p&gt;
+
+&lt;p&gt;Anyways, I started using &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;grep&lt;/code&gt; for the first time a while ago with the terminal
+built into RStudio in order to find the places where I use functions. The idea
+for the project was to grep through the “R” folder, find all the function
+definitions, and print their locations with all the locations they are called.
+My implementation is far from perfect: it misses uses of functions within
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;apply&lt;/code&gt; functions, for example. That said, it satisifies a need for me, and
+likely wouldn’t be too difficult to make more thorough. This does sort-of
+break the description I wrote above about how I tend to use scripting languages,
+which brings up interesting questions about the best way to do this sort of
+task. I’m always open to suggestions!&lt;/p&gt;
+
+&lt;p&gt;The main source of my attraction towards Bash is building up commands
+bit-by-bit. For the first part of this project, I tested in the terminal each of
+the following snippets:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# find function declarations, with location of file and line
+grep -rn &apos;&amp;lt;- function(.*&apos; | sed &apos;s/&amp;lt;-.*$//&apos;
+
+# Find use of a function, func_name
+grep -r func_name\(.*\)
+
+# Exclude comments and examples
+grep -v \#\&apos;
+
+# Match only nested functions
+grep -rn &apos;&amp;lt;- function(.*&apos; | sed &apos;s/&amp;lt;-.*$//&apos; | sed &apos;s/^.*:.*://&apos; | grep \^[[:space:]]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This eventually became:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#! /usr/bin/bash
+
+declare -a functions
+readarray -t functions &amp;lt; &amp;lt;(grep -rn &apos;&amp;lt;- function(.*&apos; | sed &apos;s/&amp;lt;-.*$//&apos; | sed &apos;s/^.*:.*://&apos;)
+
+for i in &quot;${functions[@]}&quot;; do
+    if [[ $i =~ \# ]]; then
+          :
+    elif [[ $i =~ ^[[:space:]] ]]; then
+        func=&quot;$(echo &quot;$i&quot; | sed &apos;s/^[[:space:]]*//&apos;)&quot;
+        printf &quot;Nested Function: %s\n&quot; $func
+        unset func
+    else
+        printf &quot;Function: %s\n&quot; $i
+    fi
+done
+
+unset IFS
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;I wasn’t happy with using the array, though, since it made the code more verbose
+than it needed to be. After fiddling with delimiters, I got to this:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#! /usr/bin/bash
+
+IFS=$&apos;\n&apos;
+
+#grep -rn &apos;&amp;lt;- function(.*&apos; | sed &apos;s/&amp;lt;-.*$//&apos; | sed &apos;s/^.*:.*://&apos; | while read i; do
+for i in $(grep -rn &apos;&amp;lt;- function(.*&apos; | sed &apos;s/&amp;lt;-.*$//&apos; | sed &apos;s/^.*:.*://&apos;); do
+    if [[ $i =~ \# ]]; then
+          :
+    elif [[ $i =~ ^[[:space:]] ]]; then
+        func=&quot;$(echo &quot;$i&quot; | sed &apos;s/^[[:space:]]*//&apos;)&quot;
+        printf &quot;Nested Function: %s\n&quot; $func
+        unset func
+    else
+        printf &quot;Function: %s\n&quot; $i
+    fi
+done
+
+unset IFS
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;I just had to set the IFS (interfield seperator) to newline characters to get
+the same behavior from a for loop as from &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;readarray&lt;/code&gt;. To me, this method is
+just as easy to read and simpler to troubleshoot, since it cuts down on the
+number of unique functions used.&lt;/p&gt;
+
+&lt;p&gt;Next, I wanted to find all the occasions of a function being used:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#!/usr/bin/bash
+
+# Input should be the name of the function you&apos;re looking for
+func=$1
+# Separate the array items below by newlines, not spaces
+IFS=$&apos;\n&apos;
+
+# Grep for that function name (being used as a function)
+
+for i in $(grep -rn $func\( | grep -v ^.*\#); do
+    file=&quot;$(echo $i | grep -o ^.*R)&quot;
+    line=&quot;$(echo $i | grep -Eo :[0-9]+*: | sed &apos;s/://g&apos;)&quot;
+    printf &quot;Used on line %s in file %s\n&quot; $line $file
+done
+unset IFS
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;I remember hating all the time we spent manipulating strings in my first comp
+sci class in high school. I’ve come to appreciate it a lot more now that I’m
+doing it with a purpose in mind - arbitrary problems like “remove everything
+before the first occasion of this substring” are both easy to do with Bash and
+much more satisfying when they get you what you want.&lt;/p&gt;
+
+&lt;p&gt;The only step remaining was to combine them together:&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#!/usr/bin/bash
+
+# Get a function, then print the uses of that function
+
+IFS=$&apos;\n&apos; 
+for i in $(source ~/Documents/CSDS397/video3/find_funcs.sh);
+do
+    # First, print the name of the function we&apos;ll be examining
+    printf &quot;$i\n&quot;
+    # Now, get that $i down to just the function name
+    func=&quot;$(echo $i | grep -o &quot;: .*$&quot;)&quot;
+    func=${func#* }
+    func=$(echo $func | sed &apos;s/ //g&apos;)
+
+    output=$(source ~/Documents/CSDS397/video3/find_func_uses.sh $func; echo x)
+    output=${output%?}
+    printf &quot;$output%s&quot; &apos;&apos;
+done
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This one was interesting for the printing challenges. I’m not sure that I have
+the most concise form of this code, but I landed here after playing with
+trailing whitespace and adding newlines and so on for an hour or two. This was
+definitely the most tedious part of developing the script, since I was so close
+to done but still dealing with Bash quirks.&lt;/p&gt;
+
+&lt;h3 id=&quot;concluding-thoughts&quot;&gt;Concluding Thoughts&lt;/h3&gt;
+
+&lt;p&gt;I still use the three scripts I wrote for finding R functions all the time. They
+were immediately useful for finding some small problems, like a nested function
+that was defined identically in two different functions or a few deprecated
+functions I hadn’t yet removed. What’s most helpful is having the
+greps and seds on hand to quickly get what I want instead of having to come up
+with a new one-liner each time.&lt;/p&gt;
+
+&lt;p&gt;Since the semester ended, I’ve found myself using bash and the command line much
+more often. At this point, the only two things I typically have open are Firefox
+and a few terminals, plus the occasional PDF reader if I’m annotating something.
+I’ve found this to be marginally quicker than using file explorers and other
+applications, but also much more satisfying. That’s for most of the same reasons
+I’ve come to enjoy scripting - this sense of freedom in personal control.&lt;/p&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><summary type="html">I’m pretty sure I first got interested in linux around the same time Edward Snowden fled the US. I was 13 years old and captivated by how much one could determine from the metadata and other stuff the NSA was collecting. There was also some part of me that really, really hated the idea that someone out there knew what I was doing on the computer (again, I was 13, so that was mostly downloading Minecraft mods). While exploring ways to be more private online, I was introduced to the open source community and Linux.</summary></entry><entry><title type="html">Why Put _Anything_ Online?</title><link href="http://localhost:4000/2021/04/02/why-put-anything-online.html" rel="alternate" type="text/html" title="Why Put _Anything_ Online?" /><published>2021-04-02T00:00:00-04:00</published><updated>2021-04-02T00:00:00-04:00</updated><id>http://localhost:4000/2021/04/02/why-put-anything-online</id><content type="html" xml:base="http://localhost:4000/2021/04/02/why-put-anything-online.html">&lt;p&gt;I haven’t written to this blog in &lt;em&gt;long&lt;/em&gt; while. There’s a few reasons for this.
+I made this at the tail end of two semesters of pretty much just math and CS
+courses, and desperately needed a creative outlet: now, my courseload is a good
+bit more balanced and the itch is scratched. Also, I’ve been struggling to come
+up with ideas to write about that merited being shared.&lt;/p&gt;
+
+&lt;p&gt;What could I possibly put up on the internet that would be of value to anyone? I
+don’t think what I’ve written is particularly interesting, entertaining, or
+informative to anyone who isn’t invested in me as a person. But at the same
+time, the posts I’ve written aren’t just for me - it’d be a bit strange to link
+to your dotfiles in diary. Instead, these posts have been in a middle ground:
+clearly written for an audience other than me, but that audience is not well
+defined.&lt;/p&gt;
+
+&lt;p&gt;I have two strains of thought writing this post. Firstly, that I don’t want to
+shout into the internet void simply to ‘build a brand’ or ‘market myself’. I
+read an excellent piece by Sean Blanda at 99U about the purported &lt;a href=&quot;https://99u.adobe.com/articles/55974/the-creative-worlds-bullshit-industrial-complex&quot;&gt;“Creative
+World’s Bullshit Industrial
+Complex”&lt;/a&gt;
+that got me thinking about what exactly this. Even if building a brand was part
+of my intention with this blog, how could I begin to do that without
+regurgitating learnings from elsewhere?&lt;/p&gt;
+
+&lt;p&gt;Secondly, I do write quite a bit just for myself. Most of this is frustrations
+with current events or things going on in my life, or structural changes I’d
+like to see, and the personal beliefs that underly either of those two. However,
+to be frank, I’m 21 years old and I know practically nothing. The chances that
+in 4-5 years I stand behind 100% of what I write today are slim to none - yet if
+I were to post those things today, and this blog were still around then or had
+been archived, the words attributed to me would be 100% the same then. What do I
+gain from going on the record publicly today?&lt;/p&gt;
+
+&lt;p&gt;Journalists and politicians write publicly all the time, but with purpose. It
+comes back to bite them in the ass regularly, but the risk:reward makes sense
+for them – communication is integral to their careers. People in both of those
+roles, though politicians much more so, often can’t afford to change their
+positions when presented with new information. The expectation is that they have
+thought this stuff out so well, and so thoroughly, and that they stand behind
+their beliefs so strongly, that any shift in opinion needs to have a great deal
+of impetus. So the question is, would that be (to any extent) my fate were I to
+publish what I’m thinking today?&lt;/p&gt;
+
+&lt;p&gt;These two concerns point towards a potential test for whether to post something:
+Is it original or transformative, and is it objective or low stakes? Let’s
+demonstrate this with some examples.&lt;/p&gt;
+
+&lt;p&gt;Say I were to post about implementing a pre-existing algorithm in a niche
+programming language. This is reasonably original, since if it has been done
+before, it is likely not a very common project. It’s also objective - the code
+either works or it doesn’t. If it doesn’t, then that’s embarrassing perhaps, but
+fixable with relative ease.&lt;/p&gt;
+
+&lt;p&gt;Say I were to post a collection of thoughts on the positions of a politician.
+This could very well be original, but it’s not objective. Is it low stakes?
+Maybe! Depends on what the positions are and what my thoughts are. Revealing
+myself as a radical communist (which I am not), for example, could be a very
+bad thing were I ever to run for office or attempt to exist in a political
+sphere. Providing my take on gun control may not win me any friends, but it also
+likely won’t get me fired. What is difficult here is that it’s not easy to gauge
+how others may react to what I have to say. This sort of post would be a
+judgement call.&lt;/p&gt;
+
+&lt;p&gt;Say, for a final example, that I were to get on here and repackage the
+entrepreneurship advice I’ve collected from listening to &lt;em&gt;The Knowledge Project&lt;/em&gt;
+(big plug for that podcast, by the way). That’s not original, and likely not
+transformative either. While it may be low stakes to post something like that,
+it’s intellectually lazy, and were I to do it enough, I’d start to sound like
+any one of the workfluencer grifters on LinkedIn.&lt;/p&gt;
+
+&lt;p&gt;All of this is to say, I’m probably overthinking the burden of having a personal
+blog. Regardless, since I’m the sort of person that likes a procedure to follow,
+I’m going to try to stick with that test of what deserves to be thrown up on the
+internet and attached to my name.&lt;/p&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><summary type="html">I haven’t written to this blog in long while. There’s a few reasons for this. I made this at the tail end of two semesters of pretty much just math and CS courses, and desperately needed a creative outlet: now, my courseload is a good bit more balanced and the itch is scratched. Also, I’ve been struggling to come up with ideas to write about that merited being shared.</summary></entry><entry><title type="html">Quick Post: Some Good News</title><link href="http://localhost:4000/2020/09/01/some-good-news.html" rel="alternate" type="text/html" title="Quick Post: Some Good News" /><published>2020-09-01T00:00:00-04:00</published><updated>2020-09-01T00:00:00-04:00</updated><id>http://localhost:4000/2020/09/01/some-good-news</id><content type="html" xml:base="http://localhost:4000/2020/09/01/some-good-news.html">&lt;p&gt;Hi! This here is what I’m going to start calling “quick posts”: just sharing
+some things I’ve found interesting lately with a minimal amount of commentary.
+Enjoy!&lt;/p&gt;
+
+&lt;h3 id=&quot;africa-declared-free-from-polio-from-nature&quot;&gt;“Africa Declared Free from Polio”, from &lt;em&gt;Nature&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.nature.com/articles/d41586-020-02501-3?utm_source=Nature+Briefing&amp;amp;utm_campaign=a0e94d745b-briefing-dy-20200901&amp;amp;utm_medium=email&amp;amp;utm_term=0_c9dfd39373-a0e94d745b-44568457&quot;&gt;link&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;The polio vaccine was probably the first example of a vaccine that I was taught
+about in a history class. The African continent being officially declared free
+of the wild poliovirus is a huge step forward and an awesome piece of news for
+the inbox inundated with less fortunate virus news.&lt;/p&gt;
+
+&lt;p&gt;There’s some fascinating bioethics that was involved in the process as mentioned
+in the article. There’s been a lot of thought lately about how different
+cultures handle public health, related to perceptions of authority,
+communication modalities, and dozens of other sociological concepts. I
+definitely want to learn more about how the practice of medicine depends on
+scale and community.&lt;/p&gt;
+
+&lt;p&gt;One last thought: one of the mentioned barriers to eradication was attitudes
+towards vaccinations. Interestingly enough, the form of polio still left in most
+of the world is vaccine-derived, the result of oral-drop vaccines containing
+weakened strains mutating in the body and resulting in illness. The solution to
+this is more widespread immunization, which is awfully counterintuitive. I
+wonder if there will be lessons to be learned from the fight against polio to
+apply to the eventual coronavirus vaccine drive.&lt;/p&gt;
+
+&lt;h3 id=&quot;the-mosquito-strategy-that-could-eliminate-dengue-from-nature&quot;&gt;The mosquito strategy that could eliminate dengue, from &lt;em&gt;Nature&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.nature.com/articles/d41586-020-02492-1?utm_source=Nature+Briefing&amp;amp;utm_campaign=a0e94d745b-briefing-dy-20200901&amp;amp;utm_medium=email&amp;amp;utm_term=0_c9dfd39373-a0e94d745b-44568457&quot;&gt;link&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;This is just super cool. Researchers interested in dengue fever started working
+in the 90’s on creating mosquito populations which carry a bacteria that
+prevents the spread of viruses including dengue virus. There have been a variety
+of studies and tests done before, but a study begun in Indonesia in 2016 has
+just wrapped up and published results that show an incredible reduction in
+dengue fever as a result of releasing these mosquitos in cities. The data is as
+yet unpublished, and while there is still much to be discovered from the study
+many epidemiologists are extremely excited about the potential of the technique.
+Some economists have said it will pay for itself from reduced healthcare costs
+and avoided lost working hours as a result of infection. The WHO still needs to
+reccomend the intervention, but lots of people have high hopes, and now some of
+the evidence to justify it.&lt;/p&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><summary type="html">Hi! This here is what I’m going to start calling “quick posts”: just sharing some things I’ve found interesting lately with a minimal amount of commentary. Enjoy!</summary></entry><entry><title type="html">Covid Post, II</title><link href="http://localhost:4000/2020/08/30/COVID-post-two.html" rel="alternate" type="text/html" title="Covid Post, II" /><published>2020-08-30T00:00:00-04:00</published><updated>2020-08-30T00:00:00-04:00</updated><id>http://localhost:4000/2020/08/30/COVID-post-two</id><content type="html" xml:base="http://localhost:4000/2020/08/30/COVID-post-two.html">&lt;p&gt;It’s been nine days since I tested positive for COVID-19, and since I’ve been
+completely asymptomatic, that means tomorrow I’m allowed back on campus. The
+university isn’t retesting, and in fact will now exclude me from surveillance
+testing, meaning I won’t be retested unless I’m showing symptoms.&lt;/p&gt;
+
+&lt;p&gt;There’s two findings about COVID tests that inform my point of view on that
+policy. First, most test methods are very specific but not very sensitive. 
+That means it’s much more likely to give a false negative than a false positive.
+However, and this is the second finding, a positive test merely states that you 
+have genetic material from the virus in the nose and throat. The test results
+are a simple yes/no on if such material is present, even if it is in very small
+amounts. This means many people who test positive may not be contagious. Moving
+to the armchair for a second, I wonder if that may be a part of the perception
+that most cases are asymptomatic. Of course, it can’t explain all the findings
+about how COVID-19 affects different individuals, but it’s interesting
+nonetheless.&lt;/p&gt;
+
+&lt;p&gt;Here are links to the sources for those two findings:
+&lt;a href=&quot;https://www.health.harvard.edu/blog/which-test-is-best-for-covid-19-2020081020734&quot;&gt;accuracy&lt;/a&gt;
+&lt;a href=&quot;https://www.nytimes.com/2020/08/29/health/coronavirus-testing.html&quot;&gt;meaning of positive tests&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;thoughts-on-isolation&quot;&gt;Thoughts on Isolation&lt;/h3&gt;
+&lt;p&gt;The first few days of being in isolation weren’t a big deal at all, really. I
+live alone, I had plenty of food on hand, and all of my classes were available
+online to me in the first week anyways. It only really started to grate about
+halfway through. I found myself getting restless, walking around in circles and
+sweeping constantly looking for excuses to be standing up. In my first two years
+of college, I picked up a habit of not really relaxing very often. Rather than
+moving between being fully ‘on’ and relaxing, I spent most of my time at some
+medium level of stress and anxiety. That made it harder to sustain intense focus
+for short periods of time. Instead, I’d constantly find myself flitting between
+assignments and readings and etc., spending way too much time just thinking
+about how much I had to do. Being isolated brought some of that back to me:
+I actually reached the point where I had all of my assignments and readings and
+etc. done, and couldn’t shake a feeling of guilt when I took time off to watch
+Netflix or play some video games. Normally, spending time with my friends
+releases me from that guilt. For whatever reason, when I’m by myself I always
+feel like I should be getting &lt;em&gt;something&lt;/em&gt; done.&lt;/p&gt;
+
+&lt;p&gt;I’m  trying to combat that by scheduling more intentionally. For example, after
+classes were done on Thursday I wrote a list of what I wanted to get done that
+night. I worked on some of it, then took a break guilt-free knowing I had
+plenty of time to get the rest of it done after 7. The work got done, but then I
+started to feel like maybe I had been underambitious in my todo list. There are
+certainly some kinks to work out, especially once I start getting long-term
+projects assigned.&lt;/p&gt;
+
+&lt;p&gt;Moving away from that conversation, I started to fully appreciate the reality of
+living in a studio apartment. Since everything’s always in your immediate
+vicinity, I’ve been forced to clean more often than I might have were the
+kitchen or bedroom not in view. I honestly like that part of it – having a
+smaller space makes it easier to intentionally use all parts of it. At this
+point, I’m shopping for some art for my one blank wall, but otherwise I’m happy
+with my first real place. Having a space I like and that was already set up for
+remote activity made isolation much easier than it would have been if I were at
+home with my family or if I had roommates.&lt;/p&gt;
+
+&lt;h3 id=&quot;fun-quarantine-activites-part-two&quot;&gt;Fun Quarantine Activites, Part Two&lt;/h3&gt;
+&lt;p&gt;I baked more! I made a bunch of cookies and proudly showed my mom and grandma,
+and today I made a coffee cake again. There’s definitely something to be said
+for varying the type of work you do throughout the day – I look forward to
+whisking and measuring and the sort because it’s so menial when compared to
+doing my physics or probability homework, for example. A nice mix of reading,
+writing, thinking, and just moving around is becoming an apparent necessity for
+me, as I’m sure it is for many others.&lt;/p&gt;
+
+&lt;p&gt;I also have been much more consistent about doing some sort of exercise every
+day, funnily enough. The lack of walking made the idea of giving my legs
+something to do much more attractive than it typically is. It also gave me a
+good way to take a measured break - 20-30 minutes of exercise and stretching,
+then 10-15 to shower and change is a pretty consistent way to wind down from
+being in class. The moving around between sessions at the computer seems to do
+something comparable to walking between class and the library and home like I
+got used to last year.&lt;/p&gt;
+
+&lt;h3 id=&quot;closing-thoughts&quot;&gt;Closing Thoughts&lt;/h3&gt;
+&lt;p&gt;I know I teased talking about Algorithms and Accounting last time, but
+unfortunately the first week of class is never the most exciting one to write
+about (unless you’re particularly into syllabuses). I also joked last time about
+the language often used to describe what’s going on in the world right now. What
+I think I’ve realized is that much of what is happening, at least for me, has
+some amount of precedent. While going to class on zoom is pretty different from
+in person, the content of Intro to Algorithms hasn’t changed at all. While the
+modality is different, the meat of the matter is exactly the same. Learning to
+work within a new context always has a ramp-up time, but perhaps because I’m a
+college student, adapting to the new honestly just isn’t too bad. Perhaps
+because I don’t have the well-defined long term vision of someone outside of
+their early 20’s, I’m not as shaken by what the future will look like given
+today. I currently have a lot to be excited about in the second half of my
+college career and beyond. A pretty important part of the second half of college
+is developing some of that long term vision, both for myself and the corner of
+the world in which I belong. With all that in mind, it’s hard not to be excited.&lt;/p&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><summary type="html">It’s been nine days since I tested positive for COVID-19, and since I’ve been completely asymptomatic, that means tomorrow I’m allowed back on campus. The university isn’t retesting, and in fact will now exclude me from surveillance testing, meaning I won’t be retested unless I’m showing symptoms.</summary></entry><entry><title type="html">COVID Posts, I</title><link href="http://localhost:4000/2020/08/22/COVID-post-one.html" rel="alternate" type="text/html" title="COVID Posts, I" /><published>2020-08-22T00:00:00-04:00</published><updated>2020-08-22T00:00:00-04:00</updated><id>http://localhost:4000/2020/08/22/COVID-post-one</id><content type="html" xml:base="http://localhost:4000/2020/08/22/COVID-post-one.html">&lt;p&gt;Seemingly on cue, as soon as I started writing weekly posts I ended up in the
+final sprint of my summer research project. That took away most of the time for
+writing I had each week, so I neglected to update the blog until today.&lt;/p&gt;
+
+&lt;p&gt;Which may not be such a bad thing, seeing as I have much more of interest going
+on now. On Thursday of this past week, I got tested for COVID-19 by my
+university. On Friday of this past week, I got a call from my university letting
+me know I tested positive, which really put a damper on my plans to start
+running more often which totally would have come to fruition otherwise.&lt;/p&gt;
+
+&lt;p&gt;Jokes aside, it was suggested that I try keeping a journal about my isolation
+experience. While my case came out of nowhere and is entirely asymptomatic so
+far, at a minimum I can talk your ear off about podcasts and Netflix.&lt;/p&gt;
+
+&lt;h2 id=&quot;summary-so-far&quot;&gt;Summary So Far&lt;/h2&gt;
+&lt;p&gt;I woke up earlier than normal on Thursday to walk to the testing site before it
+got too crowded. The line was still about half an hour long, but it went by
+uneventfully. When I got back to my apartment I just went about my day as
+normal, finishing off the coffee cake I had made the week before and playing
+some video games in my last few days before classes start back up.&lt;/p&gt;
+
+&lt;p&gt;I got the call from my university’s Health Services department the next day,
+maybe ~26 hours after being tested. It came as a total surprise – I’ve only
+been around maybe three people for any extended time in the past two weeks, and
+have only gone out for the occasional Target run. As mentioned above, I feel
+totally fine. Regardless, the positive test means spending at minimum 10 days
+isolated from everyone else.&lt;/p&gt;
+
+&lt;p&gt;I generally think my university is handling the situation well. There have been
+some hiccups – waiting till two weeks before class began to announce that half
+of the undergrads can’t live on campus was a bit of a stinker. However, the
+testing procedure and the choices about how to deliver classes have generally
+been sensible from a (more or less) layman’s point of view. I wonder how the
+experience has been from the faculty’s side.&lt;/p&gt;
+
+&lt;p&gt;I’m getting daily calls and surveys about symptoms from the university. Besides
+just physical health, they’re asking about how I’m holding up mentally and once
+classes start there’s a vague promise of academic support. I emailed my
+professors who I might have seen in person to let them know, and it didn’t
+present any problems thankfully. All in all, it’s been at most mildly
+inconvenient so far.&lt;/p&gt;
+
+&lt;p&gt;I also heard from the Cleveland Department of Public Health. They asked me a
+bunch of questions about where I’ve been in the past two weeks, what symptoms
+I’m feeling, and the like. They also sent me an email that included citations of
+the specific Cleveland and Ohio laws that require me to isolate for the next 10
+days, and at least until 72 hours pass symptom-free. Otherwise police may escort
+me back to my home, if they somehow identify me, which is a fun stipulation.
+Interestingly enough, they actually require me to get clearance before
+discontinuing isolation by calling a number which may take 24-48 hours to get
+back to me.&lt;/p&gt;
+
+&lt;p&gt;Anyways, the day I got the news I spent about 2-3 hours on the phone between my
+parents, the people I’d seen in the last week, and a prescheduled meeting on
+which I listened to the iPhone noise for getting a call while you’re on a call
+what seemed like half a dozen times. As a 2000’s baby, that probably tripled my
+average monthly time on a phone call.&lt;/p&gt;
+
+&lt;p&gt;A final note about the “experience of COVID (at least, for a healthy
+20-year-old)”: I felt oddly guilty about having the positive diagnosis and
+having to call all my contacts and parents and tell them I have it. I haven’t
+been around any crowds or really spent much time with friends since March; most
+of my time out of the house has been socially distanced grocery runs. It’s not
+as though I’ve been an idiot about it, but regardless I felt bad about
+inconveniencing my friends. I suppose I would expect to feel frustrated having
+gotten a positive test despite spending the past few months relatively isolated,
+but that hasn’t been among my reactions so far. And despite all the reports of
+everything from mild flu symptoms to permanent
+&lt;a href=&quot;https://www.theatlantic.com/health/archive/2020/08/long-haulers-covid-19-recognition-support-groups-symptoms/615382/&quot;&gt;disabilities&lt;/a&gt;  as a result of the
+virus, I’m not really scared either. Perhaps this is a side effect of the
+relatively good end to the summer I’m having otherwise: I was elected to a new
+position in my fraternity, I got an internship lined up for next summer, and my
+summer research went pretty well, all things considered. I’ve been having one of
+the best periods of my college years recently, and I may have some degree of
+blinders on towards bad news as a result. Only time will tell.&lt;/p&gt;
+
+&lt;h3 id=&quot;fun-quarantine-activities&quot;&gt;Fun Quarantine Activities&lt;/h3&gt;
+&lt;p&gt;Anyways, taking a 180 degree turn, let’s talk about banana bread! I made some on
+Friday after getting the test results. I only had two bananas, so it’s more like
+a banana-flavored cake-like bread thing. Regardless, anything with that much
+brown sugar and butter can’t be bad. It pairs really well with my cold brew for
+breakfast. Next I’m looking to make some chocolate chip cookies, if I can guilt
+one of my friends into bringing groceries to my door. Will update on that front
+soon!&lt;/p&gt;
+
+&lt;p&gt;Otherwise, the timing is basically perfect with the LCS/LEC Playoffs series.
+I’ve been following pro League of Legends for nearly the lifetime of the eSport,
+and with all the time on my hands I’ve been able to watch the North American,
+European, AND Chinese playoffs matches this year. It’s interesting seeing the
+relative levels of precautions in the three regions: in China, the teams and the
+broadcast squads are all in studio, just without crowds; European teams are
+playing from home in Berlin, but the broadcast team is running from the studio
+on a skeleton crew; and NA is being ran entirely remote out of Los Angeles. If
+you’re looking to get into it, the Worlds tournament is taking place in China in
+October. Fun stuff.&lt;/p&gt;
+
+&lt;p&gt;I’ve also been rewatching &lt;em&gt;Rhythm and Flow&lt;/em&gt; on Netflix, which at minimum has
+been a better competition show than &lt;em&gt;American Idol&lt;/em&gt; or &lt;em&gt;The Voice&lt;/em&gt; due to having
+much more interesting contestants. I think that comes out of the nature of hip
+hop music – it’s as much about having a unique voice and story as it is about
+being good at the technical parts of music. All the contestants are performing
+new, original music every episode. It’s an awesome show if you have any interest
+in the music.&lt;/p&gt;
+
+&lt;h3 id=&quot;closing-thoughts&quot;&gt;Closing Thoughts&lt;/h3&gt;
+
+&lt;p&gt;I’ll plan on posting again sometime early next week after classes have started.
+With any luck, it’ll be a largely boring update on Algorithms and Accounting
+classes instead of a sudden turn for the worse. Fingers crossed!&lt;/p&gt;
+
+&lt;p&gt;P.S. I’m proud of myself for writing an entire post about COVID without saying
+“unprecendented”, “Now more than ever”, or “our new normal” even once. Hopefully
+you appreciate it, too.&lt;/p&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><summary type="html">Seemingly on cue, as soon as I started writing weekly posts I ended up in the final sprint of my summer research project. That took away most of the time for writing I had each week, so I neglected to update the blog until today.</summary></entry><entry><title type="html">What I’m Reading this Week, Vol. 2</title><link href="http://localhost:4000/readings/2020/07/26/readings2.html" rel="alternate" type="text/html" title="What I’m Reading this Week, Vol. 2" /><published>2020-07-26T00:00:00-04:00</published><updated>2020-07-26T00:00:00-04:00</updated><id>http://localhost:4000/readings/2020/07/26/readings2</id><content type="html" xml:base="http://localhost:4000/readings/2020/07/26/readings2.html">&lt;h2 id=&quot;similarly-quick-forward&quot;&gt;(Similarly Quick) Forward&lt;/h2&gt;
+&lt;p&gt;I set out to write a post like this every Friday, so of course the second week
+in I had a massive influx of work topped by about 6 hours in Zoom meetings. Oh
+well! One of the perks of a personal project is that it’s totally under my
+control: convenient when other responsibilities get in the way.&lt;/p&gt;
+
+&lt;p&gt;To try to make up for the short delay, I’m going to challenge myself to write
+about one of my favorite “Cool Math Things” this week, the Cantor Set. Variety
+is the spice of life and blogs and all that.&lt;/p&gt;
+
+&lt;h3 id=&quot;vaccines-stop-diseases-safely---why-all-the-suspicion&quot;&gt;Vaccines stop diseases safely - why all the suspicion?&lt;/h3&gt;
+&lt;h4 id=&quot;joan-donovan&quot;&gt;Joan Donovan&lt;/h4&gt;
+
+&lt;p&gt;The &lt;em&gt;Nature&lt;/em&gt; newsletter is a great source for quick science readings, and for
+the past few months, of coronavirus updates from scientists (rather than
+journalists and politicians). This piece is a review of a book by Heidi Larson,
+&lt;em&gt;Stuck: How Vaccine Rumours start - And Why They Don’t Go Away&lt;/em&gt;. The problem of
+vaccine rejection is a multidisciplinary, community one. Since a vaccine isn’t
+just for yourself, but has important ramifications for the health of all those
+around you, public officials have a vested interest in collective vaccination.
+The observation that having a choice to vaccinate is a matter of not only
+information and disinformation, but of liberty and dignity, is an excellent
+nuance on a “debate” that is often the product of inflammatory Facebook posts.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Vaccine hesitancy is a problem of dignity as much as of the abundance of
+falsehoods: individuals want to have their choices respected, amid growing
+distrust in authority.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;The role that social media plays is fascinating as well. Social media and the
+internet are both incredibly liberating in that they empower the individual to
+reach large numbers of people, while allowing users to get content from other
+users. But, in the opposite vein, social media pushes groupthink in the way that
+posts are selected to be viewed by algorithms based on popularity. Tack on the
+particular gimmick of each site (brevity on Twitter, images or video on
+Instagram, and group associations on Facebook) and each gets their own way to
+game the system in interesting and potentially harmful ways.&lt;/p&gt;
+
+&lt;p&gt;Read the article &lt;a href=&quot;https://www.nature.com/articles/d41586-020-02192-w?utm_source=Nature+Briefing&amp;amp;utm_campaign=a0e80cbbed-briefing-dy-20200724&amp;amp;utm_medium=email&amp;amp;utm_term=0_c9dfd39373-a0e80cbbed-44568457&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;how-capitalism-drives-cancel-culture&quot;&gt;How Capitalism Drives Cancel Culture&lt;/h3&gt;
+&lt;h4 id=&quot;helen-lewis&quot;&gt;Helen Lewis&lt;/h4&gt;
+
+&lt;p&gt;Moving past the clickbait-y title for a moment, this article gives a compelling
+explanation of some of the trends which make up “cancel culture”. Lewis’s “Iron
+Law of Woke Capitalism”, that “Brands will gravitate toward low-cost, high-noise
+signals as a substitute for genuine reform, to ensure their survival” definitely
+appeases the cynic inside all of us. It explains the football team in Washington
+and the various brands with new, all-black or rainbow logos. While I am a big
+believer in the fact that language matters - how we communicate impacts
+ourselves in others - it’s hard not to roll your eyes at a lot of what is done
+to catch consumer’s attention. I also appreciated her assessment of the
+popularity of &lt;em&gt;White Fragility&lt;/em&gt; a book supposedly about racism which is, in
+fact, a book about white people, for white people, written by a white women.
+John McWhorter has a piece in &lt;em&gt;The Atlantic&lt;/em&gt; recently where he claims the book
+condescends on people of color in the way it demands its readers walk on
+eggshells around topics of racism and social injustice.&lt;/p&gt;
+
+&lt;p&gt;The final section, where Lewis disambiguates economic and social radicalism, is
+a wonderful dichotomy for analysing positions on racism. It reminds me of a
+question I first encountered in Peggy McIntosh’s seminal essay, &lt;em&gt;White
+Privilege: Unpacking the Invisible Knapsack&lt;/em&gt;: in order to create equality,
+whether between genders or races or levels of ability, do the dominant groups
+need to give up some of their power? There are some great conversations to be
+had about what exactly constitutes “power” and “privilege”. While many of the
+writers at &lt;em&gt;The Atlantic&lt;/em&gt; are progressives, I appreciate the level of nuance
+given to contentious social debates like this one.&lt;/p&gt;
+
+&lt;p&gt;Read the articles by &lt;a href=&quot;https://www.theatlantic.com/international/archive/2020/07/cancel-culture-and-problem-woke-capitalism/614086/&quot;&gt;Lewis&lt;/a&gt;, &lt;a href=&quot;https://www.theatlantic.com/ideas/archive/2020/07/dehumanizing-condescension-white-fragility/614146/&quot;&gt;McWhorter&lt;/a&gt;, and &lt;a href=&quot;https://www.racialequitytools.org/resourcefiles/mcintosh.pdf&quot;&gt;McIntosh&lt;/a&gt; at the links on their
+names.&lt;/p&gt;
+
+&lt;h3 id=&quot;something-completely-different-now-the-cantor-set&quot;&gt;Something completely different now: The Cantor Set&lt;/h3&gt;
+
+&lt;p&gt;I promised I’d write a little something about one of my favorite math topics,
+the Cantor Set. It’s a great example of one of objects of curiousity which I
+love in math, namely, the concepts of finite and infinite and their interplay. I
+first heard about the Cantor Set from my advisor, Dr. Peter Thomas, during an
+office hours discussion. I’m going to walk through the construction of the
+ternary set, then talk about some of its coolest properties.&lt;/p&gt;
+
+&lt;p&gt;Imagine the real number line as you were first taught it in elementary school.
+We have at the center the number zero, with all positive numbers in increasing
+order on its right, and all negative numbers in decreasing order on its left.
+There are are infinite amount of numbers in each direction. Imagine walking
+along this line in either direction: you’d never stop walking. Alternatively,
+imagine trying to write down every whole number: 0, 1, 2, 3, 4, 5, 6, …&lt;/p&gt;
+
+&lt;p&gt;You’ll never finish.&lt;/p&gt;
+
+&lt;p&gt;But, for now, we only care about the numbers between 0 and 1. That includes
+numbers like 0.25 and 3/4, as well as numbers like half the square root of two
+and pi over four. These are all equally valid real numbers who lay between 0 and
+1 in value.&lt;/p&gt;
+
+&lt;p&gt;What is the length of this interval, from 0 to 1? It’s a more complex question
+than it may seem at first. Often, mathematicians define length as the difference
+between the furthest apart points: 1 - 0 = 1. This is a sensible measurement
+system. In the real world, you may say you’re six feet tall, because if you
+stand next to a measuring tape, the difference between what it reads at the
+bottom of your foot and its reading at the top of your head is six feet. We also
+naturally talk about distance as ratios - you may say your commute is a 20
+minute car ride, and getting to the park takes about half that time. Therefore,
+your commute is twice as long as the trip to the park.&lt;/p&gt;
+
+&lt;p&gt;What we will aim to do with the interval from 0 to 1 is use this concept of
+ratios to try to ‘cut out’ all of the numbers in this interval. First, cut the
+set into thirds. Let $p=[0,1]$, which is a notation for defining $p$ as the set
+of all numbers between 0 and 1, including 0 and 1. Now, let $p_1 = [0,1/3)$,
+$p_2 = (1/3, 2/3)$, and $p_3 = (2/3, 1]$ where the parentheses signify excluding
+the endpoint.&lt;/p&gt;
+
+&lt;p&gt;It is fairly obvious that $p_1 + p_2 + p_3 = p$, that is, if we consider all
+three of these sets $p_i$ we get all of the points that are in $p$.&lt;/p&gt;
+
+&lt;p&gt;Now, define a set $q = p_1 + p_3$. That is, $q$ is just $p=[0,1]$ without the
+middle third. You would agree, of course, that this set is ‘smaller’ than our
+original set $p$, since all of it’s numbers are in $p$ but not all of $p$ is in
+$q$. This is a different notion of size than before – now we are interested in
+how many things are in a set, rather than just the distance between its furthest
+points. This is perhaps an even more natural way to think about things: we count
+apples in a basket and say there are 10 apples, or see another basket with 5
+pears and say there are more apples than pears, or even that there are twice as
+many apples as there are pears in the baskets. We’ve simply moved to a more
+abstract space, where we consider an infinite number of objects at a time. Here,
+the objects are individual numbers, also called ‘points’ on the real number
+line. Observe that while there is a clear ‘next step’ in counting discrete
+objects in real life. If you have 5 apples, the smallest change you can make to
+that quantity is to add or subtract exactly one apple. You can’t take away a
+third of apple. However, that’s what we just did with our set of numbers between
+0 and 1.&lt;/p&gt;
+
+&lt;p&gt;Now, repeat this process of chopping out the middle there ad infinitum. So we go
+from $[0,1/3) + (2/3, 1)$ to $[0,1/9) + (2/9,3/9) + (6/9,7/9) + (8/9,1]$, and so
+on, so forth. How many numbers are left?&lt;/p&gt;
+
+&lt;p&gt;Well, we certainly still have 0 and 1,, so we have at least two numbers. It can
+also be shown that we have all numbers which can be expressed of the form $x =
+c_1/3 + c_2/3^2 + … + c_n/3^n + …$, where $n$ is a natural number (the
+naturals are all whole numbers 1 and above, the numbers which make sense to
+count with) and where $c_i$ is either 0 or 2 for all $n$. Here’s an image from
+Wolfram Mathworld:
+&lt;img src=&quot;/assets/CantorSet_900.png&quot; alt=&quot;Cantor Set&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Without giving the detailed, analysis-based proofs, that statement above can be
+shown as well as the fact that it describes an infinite amount of numbers
+between 0 and 1. The difference between the largest and smallest elements in our
+final set is still 1, but there are clearly much, much fewer points than started
+with. Certainly, there are more points which were discarded than there are left.
+Regardless, we have an infinite number of points remaining – just a “smaller”
+infinity than those discarded. Of course, we also started with a “larger”
+infinity of points than is either our final set or all of our discarded points.&lt;/p&gt;
+
+&lt;p&gt;This, as it turns out, satisfies a quite a few set descriptions in mathematics.
+The Cantor Set, as constructed above, is totaly disconnected, perfect, nowhere
+dense, closed, compact, and of measure zero. Those of you with formal
+mathematics training are smiling along knowingly, and for the rest of you, well,
+none of that needs to be meaningful to appreciate the beauty of the set. How can
+you take infinity away from infinity, and be left with infinity? How do we
+quantify this set – how large is it, how long is it, how does it compare in
+various ideas of size with other sets of objects?&lt;/p&gt;
+
+&lt;p&gt;It’s interesting, as well, to think about jumping around between the points in
+the set. What is the next biggest number after 0? Is it 1? No, because $0 &amp;lt; 1/2
+&amp;lt; 1$. So is it $1/2$? No, because $0 &amp;lt; 1/4 &amp;lt; 1/2$. Continue ad infinitum, and
+you begin to recognize a similarity with the construction of the Cantor Set.
+Namely, there are no two points which are ‘next to each other’ in the final set,
+since in the process of pruning down the set, we always remove the middle third
+of any subinterval of points.&lt;/p&gt;
+
+&lt;p&gt;In other words, if given a point in $[0,1]$, we could tell you whether or not it
+is in the Cantor Set by seeing if it can be written with the series expansion
+above, $x = c_1/3 + c_2/3^2 + …$. However, we could not then write down the
+next largest number in the set. This describes infinity.&lt;/p&gt;
+
+&lt;p&gt;There’s a ton of other cool stuff about the Cantor Set, like how the
+construction we did (called the Cantor Ternary Set) describes all numbers
+between 0 and 1 which can be written in ternary without using 1’s. However, what
+I first found so fascinating about it is the ideas of infinity encapsulated
+within. That fundamental idea of always being able to find a closer value, even
+in a set which seems to be so small, is fascinating and beautiful.&lt;/p&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><category term="readings" /><summary type="html">(Similarly Quick) Forward I set out to write a post like this every Friday, so of course the second week in I had a massive influx of work topped by about 6 hours in Zoom meetings. Oh well! One of the perks of a personal project is that it’s totally under my control: convenient when other responsibilities get in the way.</summary></entry><entry><title type="html">What I’m Reading this Week, Vol. 1</title><link href="http://localhost:4000/readings/2020/07/17/readings.html" rel="alternate" type="text/html" title="What I’m Reading this Week, Vol. 1" /><published>2020-07-17T00:00:00-04:00</published><updated>2020-07-17T00:00:00-04:00</updated><id>http://localhost:4000/readings/2020/07/17/readings</id><content type="html" xml:base="http://localhost:4000/readings/2020/07/17/readings.html">&lt;h2 id=&quot;quick-forward&quot;&gt;Quick Forward&lt;/h2&gt;
+&lt;p&gt;As part of a personal challenge to write and reflect more often, I’ve decided to
+start sharing some of the more interesting articles and what-not I’ve read
+recently. Revisiting all of these should ideally help me stew in the ideas more,
+since it’s all too easy to read and move on. My high school chemistry teacher
+used to talk about how learning anything requires multiple exposures – for her,
+that was a justification for constant homework and quizzes, but then she was one
+of our best science teachers. “Lifelong Learning” is a buzzword, but one I
+believe in wholeheartedly.&lt;/p&gt;
+
+&lt;p&gt;Without further ado, let’s get to it.&lt;/p&gt;
+
+&lt;h3 id=&quot;whats-the-use-of-being-a-boy-an-interview-with-douglas-a-martin&quot;&gt;&lt;em&gt;What’s the Use of Being a Boy: An interview with Douglas A. Martin&lt;/em&gt;&lt;/h3&gt;
+&lt;h4 id=&quot;by-spencer-quong&quot;&gt;By Spencer Quong&lt;/h4&gt;
+
+&lt;p&gt;I first came across &lt;em&gt;the Paris Review&lt;/em&gt; from Sarah Kay’s Poetry Rx series of
+posts. She was the convocation speaker my freshman year at Case, and I’ve been
+loosely following what she writes since. When I was in middle school we had
+about 3-4 authors visit each year, by some miracle work of our librarian. When I
+was younger I always thought I’d be an author one day, whether that would be my
+career or something I do after retirement. Reading the &lt;em&gt;Review&lt;/em&gt; has helped me
+keep up those interests even as I pursue a STEM degree at an incredibly
+pre-profesional school. But then, that’s another topic entirely.&lt;/p&gt;
+
+&lt;p&gt;The author, Douglas Martin, is as thoroughly fascinating in this interview as
+everyone with the stroke of practiced brilliance and dedication that any great
+writer has. The impulse to write following being exposed to the news cycle
+around the events which inspired to book is amazing to me - too often, I feel
+stretched in response to encountering something impactful. It’s often easier to
+lean away rather than into discomfort, but Martin describes doing exactly that.&lt;/p&gt;
+
+&lt;p&gt;Perhaps as a product of being fortunate enough to encounter so many writers at a
+young age, I love hearing about their process. Martin’s musings over giving his
+characters names is wonderfully tasteful and high level. His ultimate decision
+to prioritise relationships – “I want to look at some supposed roles within
+these positions” – seems to, in some capacity, define the book. The
+interviewer, Spencer Quong, dives into this further by asking about the use of
+the word “boy” throughout the text. Given the current discourse I find myself in
+surrounding what it means to be masculine, hearing this perspective of the
+precursive condition of boyhood was elucidating and freeing.&lt;/p&gt;
+
+&lt;p&gt;Read the article &lt;a href=&quot;https://www.theparisreview.org/blog/2020/07/14/whats-the-use-of-being-a-boy-an-interview-with-douglas-a-martin/&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;the-partially-examined-life-ep-235-judith-butlers-gender-trouble&quot;&gt;The Partially Examined Life, ep. 235: Judith Butler’s &lt;em&gt;Gender Trouble&lt;/em&gt;&lt;/h3&gt;
+&lt;h4 id=&quot;partially-examined-life-podcast&quot;&gt;Partially Examined Life Podcast&lt;/h4&gt;
+
+&lt;p&gt;I first began listening to PEL some time in high school, when I had a much more
+difficult time interpreting any of what they were saying. The podcast attempts
+to make philosophy accessible to their listeners, but never compromising real
+discussion of the material at hand. In other words, you don’t need a PhD in
+Philosophy to follow, but some background and intentional listening is needed.&lt;/p&gt;
+
+&lt;p&gt;I first encountered &lt;em&gt;Gender Trouble&lt;/em&gt; in a University Seminar class, &lt;em&gt;Many Ways
+to be a Woman&lt;/em&gt;. That was my first real introduction to feminism outside of what
+exists on Twitter, and it was incredibly eye-opening. My conception of many
+ideas about equality were expanded and given new legs by that class. Nowadays, I
+get frustrated by old friends who still make jokes about Gender Studies as
+though it isn’t a legitimate, necessary field with a role to play in our
+society. I’m begining to digress.&lt;/p&gt;
+
+&lt;p&gt;I’ve relistened to this podcast a few times, gleaning more at each go-around.
+The question of what structures we take for granted are socially constructed
+(and what the heck that actually means) are endlessly fascinating and
+informative. By rooting my understanding of what it means to be a man or a woman
+or to identify as neither in philosophical soil, it has become entrenched in a
+much more meaningful way. It isn’t just a matter of what you can and cannot say
+or think, but of identifying the impact of your words or actions in the greater
+context of our culture. While Butler is often criticized for failing to offer
+concrete action of any kind, the podcast’s hosts argue that her seminal work is
+often overinterpreted. It is not that Butler wouldn’t fight for women’s
+suffrage, for example, but that she believes that is not enough to make
+meaningful change in the face of the social constructions that define how we
+interact with each other.&lt;/p&gt;
+
+&lt;p&gt;Listen at the &lt;a href=&quot;https://partiallyexaminedlife.com/2020/02/03/ep235-1-butler-gender-trouble/&quot;&gt;link&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;the-dark-power-of-fraternities-the-atlantic&quot;&gt;“The Dark Power of Fraternities”, &lt;em&gt;The Atlantic&lt;/em&gt;&lt;/h3&gt;
+&lt;h4 id=&quot;by-caitlin-flanagan&quot;&gt;By Caitlin Flanagan&lt;/h4&gt;
+
+&lt;p&gt;I’ve been leading a reading group within my fraternity this summer to read and
+talk about social justice issues. There’s two parts to my motivation here:
+firstly, to move beyond just talking about inequality and dig into some
+writings; and secondly, to get the guys most interested in this sort of thing to
+spend more time on it and get comfortable talking to each other about it.
+Ideally, this will have a trickle-down effect in our chapter culture – if
+there’s 10 guys who will feel empowered by their knowledge and previous
+conversations to call out bad behavior or explain a concept to someone, that
+betters our whole community.&lt;/p&gt;
+
+&lt;p&gt;This article in particular is an absolutely amazing deep dive into the forces
+and politics at play in Greek Life on college campuses. Some of what Flanagan
+discusses, like the FIPG’s and the complicated web of insurance-related policies
+that exist in the fraternity world, are realities we have grown too comfortable
+with on our campus. An excellent quote from the article:&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;Are fraternities acting in an ethical manner, requiring good behavior and
+punishing poor decisions? Or are they keeping a cool distance from the mayhem,
+knowing full well that it occurs with regularity?&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;This is especially vital reading for me as a member of my fraternity’s national
+leadership. There is a great deal of work to be done for our members, but there
+is also a great deal of awareness to be raised and actions to be taken for the
+campus communities that greek chapters exist within.&lt;/p&gt;
+
+&lt;p&gt;I’ve been dealing with a lot of personal reckonings lately, from my academic
+and career aspirations to my myriad associations and personal beliefs which are
+growing increasingly tenuous in our current world. I am growing increasingly
+aware by the day of the breadth and depth of work necessary if I am to be the
+kind of person I have always wanted and believed to be. It’s both a
+nervewracking and exciting experience, as difficult as anything worth doing is.&lt;/p&gt;
+
+&lt;p&gt;I strongly recommend reading this &lt;a href=&quot;https://www.theatlantic.com/magazine/archive/2014/03/the-dark-power-of-fraternities/357580/&quot;&gt;one&lt;/a&gt;.&lt;/p&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><category term="readings" /><summary type="html">Quick Forward As part of a personal challenge to write and reflect more often, I’ve decided to start sharing some of the more interesting articles and what-not I’ve read recently. Revisiting all of these should ideally help me stew in the ideas more, since it’s all too easy to read and move on. My high school chemistry teacher used to talk about how learning anything requires multiple exposures – for her, that was a justification for constant homework and quizzes, but then she was one of our best science teachers. “Lifelong Learning” is a buzzword, but one I believe in wholeheartedly.</summary></entry><entry><title type="html">Time Management Strategies - The Eisenhower Square</title><link href="http://localhost:4000/2020/06/16/time-management-square.html" rel="alternate" type="text/html" title="Time Management Strategies - The Eisenhower Square" /><published>2020-06-16T00:00:00-04:00</published><updated>2020-06-16T00:00:00-04:00</updated><id>http://localhost:4000/2020/06/16/time-management-square</id><content type="html" xml:base="http://localhost:4000/2020/06/16/time-management-square.html">&lt;p&gt;The below is an email I sent to my fraternity chapter last semester, during the
+period where we fould ourselves stuck at home. I am the Director of Member
+Development, in charge of programming related to ‘development’, in all the forms
+that that takes, and a member of the executive board with the goal of forming a
+cohesive, growth-oriented experience across the 4 years any of our members are
+undergraduates. When the pandemic interrupted our plans for the semester, many
+of us in leadership roles adapted as best we could. I felt this was an
+interesting write-up on one of my favorite time management strategies. I include
+most of the email body below. Enjoy!&lt;/p&gt;
+
+&lt;h3 id=&quot;the-eisenhower-square&quot;&gt;The Eisenhower Square&lt;/h3&gt;
+&lt;p&gt;This is a strategy I use whenever I feel like I’ve got a lot on my plate and
+it’s going to be hard to prioritise and get it all done. 4 quick steps:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Write down everything you need to get done that you’re aware of
+    &lt;ul&gt;
+      &lt;li&gt;Homework, chores, things due in a month, test prep, etc.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Next to each item, indicate with a “U” if it’s Urgent
+    &lt;ul&gt;
+      &lt;li&gt;This depends on the size of the time. For example, a one page reflection is
+ probably only urgent when it’s due in 24 hours, but studying for a midterm is
+ probably urgent 5 days out.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Next to each item, indicate with an “I” if it’s Important
+    &lt;ul&gt;
+      &lt;li&gt;Is this meaningful to you? Does it help you achieve your goals or reflect
+your values? Are there others counting on you to do this?&lt;/li&gt;
+      &lt;li&gt;For example, MCAT review is definitely important, but daily reflections for
+class may not be to you&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Next to each item, indicate with “RN” if it can be done Right Now
+    &lt;ul&gt;
+      &lt;li&gt;Would it take you five minutes or less?&lt;/li&gt;
+      &lt;li&gt;For example, sending an email, writing up finished homework, washing your
+face, etc.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Once you’ve done that, fill out the square:
+&lt;img src=&quot;/assets/eisenhower.png&quot; alt=&quot;eisenhower&quot; /&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Right Now (RN)
+    &lt;ul&gt;
+      &lt;li&gt;Do this stuff right now! The &lt;strong&gt;quick win&lt;/strong&gt; of acomplishing something will prep
+ you to succeed all day long&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Important and Urgent (IU)
+    &lt;ul&gt;
+      &lt;li&gt;This stuff should be your &lt;strong&gt;Top Priority&lt;/strong&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Not Important, but Urgent (nIU)
+    &lt;ul&gt;
+      &lt;li&gt;Once the stuff above is done, evaluate these items. Can they be &lt;strong&gt;delegated&lt;/strong&gt;
+ or &lt;strong&gt;postponed&lt;/strong&gt;?&lt;/li&gt;
+      &lt;li&gt;If not, get them done now, too. If you get daily, small assignments for
+ example, they’ll
+ probably land here.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Important, but not Urgent (InU)
+    &lt;ul&gt;
+      &lt;li&gt;If you have extra time today, you might get to this stuff. But if not, don’t
+ sweat it!&lt;/li&gt;
+      &lt;li&gt;What’s most valuable is to &lt;strong&gt;set a schedule&lt;/strong&gt; for when you will get these
+ things done. Keep in mind due dates and size of the task.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Not Important and Not Urgent (nInU)
+    &lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;Re-evaluate&lt;/strong&gt; why this stuff made it on your list at all. Is there any value
+ here?&lt;/li&gt;
+      &lt;li&gt;Identify what value exists, and determine if this is something to &lt;strong&gt;scrap&lt;/strong&gt;,
+ something to &lt;strong&gt;schedule&lt;/strong&gt;, or something to &lt;strong&gt;reconsider&lt;/strong&gt; in some other way.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Here’s my list for today. Next to each item, I indicate with I/nI, U/nU, or RN
+for right now.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Finish 422 Homework - I,U&lt;/li&gt;
+  &lt;li&gt;Write up 422 - I,U&lt;/li&gt;
+  &lt;li&gt;Home Reading for 422 - I,nU&lt;/li&gt;
+  &lt;li&gt;read 319 Paper - I,nU&lt;/li&gt;
+  &lt;li&gt;flesh out simulations 319 - nI,nU&lt;/li&gt;
+  &lt;li&gt;practice email BAFI - Right Now&lt;/li&gt;
+  &lt;li&gt;readings BAFI - I,U&lt;/li&gt;
+  &lt;li&gt;send an email to the chapter - Right Now&lt;/li&gt;
+  &lt;li&gt;wash towels - Right Now&lt;/li&gt;
+  &lt;li&gt;clean bathroom - I,nU&lt;/li&gt;
+  &lt;li&gt;watch discrete lecture - I,nU&lt;/li&gt;
+  &lt;li&gt;watch MUTH lecture - nU,nI&lt;/li&gt;
+  &lt;li&gt;Do my taxes - I,nU&lt;/li&gt;
+  &lt;li&gt;clean desk - Right Now&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><summary type="html">The below is an email I sent to my fraternity chapter last semester, during the period where we fould ourselves stuck at home. I am the Director of Member Development, in charge of programming related to ‘development’, in all the forms that that takes, and a member of the executive board with the goal of forming a cohesive, growth-oriented experience across the 4 years any of our members are undergraduates. When the pandemic interrupted our plans for the semester, many of us in leadership roles adapted as best we could. I felt this was an interesting write-up on one of my favorite time management strategies. I include most of the email body below. Enjoy!</summary></entry><entry><title type="html">Theming KDE</title><link href="http://localhost:4000/workflow/2020/04/26/theming-KDE.html" rel="alternate" type="text/html" title="Theming KDE" /><published>2020-04-26T00:00:00-04:00</published><updated>2020-04-26T00:00:00-04:00</updated><id>http://localhost:4000/workflow/2020/04/26/theming-KDE</id><content type="html" xml:base="http://localhost:4000/workflow/2020/04/26/theming-KDE.html">&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;I was about 13 when I built my first PC with a combination of savings,
+birthday and christmas money, and help from a copious number of Youtube
+tutorials. I still remember my panic when the internet didn’t immediately work, and
+I had to run out to TigerDirect to buy a WiFi adapter (whoops!). Since then I’ve
+built about a dozen or so systems for family and friends, and found out I
+wasn’t alone - it seems to be a common beginner mistake to assume once you have
+all the parts put together, the machine should just work like a prebuilt.&lt;/p&gt;
+
+&lt;p&gt;The other side of this is the $100 cost for a Windows installation disk. Turns
+out there’s no better way to turn a 13 year old into a Linux user than to ask
+him for even more money after he’s made the biggest purchase of his life. While
+I eventually turned over the Microsoft tax (since Linux gaming support wasn’t exactly
+the best in 2013), I spent several weeks on Ubuntu 16.04 LTS, with the Gnome
+desktop environment.&lt;/p&gt;
+
+&lt;p&gt;This first foray into Linux and FOSS was pretty huge for me. While I didn’t
+understand what I was doing then, using the command line to install drivers and
+solving my own problems (while creating a good amount too!) was magical to me.
+When I left for college and got my first laptop, I immediately dual-booted it
+with Ubuntu 18.04 and Gnome.&lt;/p&gt;
+
+&lt;p&gt;This worked great for a while, and I steadily used Windows 10 less and less as I
+got more used to the configurability and ease of use of Ubuntu and gnome. When I
+started doing data science research with the Solar Durability and Lifetime
+Extension center on campus, being familiar with Linux was a huge bonus. All of
+the graduate students and PI’s used Ubuntu and KDE, and the Raspberry Pi’s we
+primarily used to connect to the University’s HPC were configured with Raspbian.&lt;/p&gt;
+
+&lt;p&gt;My laptop had a touchscreen, so I thought I was smart to be using Gnome with
+its larger UI and (in my mind) more elegant design compared to the slow,
+cluttered KDE environments I used on the HPC. But a friend of mine in the lab
+showed me his XFCE setup and how deeply customized he had made it. It was around
+this time that I switched to Manjaro just for the sake of more frequent updates
+and better driver support on my Razer Blade Stealth, and I decided to make the
+jump to KDE as well.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-setup&quot;&gt;The Setup&lt;/h2&gt;
+&lt;h3 id=&quot;global-themeplasma-style&quot;&gt;Global Theme/Plasma Style&lt;/h3&gt;
+&lt;p&gt;I use &lt;a href=&quot;https://draculatheme.com/&quot;&gt;Dracula&lt;/a&gt; as my global theme. It’s a fantastic dark color scheme, with a
+lot of nice purples and greens, but perhaps most importantly, it exists for a
+ton of applications. The dracula theme is consistent across my desktop
+environment, my firefox top bar, my vim and konsole colors, etc. For the global
+theme, I opened system settings -&amp;gt; Appearance -&amp;gt; Global Themes -&amp;gt; Get New Global
+Themes.. and searched for it. I use it for my window decorations and Plasma
+style as well, both in the Appearance tab as well in KDE’s system settings.
+&lt;img src=&quot;/assets/Screenshot_20200426_175508.png&quot; alt=&quot;global theme&quot; /&gt;
+I’ve also tried out &lt;a href=&quot;https://github.com/EliverLara/Nordic&quot;&gt;Nordic&lt;/a&gt;, which is a gorgeous, more matte option. I prefer
+Dracula, but I have no qualms recommending that one as well.&lt;/p&gt;
+
+&lt;h3 id=&quot;icons&quot;&gt;Icons&lt;/h3&gt;
+&lt;p&gt;For Icons, I use &lt;a href=&quot;https://github.com/vinceliuice/Tela-icon-theme&quot;&gt;Tela&lt;/a&gt;. I really like how well the colors here pair with
+Dracula. You can follow the link to the github for installation instructions,
+but I just went from system settings -&amp;gt; Icons -&amp;gt; Get New Icons… since that was
+easy.&lt;/p&gt;
+
+&lt;h3 id=&quot;other-fun-stuff&quot;&gt;Other Fun Stuff&lt;/h3&gt;
+&lt;p&gt;I love using virtual desktops to keep some semblance of order between my various
+assignments and classes throughout the day. Often I’ll have 4 desktops: one for
+editing assignments and reading them from Canvas, one for textbook PDF’s and
+other reference material, one for reserve/putting other classwork out of mind,
+and one for Spotify and whatever else is running in the background. I already
+use hotkeys to open applications and for whatever is running, so having keys to
+switch between desktops can get tricky. I much prefer the MacOS approach of
+having decent touchpad support, but this isn’t built into KDE/Manjaro.&lt;/p&gt;
+
+&lt;p&gt;I use &lt;a href=&quot;https://github.com/bulletmark/libinput-gestures&quot;&gt;libinput-gestures&lt;/a&gt; for this. Simply put, it lets you configure your
+touchpad to recognize gesture inputs however you’d like. I followed it’s install
+guide to a T, installing the library from the AUR. I just use the defaults to
+3-finger swipe between virtual desktops, but there’s a ton of config options
+detailed on the github.&lt;/p&gt;
+
+&lt;p&gt;On the desktop, I use &lt;a href=&quot;https://github.com/KDE/latte-dock&quot;&gt;latte-dock&lt;/a&gt;, and specifically the Plasma layout. I’ve
+tried it at the top and bottom, and prefer having as small a GUI as possible to
+help me focus on whatever I’m working on. The bar is the least intrusive, most
+intuitive metaphor for me, since I often find using pop-up panels gets annoying
+when mousing around the screen. YMMV, of course.&lt;/p&gt;
+
+&lt;h4 id=&quot;command-line-goodies&quot;&gt;Command Line Goodies&lt;/h4&gt;
+&lt;p&gt;I really, really love the aesthetic and convenience of [yakuake]. It comes by
+default on Manjaro KDE and makes interacting with the command line super easy. I
+use Ctrl + Tab to bring it up, and F12 to fullscreen it (both set in System
+Settings -&amp;gt; Shortcuts). If I’m coding alongside a tutorial or something like
+that, I’ll split screen with Konsole, but usually I prefer the drop-down.&lt;/p&gt;
+
+&lt;p&gt;Within the console, I use &lt;a href=&quot;https://github.com/tmux/tmux&quot;&gt;tmux&lt;/a&gt; to organize my workspace. Tmux is a terminal
+multiplexer, which basically lets you interact with multiple instances of the
+command line in one window. I might use 10% of its capabilities – it’s a hugely
+useful app – but I can’t get by without it now. Ham Vocke has an awesome intro
+to it on &lt;a href=&quot;https://www.hamvocke.com/blog/a-quick-and-easy-guide-to-tmux/&quot;&gt;his website&lt;/a&gt; detailing how useful it is to him as a full-time
+programmer. I’d strongly suggest that post and his follow-ups as an intro to
+using the app. Here’s a link to my current config file, which is largely poached
+from various Reddit users and public github repos: 
+&lt;a href=&quot;/assets/tmux.conf&quot;&gt;.tmux.conf&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Within the command line, I replaced my prompt with &lt;a href=&quot;https://starship.rs/&quot;&gt;starship.rs&lt;/a&gt;, which is
+wonderfully customizable. It lets me customize what the prompt looks like and
+what information is included with it each time a command runs. I use it to
+remind me what virtual environment I might be on, what git branch I’m on and
+whether it’s updated remotely, and get rough timings of commands.
+&lt;img src=&quot;/assets/Screenshot_20200426_182710.png&quot; alt=&quot;tmux and starship&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;And here’s a link to my configuration file: &lt;a href=&quot;/assets/starship.toml&quot;&gt;config&lt;/a&gt; I
+only use a small portion of the languages it can recognize. Checkout the
+website for more!&lt;/p&gt;
+
+&lt;p&gt;Lastly, it’s worth mentioning that I’ve themed out my Vim, Konsole, Firefox, and
+tmux with the &lt;a href=&quot;https://draculatheme.com/&quot;&gt;Dracula&lt;/a&gt; theme. Check out their documentation for installation of
+each of these. Unfortunately, since the theme supports so many platforms, the
+documentation is very general and I found myself going through a fair amount of
+stackoverflow threads looking for small fixes (including spending about 20
+minutes looking for a hidden file! fun times all around). Joking aside, I’ll
+link my .bashrc and .vimrc below for your utility/amusement:
+&lt;a href=&quot;/assets/bashrc&quot;&gt;.bashrc&lt;/a&gt;
+&lt;a href=&quot;/assets/vimrc&quot;&gt;.vimrc&lt;/a&gt;&lt;/p&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><category term="workflow" /><summary type="html">I was about 13 when I built my first PC...</summary></entry></feed>

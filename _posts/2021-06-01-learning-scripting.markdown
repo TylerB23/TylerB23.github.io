@@ -1,7 +1,6 @@
 ---
 layout: post
 title: "Learning to Script"
-date: 2021-06-01
 ---
 I'm pretty sure I first got interested in linux around the same time Edward
 Snowden fled the US. I was 13 years old and captivated by how much one could

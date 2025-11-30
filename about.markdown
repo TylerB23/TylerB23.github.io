@@ -4,36 +4,59 @@ title: About
 permalink: /about/
 author_profile: true
 ---
-I'm an udergraduate studying Applied Mathematics at 
-Case Western Reserve University in Cleveland, Ohio.
+I started this blog while an undergraduate at Case Western Reserve University.
+The combination of pandemic isolation and taking almost entirely math
+classes led me to seek out a creative outlet, which is why I started this blog.
+Today, I work in investment banking in Cleveland, Ohio.
 
-My major concentration is primarily in mathematical modeling. At a high level, that entails
-framing problems about systems in mathematical terms in order to better understand both the
-problem assumptions and the behavior of the system at hand. In class, I've mostly done this through
-a variety of biological courses, including the core systems biology courses at CWRU and a course
-on stochastic biological models.
+In school, I studied Applied Mathematics, Computer Science, and Finance. My
+major was primarily concerned with mathematical modeling, especially in
+biological applications. I took most of the core systems biology courses while
+in school. About midway through, I realized I had no real idea what I wanted to
+do after undergrad. That led me to the business school, where I developed an
+interest in finance and picked up the minor. After two summers spent doing
+research on campus (more on that below), I interned with KeyBanc Capital Markets
+and ultimately took a full-time position there after graduating.
 
-Besides the major in applied math, I'm studying computer science and music as well.
-My interest in computer science is practical and theoretical. First, while it may have been
-practical 100 years ago to model systems on paper and pencil, virtually all mathematicians today
-involved in the practice will use some sort of computer simulations in their work. Second, I really
-like solving problems and the ways computer science makes that possible for me. I'm an avid Linux
-user, and I have a lot of fun playing in config files, doing things faster with the command line,
-and customizing my experience with the OS. That's how I ended up making this website!
+I enjoy my career and everything it's afforded me, from the personal development
+to the professional network with some really wonderful people. It's taught me a
+lot of the soft skills that math majors stereotypically don't have, but more
+than that, I like to say it's taught me competency. I suppose a psychologist
+might call it concientiousness. Being in the work environment, especially at an
+investment bank, has forced me to become much more organized and tenacious. In
+undergrad, I often agonized for a week or more about sending an email to someone
+I didn't know well. That obviously doesn't fly at the office. I've quickly grown as a
+professional and as a person in the time since graduating. 
 
-I've conducted research in data science at the [Solar Durability and Lifetime
+In college I used Linux on my personal computer. I built my first PC when I was
+13, but forgot to budget for the cost of Windows, which led me to using Ubuntu
+for a few months. I still enjoy messing around with hardware and software today,
+though I'm now using a Mac at home - fewer things go wrong with it, and I don't
+have the time to do the troubleshooting I used to do in college.
+
+In 2019 and 2020, I conducted research in data science at the [Solar Durability and Lifetime
 Extension Center](https://engineering.case.edu/centers/sdle/), where I assisted
 in  writing and packaging several R packages for the analysis of 
-photovoltaic system long-term performance. In the process, I've learned
+photovoltaic system long-term performance. In the process, I learned
 a lot about the R programming language and software packaging in general.
 
-On the music side of things, I've played the french horn for about 10 years,
-and I've been recently learning to play guitar. I'll listen to nearly anything, but some of my
+Later in undergrad, I did an REU with my advisor in the Math department. The
+research topic was the effect of asymmetric mitosis on population structures. I
+also took part in some reading groups with grad students studying mathematical
+biology, and assisted my advisor in one of his research projects on information
+transmission in biological systems. The math was very difficult and very
+interesting to me, though by the end of my schooling I came to recognize that
+biological applications weren't totally for me. I was quickly becoming
+interested in financial mathematics, especially as I began to recognize some
+parallels between the two disciplines.
+
+I've played the french horn for about 10 years, and I've been recently learning to 
+play guitar. I'll listen to nearly anything, but some of my
 favorite artists include Kendrick Lamar, Radiohead, Kanye, Vulfpeck, Kamasi Washington, and
 Thundercat.
 
-I'd love to hear what you think of my blog! Reach out to me with the email link
-under my profile (tjb152 @ case . edu) or on Twitter in the footer below.
+If anything on this blog piques your interest, feel free to reach out via email:
+tylerburleyson23@gmail.com
 
 This website is hosted by github pages from my github repo (link in the footer).
 You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at [jekyllrb.com](https://jekyllrb.com/)

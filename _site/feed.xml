@@ -1,4 +1,483 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-11-30T14:07:04-05:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Tyler’s Blog</title><subtitle>Welcome! | Tyler&apos;s Blog</subtitle><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><entry><title type="html">Using Linear Algebra for Bond Math</title><link href="http://localhost:4000/2025/11/30/LA-Bond-Math.html" rel="alternate" type="text/html" title="Using Linear Algebra for Bond Math" /><published>2025-11-30T00:00:00-05:00</published><updated>2025-11-30T00:00:00-05:00</updated><id>http://localhost:4000/2025/11/30/LA-Bond-Math</id><content type="html" xml:base="http://localhost:4000/2025/11/30/LA-Bond-Math.html">&lt;p&gt;I’m training two new analysts at work, which means introducing them to bond
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2026-01-03T21:27:53-05:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Tyler’s Blog</title><subtitle>Welcome! | Tyler&apos;s Blog</subtitle><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><entry><title type="html">Analytic Solution to an Amortizing Bond Model</title><link href="http://localhost:4000/2026/01/03/analytic-solutions-bond-model.html" rel="alternate" type="text/html" title="Analytic Solution to an Amortizing Bond Model" /><published>2026-01-03T00:00:00-05:00</published><updated>2026-01-03T00:00:00-05:00</updated><id>http://localhost:4000/2026/01/03/analytic-solutions-bond-model</id><content type="html" xml:base="http://localhost:4000/2026/01/03/analytic-solutions-bond-model.html">&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
+
+&lt;p&gt;We’re picking up where we left off with using linear algebra to consider
+amortizing bond models like the ones I implement at work. Last time, we wrote
+the coefficients matrix which encodes the model: multiply the below matrix by a
+vector with annual principal payments, and you’ll get a vector representing the
+total annual payment.&lt;/p&gt;
+
+\[P_n \leq \frac{R_n}{1+r} \\
+P_{n-1} \leq \frac{R_{n-1}-rP_n}{1+r} \\
+P_{n-2} \leq \frac{R_{n-2}-rP_n-rP_{n-1}}{1+r}\]
+
+&lt;p&gt;I wrote a short follow-up note correcting my code, which had a rounding error as
+originally written. Typically, muni bonds are sold in denominations of \$5,000,
+but for our purposes we’re going to pretend denominations don’t matter and we
+can sell any amount of principal.&lt;/p&gt;
+
+&lt;p&gt;You can invert the matrix, but it’s easy to solve. It’s 
+upper triangular, so you just need to do back substitution. It’s simplest in the
+case where annual revenue is constant, discussed in the next section.&lt;/p&gt;
+
+&lt;p&gt;In college I used a lot of Mathematica, which unfortunately is very expensive.
+For this project, I wanted to use something like that to do the back
+substitution. I ended up using Sympy for the first time, with the help of
+ChatGPT to learn the syntax.&lt;/p&gt;
+
+&lt;h2 id=&quot;scenario-1-level-payments&quot;&gt;Scenario 1: Level Payments&lt;/h2&gt;
+
+&lt;p&gt;Let’s start with a 10 period model:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;c1&quot;&gt;# R is the annual revenue constraint
+# r is the coupon rate
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;R&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;symbols&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;R r&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# A is our coefficients matrix
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;A&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Matrix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;eye&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;triu&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ones&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]),&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;div style=&quot;overflow-x:auto;&quot;&gt;
+$$\small \displaystyle \left[\begin{matrix}1.0 r + 1.0 &amp;amp; 1.0
+r &amp;amp; 1.0 r &amp;amp; 1.0 r &amp;amp; 1.0 r &amp;amp; 1.0 r &amp;amp; 1.0 r &amp;amp; 1.0 r &amp;amp; 1.0 r &amp;amp; 1.0 r\\
+0 &amp;amp; 1.0 r + 1.0 &amp;amp; 1.0 r &amp;amp; 1.0 r &amp;amp; 1.0 r
+&amp;amp; 1.0 r &amp;amp; 1.0 r &amp;amp; 1.0 r &amp;amp; 1.0 r &amp;amp; 1.0 r\\0 &amp;amp; 0 &amp;amp; 1.0 r + 1.0 &amp;amp; 1.0 r &amp;amp; 1.0 r &amp;amp;
+1.0 r &amp;amp; 1.0 r &amp;amp; 1.0 r &amp;amp; 1.0 r &amp;amp; 1.0 r\\0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 1.0 r + 1.0 &amp;amp; 1.0 r &amp;amp; 1.0 r &amp;amp;
+1.0 r &amp;amp; 1.0 r &amp;amp; 1.0 r &amp;amp; 1.0 r\\0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 1.0 r + 1.0 &amp;amp; 1.0 r &amp;amp; 1.0 r &amp;amp; 1.0
+r &amp;amp; 1.0 r &amp;amp; 1.0 r\\0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 1.0 r + 1.0 &amp;amp; 1.0 r &amp;amp; 1.0 r &amp;amp; 1.0 r &amp;amp; 1.0
+r\\0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 1.0 r + 1.0 &amp;amp; 1.0 r &amp;amp; 1.0 r &amp;amp; 1.0 r\\0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 &amp;amp;
+0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 1.0 r + 1.0 &amp;amp; 1.0 r &amp;amp; 1.0 r\\0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 1.0 r +
+1.0 &amp;amp; 1.0 r\\0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 1.0 r + 1.0\end{matrix}\right]$$
+&lt;/div&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;c1&quot;&gt;# revenue is our revenue vector
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;revenue&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Matrix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;R&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ones&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;principal&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;solve&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;revenue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;principal&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+\[\small \displaystyle \left[\begin{matrix}\frac{1.0 R}{1.0 r^{10} + 10.0 r^{9} + 45.0
+r^{8} + 120.0 r^{7} + 210.0 r^{6} + 252.0 r^{5} + 210.0 r^{4} + 120.0 r^{3} +
+45.0 r^{2} + 10.0 r + 1.0}\\\frac{1.0 R}{1.0 r^{9} + 9.0 r^{8} + 36.0 r^{7} +
+84.0 r^{6} + 126.0 r^{5} + 126.0 r^{4} + 84.0 r^{3} + 36.0 r^{2} + 9.0 r +
+1.0}\\\frac{1.0 R}{1.0 r^{8} + 8.0 r^{7} + 28.0 r^{6} + 56.0 r^{5} + 70.0 r^{4}
++ 56.0 r^{3} + 28.0 r^{2} + 8.0 r + 1.0}\\\frac{1.0 R}{1.0 r^{7} + 7.0 r^{6} +
+21.0 r^{5} + 35.0 r^{4} + 35.0 r^{3} + 21.0 r^{2} + 7.0 r + 1.0}\\\frac{1.0
+R}{1.0 r^{6} + 6.0 r^{5} + 15.0 r^{4} + 20.0 r^{3} + 15.0 r^{2} + 6.0 r +
+1.0}\\\frac{1.0 R}{1.0 r^{5} + 5.0 r^{4} + 10.0 r^{3} + 10.0 r^{2} + 5.0 r +
+1.0}\\\frac{1.0 R}{1.0 r^{4} + 4.0 r^{3} + 6.0 r^{2} + 4.0 r + 1.0}\\\frac{1.0
+R}{1.0 r^{3} + 3.0 r^{2} + 3.0 r + 1.0}\\\frac{1.0 R}{1.0 r^{2} + 2.0 r +
+1.0}\\\frac{1.0 R}{1.0 r + 1.0}\end{matrix}\right]\]
+
+&lt;p&gt;I watched a &lt;a href=&quot;https://www.youtube.com/watch?v=fw1kRz83Fj0&quot;&gt;Mathologer video&lt;/a&gt; on
+YouTube recently about solving power sums which reminded me of Pascal’s
+Triangle. If I hadn’t watched that video, I probably wouldn’t have realized that
+the denominators in each of those terms are just expanded versions of
+\((1+r)^n\). It was pretty neat to make the connection, especially since that
+vector is a bit intimidating at first glance.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;n&quot;&gt;principal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;applyfunc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;factor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+\[\small \displaystyle \left[\begin{matrix}\frac{1.0 R}{\left(1.0 r +
+1.0\right)^{10}}\\\frac{1.0 R}{\left(1.0 r + 1.0\right)^{9}}\\\frac{1.0
+R}{\left(1.0 r + 1.0\right)^{8}}\\\frac{1.0 R}{\left(1.0 r +
+1.0\right)^{7}}\\\frac{1.0 R}{\left(1.0 r + 1.0\right)^{6}}\\\frac{1.0
+R}{\left(1.0 r + 1.0\right)^{5}}\\\frac{1.0 R}{\left(1.0 r +
+1.0\right)^{4}}\\\frac{1.0 R}{\left(1.0 r + 1.0\right)^{3}}\\\frac{1.0
+R}{\left(1.0 r + 1.0\right)^{2}}\\\frac{1.0 R}{r + 1}\end{matrix}\right]\]
+
+&lt;p&gt;It’s pretty easy to see that for a bond model with maturity \(n\), the principal
+paid in the first period is \(\frac{R}{(1+r)^n}\), and so requiring principal to
+be greater than or equal to zero is equivalent to requiring \(R \geq (1+r)^n\).
+This is intuititive; for the level payments scenario, extending the maturity or
+raising the coupon could potentially lead to a bond model which doesn’t pencil
+(i.e., where we can’t maximize principal paid in later periods without debt
+service exceeding the revenue constraint early on). But, this is very unlikely
+with realistic coupon rates which make \(1+r \approx 1\).&lt;/p&gt;
+
+&lt;h2 id=&quot;scenario-2-growing-payments&quot;&gt;Scenario 2: Growing Payments&lt;/h2&gt;
+
+&lt;p&gt;Now let’s consider a revenue constraint which grows at some constant rate each
+period. We’ll call the growth rate \(g\), so the revenue available to pay debt
+service in period \(k\) is the product of our base revenue \(R_0\) and a growth
+factor: \(R_k = R_0 (1+g)^k\).&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;c1&quot;&gt;# g is the growth rate in the annual revenue constraint
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;symbols&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;g&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;revenue2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Matrix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;zeros&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# growth_rate = lambda i, n : (1+g)**(i-n)
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;growth_rate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;**&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;revenue2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;growth_rate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;9&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;R&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;revenue2&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+\[\small \displaystyle \left[\begin{matrix}R\\R \left(g + 1\right)\\R \left(g +
+1\right)^{2}\\R \left(g + 1\right)^{3}\\R \left(g + 1\right)^{4}\\R \left(g +
+1\right)^{5}\\R \left(g + 1\right)^{6}\\R \left(g + 1\right)^{7}\\R \left(g +
+1\right)^{8}\\R \left(g + 1\right)^{9}\end{matrix}\right]\]
+
+&lt;p&gt;This solution is much less pretty, even after I spent a few hours learning how
+to factor expressions in Sympy:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;n&quot;&gt;principal2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;solve&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;revenue2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;principal2&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;div style=&quot;overflow-x:auto;&quot;&gt;
+$$\small \displaystyle \left[\begin{matrix}\frac{- 1.0 R g^{9} r - 1.0 R g^{8} r^{2} -
+10.0 R g^{8} r - 1.0 R g^{7} r^{3} - 10.0 R g^{7} r^{2} - 45.0 R g^{7} r - 1.0 R
+g^{6} r^{4} - 10.0 R g^{6} r^{3} - 45.0 R g^{6} r^{2} - 120.0 R g^{6} r - 1.0 R
+g^{5} r^{5} - 10.0 R g^{5} r^{4} - 45.0 R g^{5} r^{3} - 120.0 R g^{5} r^{2} -
+210.0 R g^{5} r - 1.0 R g^{4} r^{6} - 10.0 R g^{4} r^{5} - 45.0 R g^{4} r^{4} -
+120.0 R g^{4} r^{3} - 210.0 R g^{4} r^{2} - 252.0 R g^{4} r - 1.0 R g^{3} r^{7}
+- 10.0 R g^{3} r^{6} - 45.0 R g^{3} r^{5} - 120.0 R g^{3} r^{4} - 210.0 R g^{3}
+r^{3} - 252.0 R g^{3} r^{2} - 210.0 R g^{3} r - 1.0 R g^{2} r^{8} - 10.0 R g^{2}
+r^{7} - 45.0 R g^{2} r^{6} - 120.0 R g^{2} r^{5} - 210.0 R g^{2} r^{4} - 252.0 R
+g^{2} r^{3} - 210.0 R g^{2} r^{2} - 120.0 R g^{2} r - 1.0 R g r^{9} - 10.0 R g
+r^{8} - 45.0 R g r^{7} - 120.0 R g r^{6} - 210.0 R g r^{5} - 252.0 R g r^{4} -
+210.0 R g r^{3} - 120.0 R g r^{2} - 45.0 R g r + 1.0 R}{1.0 r^{10} + 10.0 r^{9}
++ 45.0 r^{8} + 120.0 r^{7} + 210.0 r^{6} + 252.0 r^{5} + 210.0 r^{4} + 120.0
+r^{3} + 45.0 r^{2} + 10.0 r + 1.0}\\\frac{- 1.0 R g^{9} r - 1.0 R g^{8} r^{2} -
+10.0 R g^{8} r - 1.0 R g^{7} r^{3} - 10.0 R g^{7} r^{2} - 45.0 R g^{7} r - 1.0 R
+g^{6} r^{4} - 10.0 R g^{6} r^{3} - 45.0 R g^{6} r^{2} - 120.0 R g^{6} r - 1.0 R
+g^{5} r^{5} - 10.0 R g^{5} r^{4} - 45.0 R g^{5} r^{3} - 120.0 R g^{5} r^{2} -
+210.0 R g^{5} r - 1.0 R g^{4} r^{6} - 10.0 R g^{4} r^{5} - 45.0 R g^{4} r^{4} -
+120.0 R g^{4} r^{3} - 210.0 R g^{4} r^{2} - 252.0 R g^{4} r - 1.0 R g^{3} r^{7}
+- 10.0 R g^{3} r^{6} - 45.0 R g^{3} r^{5} - 120.0 R g^{3} r^{4} - 210.0 R g^{3}
+r^{3} - 252.0 R g^{3} r^{2} - 210.0 R g^{3} r - 1.0 R g^{2} r^{8} - 10.0 R g^{2}
+r^{7} - 45.0 R g^{2} r^{6} - 120.0 R g^{2} r^{5} - 210.0 R g^{2} r^{4} - 252.0 R
+g^{2} r^{3} - 210.0 R g^{2} r^{2} - 120.0 R g^{2} r - 1.0 R g r^{8} - 9.0 R g
+r^{7} - 36.0 R g r^{6} - 84.0 R g r^{5} - 126.0 R g r^{4} - 126.0 R g r^{3} -
+84.0 R g r^{2} - 36.0 R g r + 1.0 R g + 1.0 R}{1.0 r^{9} + 9.0 r^{8} + 36.0
+r^{7} + 84.0 r^{6} + 126.0 r^{5} + 126.0 r^{4} + 84.0 r^{3} + 36.0 r^{2} + 9.0 r
++ 1.0}\\\frac{- 1.0 R g^{9} r - 1.0 R g^{8} r^{2} - 10.0 R g^{8} r - 1.0 R g^{7}
+r^{3} - 10.0 R g^{7} r^{2} - 45.0 R g^{7} r - 1.0 R g^{6} r^{4} - 10.0 R g^{6}
+r^{3} - 45.0 R g^{6} r^{2} - 120.0 R g^{6} r - 1.0 R g^{5} r^{5} - 10.0 R g^{5}
+r^{4} - 45.0 R g^{5} r^{3} - 120.0 R g^{5} r^{2} - 210.0 R g^{5} r - 1.0 R g^{4}
+r^{6} - 10.0 R g^{4} r^{5} - 45.0 R g^{4} r^{4} - 120.0 R g^{4} r^{3} - 210.0 R
+g^{4} r^{2} - 252.0 R g^{4} r - 1.0 R g^{3} r^{7} - 10.0 R g^{3} r^{6} - 45.0 R
+g^{3} r^{5} - 120.0 R g^{3} r^{4} - 210.0 R g^{3} r^{3} - 252.0 R g^{3} r^{2} -
+210.0 R g^{3} r - 2.0 R g^{2} r^{7} - 17.0 R g^{2} r^{6} - 64.0 R g^{2} r^{5} -
+140.0 R g^{2} r^{4} - 196.0 R g^{2} r^{3} - 182.0 R g^{2} r^{2} - 112.0 R g^{2}
+r + 1.0 R g^{2} - 1.0 R g r^{7} - 8.0 R g r^{6} - 28.0 R g r^{5} - 56.0 R g
+r^{4} - 70.0 R g r^{3} - 56.0 R g r^{2} - 28.0 R g r + 2.0 R g + 1.0 R}{1.0
+r^{8} + 8.0 r^{7} + 28.0 r^{6} + 56.0 r^{5} + 70.0 r^{4} + 56.0 r^{3} + 28.0
+r^{2} + 8.0 r + 1.0}\\\frac{- 1.0 R g^{9} r - 1.0 R g^{8} r^{2} - 10.0 R g^{8} r
+- 1.0 R g^{7} r^{3} - 10.0 R g^{7} r^{2} - 45.0 R g^{7} r - 1.0 R g^{6} r^{4} -
+10.0 R g^{6} r^{3} - 45.0 R g^{6} r^{2} - 120.0 R g^{6} r - 1.0 R g^{5} r^{5} -
+10.0 R g^{5} r^{4} - 45.0 R g^{5} r^{3} - 120.0 R g^{5} r^{2} - 210.0 R g^{5} r
+- 1.0 R g^{4} r^{6} - 10.0 R g^{4} r^{5} - 45.0 R g^{4} r^{4} - 120.0 R g^{4}
+r^{3} - 210.0 R g^{4} r^{2} - 252.0 R g^{4} r - 3.0 R g^{3} r^{6} - 24.0 R g^{3}
+r^{5} - 85.0 R g^{3} r^{4} - 175.0 R g^{3} r^{3} - 231.0 R g^{3} r^{2} - 203.0 R
+g^{3} r + 1.0 R g^{3} - 3.0 R g^{2} r^{6} - 22.0 R g^{2} r^{5} - 70.0 R g^{2}
+r^{4} - 126.0 R g^{2} r^{3} - 140.0 R g^{2} r^{2} - 98.0 R g^{2} r + 3.0 R g^{2}
+- 1.0 R g r^{6} - 7.0 R g r^{5} - 21.0 R g r^{4} - 35.0 R g r^{3} - 35.0 R g
+r^{2} - 21.0 R g r + 3.0 R g + 1.0 R}{1.0 r^{7} + 7.0 r^{6} + 21.0 r^{5} + 35.0
+r^{4} + 35.0 r^{3} + 21.0 r^{2} + 7.0 r + 1.0}\\\frac{- 1.0 R g^{9} r - 1.0 R
+g^{8} r^{2} - 10.0 R g^{8} r - 1.0 R g^{7} r^{3} - 10.0 R g^{7} r^{2} - 45.0 R
+g^{7} r - 1.0 R g^{6} r^{4} - 10.0 R g^{6} r^{3} - 45.0 R g^{6} r^{2} - 120.0 R
+g^{6} r - 1.0 R g^{5} r^{5} - 10.0 R g^{5} r^{4} - 45.0 R g^{5} r^{3} - 120.0 R
+g^{5} r^{2} - 210.0 R g^{5} r - 4.0 R g^{4} r^{5} - 30.0 R g^{4} r^{4} - 100.0 R
+g^{4} r^{3} - 195.0 R g^{4} r^{2} - 246.0 R g^{4} r + 1.0 R g^{4} - 6.0 R g^{3}
+r^{5} - 40.0 R g^{3} r^{4} - 115.0 R g^{3} r^{3} - 186.0 R g^{3} r^{2} - 185.0 R
+g^{3} r + 4.0 R g^{3} - 4.0 R g^{2} r^{5} - 25.0 R g^{2} r^{4} - 66.0 R g^{2}
+r^{3} - 95.0 R g^{2} r^{2} - 80.0 R g^{2} r + 6.0 R g^{2} - 1.0 R g r^{5} - 6.0
+R g r^{4} - 15.0 R g r^{3} - 20.0 R g r^{2} - 15.0 R g r + 4.0 R g + 1.0 R}{1.0
+r^{6} + 6.0 r^{5} + 15.0 r^{4} + 20.0 r^{3} + 15.0 r^{2} + 6.0 r + 1.0}\\\frac{-
+1.0 R g^{9} r - 1.0 R g^{8} r^{2} - 10.0 R g^{8} r - 1.0 R g^{7} r^{3} - 10.0 R
+g^{7} r^{2} - 45.0 R g^{7} r - 1.0 R g^{6} r^{4} - 10.0 R g^{6} r^{3} - 45.0 R
+g^{6} r^{2} - 120.0 R g^{6} r - 5.0 R g^{5} r^{4} - 35.0 R g^{5} r^{3} - 110.0 R
+g^{5} r^{2} - 205.0 R g^{5} r + 1.0 R g^{5} - 10.0 R g^{4} r^{4} - 60.0 R g^{4}
+r^{3} - 155.0 R g^{4} r^{2} - 226.0 R g^{4} r + 5.0 R g^{4} - 10.0 R g^{3} r^{4}
+- 55.0 R g^{3} r^{3} - 126.0 R g^{3} r^{2} - 155.0 R g^{3} r + 10.0 R g^{3} -
+5.0 R g^{2} r^{4} - 26.0 R g^{2} r^{3} - 55.0 R g^{2} r^{2} - 60.0 R g^{2} r +
+10.0 R g^{2} - 1.0 R g r^{4} - 5.0 R g r^{3} - 10.0 R g r^{2} - 10.0 R g r + 5.0
+R g + 1.0 R}{1.0 r^{5} + 5.0 r^{4} + 10.0 r^{3} + 10.0 r^{2} + 5.0 r +
+1.0}\\\frac{- 1.0 R g^{9} r - 1.0 R g^{8} r^{2} - 10.0 R g^{8} r - 1.0 R g^{7}
+r^{3} - 10.0 R g^{7} r^{2} - 45.0 R g^{7} r - 6.0 R g^{6} r^{3} - 39.0 R g^{6}
+r^{2} - 116.0 R g^{6} r + 1.0 R g^{6} - 15.0 R g^{5} r^{3} - 80.0 R g^{5} r^{2}
+- 185.0 R g^{5} r + 6.0 R g^{5} - 20.0 R g^{4} r^{3} - 95.0 R g^{4} r^{2} -
+186.0 R g^{4} r + 15.0 R g^{4} - 15.0 R g^{3} r^{3} - 66.0 R g^{3} r^{2} - 115.0
+R g^{3} r + 20.0 R g^{3} - 6.0 R g^{2} r^{3} - 25.0 R g^{2} r^{2} - 40.0 R g^{2}
+r + 15.0 R g^{2} - 1.0 R g r^{3} - 4.0 R g r^{2} - 6.0 R g r + 6.0 R g + 1.0
+R}{1.0 r^{4} + 4.0 r^{3} + 6.0 r^{2} + 4.0 r + 1.0}\\\frac{- 1.0 R g^{9} r - 1.0
+R g^{8} r^{2} - 10.0 R g^{8} r - 7.0 R g^{7} r^{2} - 42.0 R g^{7} r + 1.0 R
+g^{7} - 21.0 R g^{6} r^{2} - 98.0 R g^{6} r + 7.0 R g^{6} - 35.0 R g^{5} r^{2} -
+140.0 R g^{5} r + 21.0 R g^{5} - 35.0 R g^{4} r^{2} - 126.0 R g^{4} r + 35.0 R
+g^{4} - 21.0 R g^{3} r^{2} - 70.0 R g^{3} r + 35.0 R g^{3} - 7.0 R g^{2} r^{2} -
+22.0 R g^{2} r + 21.0 R g^{2} - 1.0 R g r^{2} - 3.0 R g r + 7.0 R g + 1.0 R}{1.0
+r^{3} + 3.0 r^{2} + 3.0 r + 1.0}\\\frac{- 1.0 R g^{9} r - 8.0 R g^{8} r + 1.0 R
+g^{8} - 28.0 R g^{7} r + 8.0 R g^{7} - 56.0 R g^{6} r + 28.0 R g^{6} - 70.0 R
+g^{5} r + 56.0 R g^{5} - 56.0 R g^{4} r + 70.0 R g^{4} - 28.0 R g^{3} r + 56.0 R
+g^{3} - 8.0 R g^{2} r + 28.0 R g^{2} - 1.0 R g r + 8.0 R g + 1.0 R}{1.0 r^{2} +
+2.0 r + 1.0}\\\frac{1.0 R g^{9} + 9.0 R g^{8} + 36.0 R g^{7} + 84.0 R g^{6} +
+126.0 R g^{5} + 126.0 R g^{4} + 84.0 R g^{3} + 36.0 R g^{2} + 9.0 R g + 1.0
+R}{1.0 r + 1.0}\end{matrix}\right]$$
+&lt;/div&gt;
+
+&lt;p&gt;We can do a bit better:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;n&quot;&gt;principal2_factored&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Matrix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;zeros&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;len&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;principal2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;len&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;principal2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)):&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;num&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;den&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fraction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;principal2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;coeff&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;factors&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;factor_list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nsimplify&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;factor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;num&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;principal2_factored&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Mul&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;base&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;**&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;exp&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;base&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;exp&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;factors&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]])&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Mul&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;coeff&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;factors&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;factor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;den&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;principal2_factored&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;div style=&quot;overflow-x:auto;&quot;&gt;
+$$\small \displaystyle \left[\begin{matrix}\frac{1.0 R \left(- g^{9} r - g^{8} r^{2} -
+10 g^{8} r - g^{7} r^{3} - 10 g^{7} r^{2} - 45 g^{7} r - g^{6} r^{4} - 10 g^{6}
+r^{3} - 45 g^{6} r^{2} - 120 g^{6} r - g^{5} r^{5} - 10 g^{5} r^{4} - 45 g^{5}
+r^{3} - 120 g^{5} r^{2} - 210 g^{5} r - g^{4} r^{6} - 10 g^{4} r^{5} - 45 g^{4}
+r^{4} - 120 g^{4} r^{3} - 210 g^{4} r^{2} - 252 g^{4} r - g^{3} r^{7} - 10 g^{3}
+r^{6} - 45 g^{3} r^{5} - 120 g^{3} r^{4} - 210 g^{3} r^{3} - 252 g^{3} r^{2} -
+210 g^{3} r - g^{2} r^{8} - 10 g^{2} r^{7} - 45 g^{2} r^{6} - 120 g^{2} r^{5} -
+210 g^{2} r^{4} - 252 g^{2} r^{3} - 210 g^{2} r^{2} - 120 g^{2} r - g r^{9} - 10
+g r^{8} - 45 g r^{7} - 120 g r^{6} - 210 g r^{5} - 252 g r^{4} - 210 g r^{3} -
+120 g r^{2} - 45 g r + 1\right)}{\left(1.0 r + 1.0\right)^{10}}\\\frac{1.0 R
+\left(g + 1\right) \left(- g^{8} r - g^{7} r^{2} - 9 g^{7} r - g^{6} r^{3} - 9
+g^{6} r^{2} - 36 g^{6} r - g^{5} r^{4} - 9 g^{5} r^{3} - 36 g^{5} r^{2} - 84
+g^{5} r - g^{4} r^{5} - 9 g^{4} r^{4} - 36 g^{4} r^{3} - 84 g^{4} r^{2} - 126
+g^{4} r - g^{3} r^{6} - 9 g^{3} r^{5} - 36 g^{3} r^{4} - 84 g^{3} r^{3} - 126
+g^{3} r^{2} - 126 g^{3} r - g^{2} r^{7} - 9 g^{2} r^{6} - 36 g^{2} r^{5} - 84
+g^{2} r^{4} - 126 g^{2} r^{3} - 126 g^{2} r^{2} - 84 g^{2} r - g r^{8} - 9 g
+r^{7} - 36 g r^{6} - 84 g r^{5} - 126 g r^{4} - 126 g r^{3} - 84 g r^{2} - 36 g
+r + 1\right)}{\left(1.0 r + 1.0\right)^{9}}\\\frac{1.0 R \left(g + 1\right)^{2}
+\left(- g^{7} r - g^{6} r^{2} - 8 g^{6} r - g^{5} r^{3} - 8 g^{5} r^{2} - 28
+g^{5} r - g^{4} r^{4} - 8 g^{4} r^{3} - 28 g^{4} r^{2} - 56 g^{4} r - g^{3}
+r^{5} - 8 g^{3} r^{4} - 28 g^{3} r^{3} - 56 g^{3} r^{2} - 70 g^{3} r - g^{2}
+r^{6} - 8 g^{2} r^{5} - 28 g^{2} r^{4} - 56 g^{2} r^{3} - 70 g^{2} r^{2} - 56
+g^{2} r - g r^{7} - 8 g r^{6} - 28 g r^{5} - 56 g r^{4} - 70 g r^{3} - 56 g
+r^{2} - 28 g r + 1\right)}{\left(1.0 r + 1.0\right)^{8}}\\\frac{1.0 R \left(g +
+1\right)^{3} \left(- g^{6} r - g^{5} r^{2} - 7 g^{5} r - g^{4} r^{3} - 7 g^{4}
+r^{2} - 21 g^{4} r - g^{3} r^{4} - 7 g^{3} r^{3} - 21 g^{3} r^{2} - 35 g^{3} r -
+g^{2} r^{5} - 7 g^{2} r^{4} - 21 g^{2} r^{3} - 35 g^{2} r^{2} - 35 g^{2} r - g
+r^{6} - 7 g r^{5} - 21 g r^{4} - 35 g r^{3} - 35 g r^{2} - 21 g r +
+1\right)}{\left(1.0 r + 1.0\right)^{7}}\\\frac{1.0 R \left(g + 1\right)^{4}
+\left(- g^{5} r - g^{4} r^{2} - 6 g^{4} r - g^{3} r^{3} - 6 g^{3} r^{2} - 15
+g^{3} r - g^{2} r^{4} - 6 g^{2} r^{3} - 15 g^{2} r^{2} - 20 g^{2} r - g r^{5} -
+6 g r^{4} - 15 g r^{3} - 20 g r^{2} - 15 g r + 1\right)}{\left(1.0 r +
+1.0\right)^{6}}\\\frac{1.0 R \left(g + 1\right)^{5} \left(- g^{4} r - g^{3}
+r^{2} - 5 g^{3} r - g^{2} r^{3} - 5 g^{2} r^{2} - 10 g^{2} r - g r^{4} - 5 g
+r^{3} - 10 g r^{2} - 10 g r + 1\right)}{\left(1.0 r + 1.0\right)^{5}}\\\frac{1.0
+R \left(g + 1\right)^{6} \left(- g^{3} r - g^{2} r^{2} - 4 g^{2} r - g r^{3} - 4
+g r^{2} - 6 g r + 1\right)}{\left(1.0 r + 1.0\right)^{4}}\\\frac{1.0 R \left(g +
+1\right)^{7} \left(- g^{2} r - g r^{2} - 3 g r + 1\right)}{\left(1.0 r +
+1.0\right)^{3}}\\\frac{1.0 R \left(g + 1\right)^{8} \left(- g r +
+1\right)}{\left(1.0 r + 1.0\right)^{2}}\\\frac{1.0 R \left(g + 1\right)}{r +
+1}\end{matrix}\right]$$
+&lt;/div&gt;
+
+&lt;p&gt;I was hoping this would simplify a bit more, but I didn’t have any luck. If you
+know of a way to simplify the third term in the numerator, let me know - I
+suspect it has something to do with a multinomial missing some terms.&lt;/p&gt;
+
+&lt;p&gt;In the absense of a nicer solution, we can try to build intuition by
+approximating the entries in the vector. Since both \(g\) and \(r\) are small 
+decimals, we should be able to approximate
+the values in the vector pretty well by ignoring high degree terms of those two
+variables.&lt;/p&gt;
+
+&lt;p&gt;I intend to play around with that some more, but I also want to do
+some numerical analyses. At work I’ve noticed that a 30-year term and a growth
+rate of 3% in the revenue constraint / payments tends to lead to trouble; it’d
+be helpful to run a bunch of these models in Python to see where we begin to run
+into issues with (i) higher growth rates, (ii) higher coupon rates, and (iii)
+longer maturities. That will be the topic of a future post.&lt;/p&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><summary type="html">Introduction</summary></entry><entry><title type="html">What’s the Difference between Gambling and Investing?</title><link href="http://localhost:4000/2025/12/17/gambling-or-investing.html" rel="alternate" type="text/html" title="What’s the Difference between Gambling and Investing?" /><published>2025-12-17T00:00:00-05:00</published><updated>2025-12-17T00:00:00-05:00</updated><id>http://localhost:4000/2025/12/17/gambling-or-investing</id><content type="html" xml:base="http://localhost:4000/2025/12/17/gambling-or-investing.html">&lt;p&gt;In college, I took a class about fintech to satisfy one of the my general
+writing skills requirements. Since it was a special course to meet that
+requirement, rather than a business school course, we spent less time talking
+about the concrete details of fintech and more on the what it is,
+philosophically.&lt;/p&gt;
+
+&lt;p&gt;One of the focus areas of the class was crypto. This was in the fall of fall
+of 2020, when bitcoin was around \$8 to \$10 thousand and NFTs were just
+beginning to catch some publicity. It was also after the first round of stimulus
+checks, so bored at-home retail traders were definitely having a moment.&lt;/p&gt;
+
+&lt;p&gt;Since the class fulfilled a gen ed, the students came from all over the
+university. It being CWRU, it was mostly engineers and nursing students who
+didn’t spend much time thinking about investing. That meant some of the
+assumptions a finance major would come in with weren’t really present in that
+classroom, and so the discussion tended to go broad pretty quickly.&lt;/p&gt;
+
+&lt;p&gt;I clearly remember one day when we were talking about the fundamental drivers of
+the price of bitcoin (or really, the lack thereof), a student asked the
+professor, “isn’t this just gambling?”. To which he replied, “what do you think
+the difference between gambling and investing is?”.&lt;/p&gt;
+
+&lt;h4 id=&quot;my-answer-at-the-time&quot;&gt;My Answer at the Time&lt;/h4&gt;
+
+&lt;p&gt;I don’t remember if I volunteered this answer in the classroom, but at
+the time my thought was that what separated the two activities was &lt;strong&gt;positive
+expected value&lt;/strong&gt;. Most games at a casino have a house edge; over the long run,
+you expect to lose money. The things we typically think of as investing (fixed
+income and equities) have well-documented historic positive returns.&lt;/p&gt;
+
+&lt;p&gt;I’ve revisited the idea since taking the class, especially as I began my career
+in investment banking. When my team sells
+bonds, they’re usually financing public improvements like roadwork, utility line
+extensions, water and sewer, etc. The development increases the value of the
+parcel, and our investors get paid back from the subsequent increase in property
+taxes. It’s pretty classic investing - bondholders put up the money today that
+is used to build infrastructure which supports private development, and they get
+paid back from the cash flow coming off of the development.&lt;/p&gt;
+
+&lt;p&gt;Investors have a positive expected value; they get paid a steady stream of
+coupons which represent their return. There is some risk that the project
+doesn’t get built or the cash flows from it aren’t sufficient to pay off the
+bonds, but they’re compensated for those risks.&lt;/p&gt;
+
+&lt;p&gt;Whether investors are being compensated appropriately for the risk they’re
+taking, in my eyes, doesn’t affect whether they’re engaged in investing or
+gambling. Risk-adjusted returns are a measure of how good they are at investing,
+not a determinant of whether they’re engaged in the activity at all.&lt;/p&gt;
+
+&lt;p&gt;Equity investing is a bit different, but I think it feels like investing to most
+people for similar reasons. It’s well-documented that public equities have
+historically delivered positive returns to investors over most time horizons. If
+you take a 30,000 foot view, you could say that owning a bunch of different
+stocks which are exposed to many different aspects of the economy should more or
+less capture growth in the economy. Furthermore, owning a stock gives you an
+ownership claim over the company. You’re entitled to a share in the profits of
+the company, mediated through its leadership who may decide to invest back into
+the enterprise, issue a dividend, or do stock buybacks.&lt;/p&gt;
+
+&lt;h4 id=&quot;how-id-answer-today-a-two-prong-definition&quot;&gt;How I’d Answer Today (a Two-Prong Definition)&lt;/h4&gt;
+
+&lt;p&gt;Fixed income and equity investing are what most people think of when they think
+of investing, and I think the two key characteristics of them are that (1) you
+can generally expect a positive return from them, 
+and (2) they represent something which gives them fundamental
+economic value. For equities, it’s ownership; for fixed income, it’s a
+contractual obligation to be repaid.&lt;/p&gt;
+
+&lt;p&gt;Lately, I’ve been thinking those two qualities are what separate investing from
+gambling. Without the second, a lot of things that most people would say are
+definitely not investing would count.&lt;/p&gt;
+
+&lt;p&gt;For example, a pro poker player sitting at
+a table with a bunch of newbies would have a positive expected value from their
+play; we still wouldn’t say that they’re investing. Playing poker is clearly
+gambling in most people’s eyes. It’s a game of skill, which makes it
+qualitatively different from other forms of gambling like roulette, for example;
+but it doesn’t seem right to call it the same kind of activity as buying \$QQQ.&lt;/p&gt;
+
+&lt;p&gt;Similarly, a high frequency trading shop seems to be engaged in something other
+than investing. When you hold positions for an extremely short period of time,
+that just feels very different from buying an index fund or investing in a
+Treasury note. However, many HFT shops have done very well for themselves
+historically and we have no reason to think they won’t continue to do so. It’s
+not gambling either. I think it’s useful to think of short-term trading and
+market making activities as a third thing entirely.&lt;/p&gt;
+
+&lt;h4 id=&quot;other-examples-what-counts-and-what-doesnt&quot;&gt;Other Examples: What Counts and What Doesn’t&lt;/h4&gt;
+
+&lt;p&gt;Equities, fixed income, and real estate are commonly accepted categories of
+investing which clearly count under my definition. Commodities do, too; whether
+you own physical gold or an ETF which tracks its price, there’s ownership and
+(sometimes) reason to think it’ll go up. At the least, gold does have some basic
+value so long as its a necessary component in electronics and jewelry.&lt;/p&gt;
+
+&lt;p&gt;As discussed above, games of skill with financial stakes like poker don’t count
+as investing, nor do short term trading activities or market-making.&lt;/p&gt;
+
+&lt;p&gt;Interestingly, there’s a case to be made that sports betting could count as
+investing under this definition for a certain kind of bettor. There are people
+out there who develop good models for game outcomes or who find arbitrage
+opportunities between different sportsbooks. They can reasonably claim to have a
+positive expected value. The bets they place, arguably, represent a kind of
+ownership in the potential payoff if the bet goes their way. Since this is a
+rare edge case, I’m comfortable leaving my definition as-is. What is clear is
+that the nasty parlay you cooked up with your buddies last Saturday and lost
+20 bucks on is not investing.&lt;/p&gt;
+
+&lt;h4 id=&quot;returning-to-crypto&quot;&gt;Returning to Crypto&lt;/h4&gt;
+
+&lt;p&gt;Bitcoin and other crypto currencies present a more interesting case. Many would
+argue that they have no fundamental value, or, more snarkily, that the correct
+price for these tokens is \$0. I am pretty convinced that most cryptocurrencies
+trade on technicals and hype rather than fundamental value. However, if you’re
+knowledgeable in the space and have reason to think a greater fool is likely to
+come along, and you have the stomach for the volatility, perhaps you can decide
+that, for you, it is investing.&lt;/p&gt;
+
+&lt;p&gt;I imagine some readers have been shouting at their screens for a few paragraphs
+now, “what determines whether the expected value is positive or not?”. It’s
+really the key question if you buy into my definition. Many investors in the
+equity market are content to rely on historical data and a certain “come on,
+bro” mentality: come on, bro, do you REALLY think the S&amp;amp;P 500 is going to be
+lower 30 years from now?&lt;/p&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><summary type="html">In college, I took a class about fintech to satisfy one of the my general writing skills requirements. Since it was a special course to meet that requirement, rather than a business school course, we spent less time talking about the concrete details of fintech and more on the what it is, philosophically.</summary></entry><entry><title type="html">Fixing my Bond Math Code from the Last Post</title><link href="http://localhost:4000/2025/12/14/fixing-my-bond-math-code.html" rel="alternate" type="text/html" title="Fixing my Bond Math Code from the Last Post" /><published>2025-12-14T00:00:00-05:00</published><updated>2025-12-14T00:00:00-05:00</updated><id>http://localhost:4000/2025/12/14/fixing-my-bond-math-code</id><content type="html" xml:base="http://localhost:4000/2025/12/14/fixing-my-bond-math-code.html">&lt;p&gt;While playing around with the Python I wrote in my last blog post, I realized
+that it had a fatal error. Muni bonds are typically sold in \$5,000 lots, so in
+my first attempt I tried to deal with this by taking the floor of my calculated
+principal amounts element-wise. However, by doing that I ended up reducing the
+interest that needed to be paid in earlier periods, since I was reducing the
+principal due in later periods by rounding down. That meant that, especially for
+longer maturities, my solutions weren’t solving for debt service up to the full
+revenue constraint. Whoops.&lt;/p&gt;
+
+&lt;p&gt;Adding the wrinkle of bond denominations makes the problem much less elegant;
+we’re no longer just solving a system of linear equations. There’s still a lot
+we can learn from the linear algebra approach, however; we’ll just ignore
+denominations for now to build up some intuition.&lt;/p&gt;
+
+&lt;p&gt;Anyways, I’ve written below two bond model solving functions. The first takes
+the same approach as last time, but without the rounding. This means that we can
+get “weird” amounts of principal, but I think it’s still analytically
+interesting. The second mirrors what I do in Excel at work. It solves for each
+year’s principal and interest sequentially, starting from the maturity date of
+the bonds. It’s much more practical, but not as analytically tractable.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;numpy&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;pandas&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pd&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;simple_solve&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;R&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;# n is the number of periods
+&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;# R is the annual revenue constraint
+&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;# r is the coupon rate
+&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;# First, create coefficients matrix
+&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;A&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;eye&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;triu&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ones&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]),&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;# Next, create vector R of revenues
+&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;R&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;R&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ones&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;# Next, solve
+&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;principal&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;linalg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;solve&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;R&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    
+    &lt;span class=&quot;c1&quot;&gt;# Calculate the interest for each year
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;interest&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;zeros&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;interest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;sum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;P&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:])&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;
+    
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;principal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;interest&lt;/span&gt;
+    
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;better_solve&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;R&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;# n is the number of periods
+&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;# R is the revenue constraint
+&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;# r is the coupon rate
+&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;# Create our principal and interest arrays
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;principal&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;zeros&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;interest&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;zeros&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;# Calculate the last year&apos;s principal and interest
+&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;# I&apos;m creating the arrays backwards because it makes the indexing easier
+&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;# the &apos;.T&apos; at the end flips them so the first entry is the first year
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;principal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;floor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;r&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5000&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;interest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;principal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;principal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;floor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;r&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;interest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5000&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;interest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;interest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;principal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;principal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;interest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><summary type="html">While playing around with the Python I wrote in my last blog post, I realized that it had a fatal error. Muni bonds are typically sold in \$5,000 lots, so in my first attempt I tried to deal with this by taking the floor of my calculated principal amounts element-wise. However, by doing that I ended up reducing the interest that needed to be paid in earlier periods, since I was reducing the principal due in later periods by rounding down. That meant that, especially for longer maturities, my solutions weren’t solving for debt service up to the full revenue constraint. Whoops.</summary></entry><entry><title type="html">Using Linear Algebra for Bond Math</title><link href="http://localhost:4000/2025/11/30/LA-Bond-Math.html" rel="alternate" type="text/html" title="Using Linear Algebra for Bond Math" /><published>2025-11-30T00:00:00-05:00</published><updated>2025-11-30T00:00:00-05:00</updated><id>http://localhost:4000/2025/11/30/LA-Bond-Math</id><content type="html" xml:base="http://localhost:4000/2025/11/30/LA-Bond-Math.html">&lt;p&gt;I’m training two new analysts at work, which means introducing them to bond
 math. This can be a steep learning curve for some new hires since it often isn’t
 covered in their finance classes as undergrads. Luckily it’s not too difficult,
 and Excel really is an excellent tool for both doing it and building intuition
@@ -921,333 +1400,4 @@ construction we did (called the Cantor Ternary Set) describes all numbers
 between 0 and 1 which can be written in ternary without using 1’s. However, what
 I first found so fascinating about it is the ideas of infinity encapsulated
 within. That fundamental idea of always being able to find a closer value, even
-in a set which seems to be so small, is fascinating and beautiful.&lt;/p&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><category term="readings" /><summary type="html">(Similarly Quick) Forward I set out to write a post like this every Friday, so of course the second week in I had a massive influx of work topped by about 6 hours in Zoom meetings. Oh well! One of the perks of a personal project is that it’s totally under my control: convenient when other responsibilities get in the way.</summary></entry><entry><title type="html">What I’m Reading this Week, Vol. 1</title><link href="http://localhost:4000/readings/2020/07/17/readings.html" rel="alternate" type="text/html" title="What I’m Reading this Week, Vol. 1" /><published>2020-07-17T00:00:00-04:00</published><updated>2020-07-17T00:00:00-04:00</updated><id>http://localhost:4000/readings/2020/07/17/readings</id><content type="html" xml:base="http://localhost:4000/readings/2020/07/17/readings.html">&lt;h2 id=&quot;quick-forward&quot;&gt;Quick Forward&lt;/h2&gt;
-&lt;p&gt;As part of a personal challenge to write and reflect more often, I’ve decided to
-start sharing some of the more interesting articles and what-not I’ve read
-recently. Revisiting all of these should ideally help me stew in the ideas more,
-since it’s all too easy to read and move on. My high school chemistry teacher
-used to talk about how learning anything requires multiple exposures – for her,
-that was a justification for constant homework and quizzes, but then she was one
-of our best science teachers. “Lifelong Learning” is a buzzword, but one I
-believe in wholeheartedly.&lt;/p&gt;
-
-&lt;p&gt;Without further ado, let’s get to it.&lt;/p&gt;
-
-&lt;h3 id=&quot;whats-the-use-of-being-a-boy-an-interview-with-douglas-a-martin&quot;&gt;&lt;em&gt;What’s the Use of Being a Boy: An interview with Douglas A. Martin&lt;/em&gt;&lt;/h3&gt;
-&lt;h4 id=&quot;by-spencer-quong&quot;&gt;By Spencer Quong&lt;/h4&gt;
-
-&lt;p&gt;I first came across &lt;em&gt;the Paris Review&lt;/em&gt; from Sarah Kay’s Poetry Rx series of
-posts. She was the convocation speaker my freshman year at Case, and I’ve been
-loosely following what she writes since. When I was in middle school we had
-about 3-4 authors visit each year, by some miracle work of our librarian. When I
-was younger I always thought I’d be an author one day, whether that would be my
-career or something I do after retirement. Reading the &lt;em&gt;Review&lt;/em&gt; has helped me
-keep up those interests even as I pursue a STEM degree at an incredibly
-pre-profesional school. But then, that’s another topic entirely.&lt;/p&gt;
-
-&lt;p&gt;The author, Douglas Martin, is as thoroughly fascinating in this interview as
-everyone with the stroke of practiced brilliance and dedication that any great
-writer has. The impulse to write following being exposed to the news cycle
-around the events which inspired to book is amazing to me - too often, I feel
-stretched in response to encountering something impactful. It’s often easier to
-lean away rather than into discomfort, but Martin describes doing exactly that.&lt;/p&gt;
-
-&lt;p&gt;Perhaps as a product of being fortunate enough to encounter so many writers at a
-young age, I love hearing about their process. Martin’s musings over giving his
-characters names is wonderfully tasteful and high level. His ultimate decision
-to prioritise relationships – “I want to look at some supposed roles within
-these positions” – seems to, in some capacity, define the book. The
-interviewer, Spencer Quong, dives into this further by asking about the use of
-the word “boy” throughout the text. Given the current discourse I find myself in
-surrounding what it means to be masculine, hearing this perspective of the
-precursive condition of boyhood was elucidating and freeing.&lt;/p&gt;
-
-&lt;p&gt;Read the article &lt;a href=&quot;https://www.theparisreview.org/blog/2020/07/14/whats-the-use-of-being-a-boy-an-interview-with-douglas-a-martin/&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h3 id=&quot;the-partially-examined-life-ep-235-judith-butlers-gender-trouble&quot;&gt;The Partially Examined Life, ep. 235: Judith Butler’s &lt;em&gt;Gender Trouble&lt;/em&gt;&lt;/h3&gt;
-&lt;h4 id=&quot;partially-examined-life-podcast&quot;&gt;Partially Examined Life Podcast&lt;/h4&gt;
-
-&lt;p&gt;I first began listening to PEL some time in high school, when I had a much more
-difficult time interpreting any of what they were saying. The podcast attempts
-to make philosophy accessible to their listeners, but never compromising real
-discussion of the material at hand. In other words, you don’t need a PhD in
-Philosophy to follow, but some background and intentional listening is needed.&lt;/p&gt;
-
-&lt;p&gt;I first encountered &lt;em&gt;Gender Trouble&lt;/em&gt; in a University Seminar class, &lt;em&gt;Many Ways
-to be a Woman&lt;/em&gt;. That was my first real introduction to feminism outside of what
-exists on Twitter, and it was incredibly eye-opening. My conception of many
-ideas about equality were expanded and given new legs by that class. Nowadays, I
-get frustrated by old friends who still make jokes about Gender Studies as
-though it isn’t a legitimate, necessary field with a role to play in our
-society. I’m begining to digress.&lt;/p&gt;
-
-&lt;p&gt;I’ve relistened to this podcast a few times, gleaning more at each go-around.
-The question of what structures we take for granted are socially constructed
-(and what the heck that actually means) are endlessly fascinating and
-informative. By rooting my understanding of what it means to be a man or a woman
-or to identify as neither in philosophical soil, it has become entrenched in a
-much more meaningful way. It isn’t just a matter of what you can and cannot say
-or think, but of identifying the impact of your words or actions in the greater
-context of our culture. While Butler is often criticized for failing to offer
-concrete action of any kind, the podcast’s hosts argue that her seminal work is
-often overinterpreted. It is not that Butler wouldn’t fight for women’s
-suffrage, for example, but that she believes that is not enough to make
-meaningful change in the face of the social constructions that define how we
-interact with each other.&lt;/p&gt;
-
-&lt;p&gt;Listen at the &lt;a href=&quot;https://partiallyexaminedlife.com/2020/02/03/ep235-1-butler-gender-trouble/&quot;&gt;link&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h3 id=&quot;the-dark-power-of-fraternities-the-atlantic&quot;&gt;“The Dark Power of Fraternities”, &lt;em&gt;The Atlantic&lt;/em&gt;&lt;/h3&gt;
-&lt;h4 id=&quot;by-caitlin-flanagan&quot;&gt;By Caitlin Flanagan&lt;/h4&gt;
-
-&lt;p&gt;I’ve been leading a reading group within my fraternity this summer to read and
-talk about social justice issues. There’s two parts to my motivation here:
-firstly, to move beyond just talking about inequality and dig into some
-writings; and secondly, to get the guys most interested in this sort of thing to
-spend more time on it and get comfortable talking to each other about it.
-Ideally, this will have a trickle-down effect in our chapter culture – if
-there’s 10 guys who will feel empowered by their knowledge and previous
-conversations to call out bad behavior or explain a concept to someone, that
-betters our whole community.&lt;/p&gt;
-
-&lt;p&gt;This article in particular is an absolutely amazing deep dive into the forces
-and politics at play in Greek Life on college campuses. Some of what Flanagan
-discusses, like the FIPG’s and the complicated web of insurance-related policies
-that exist in the fraternity world, are realities we have grown too comfortable
-with on our campus. An excellent quote from the article:&lt;/p&gt;
-&lt;blockquote&gt;
-  &lt;p&gt;Are fraternities acting in an ethical manner, requiring good behavior and
-punishing poor decisions? Or are they keeping a cool distance from the mayhem,
-knowing full well that it occurs with regularity?&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;This is especially vital reading for me as a member of my fraternity’s national
-leadership. There is a great deal of work to be done for our members, but there
-is also a great deal of awareness to be raised and actions to be taken for the
-campus communities that greek chapters exist within.&lt;/p&gt;
-
-&lt;p&gt;I’ve been dealing with a lot of personal reckonings lately, from my academic
-and career aspirations to my myriad associations and personal beliefs which are
-growing increasingly tenuous in our current world. I am growing increasingly
-aware by the day of the breadth and depth of work necessary if I am to be the
-kind of person I have always wanted and believed to be. It’s both a
-nervewracking and exciting experience, as difficult as anything worth doing is.&lt;/p&gt;
-
-&lt;p&gt;I strongly recommend reading this &lt;a href=&quot;https://www.theatlantic.com/magazine/archive/2014/03/the-dark-power-of-fraternities/357580/&quot;&gt;one&lt;/a&gt;.&lt;/p&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><category term="readings" /><summary type="html">Quick Forward As part of a personal challenge to write and reflect more often, I’ve decided to start sharing some of the more interesting articles and what-not I’ve read recently. Revisiting all of these should ideally help me stew in the ideas more, since it’s all too easy to read and move on. My high school chemistry teacher used to talk about how learning anything requires multiple exposures – for her, that was a justification for constant homework and quizzes, but then she was one of our best science teachers. “Lifelong Learning” is a buzzword, but one I believe in wholeheartedly.</summary></entry><entry><title type="html">Time Management Strategies - The Eisenhower Square</title><link href="http://localhost:4000/2020/06/16/time-management-square.html" rel="alternate" type="text/html" title="Time Management Strategies - The Eisenhower Square" /><published>2020-06-16T00:00:00-04:00</published><updated>2020-06-16T00:00:00-04:00</updated><id>http://localhost:4000/2020/06/16/time-management-square</id><content type="html" xml:base="http://localhost:4000/2020/06/16/time-management-square.html">&lt;p&gt;The below is an email I sent to my fraternity chapter last semester, during the
-period where we fould ourselves stuck at home. I am the Director of Member
-Development, in charge of programming related to ‘development’, in all the forms
-that that takes, and a member of the executive board with the goal of forming a
-cohesive, growth-oriented experience across the 4 years any of our members are
-undergraduates. When the pandemic interrupted our plans for the semester, many
-of us in leadership roles adapted as best we could. I felt this was an
-interesting write-up on one of my favorite time management strategies. I include
-most of the email body below. Enjoy!&lt;/p&gt;
-
-&lt;h3 id=&quot;the-eisenhower-square&quot;&gt;The Eisenhower Square&lt;/h3&gt;
-&lt;p&gt;This is a strategy I use whenever I feel like I’ve got a lot on my plate and
-it’s going to be hard to prioritise and get it all done. 4 quick steps:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;Write down everything you need to get done that you’re aware of
-    &lt;ul&gt;
-      &lt;li&gt;Homework, chores, things due in a month, test prep, etc.&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Next to each item, indicate with a “U” if it’s Urgent
-    &lt;ul&gt;
-      &lt;li&gt;This depends on the size of the time. For example, a one page reflection is
- probably only urgent when it’s due in 24 hours, but studying for a midterm is
- probably urgent 5 days out.&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Next to each item, indicate with an “I” if it’s Important
-    &lt;ul&gt;
-      &lt;li&gt;Is this meaningful to you? Does it help you achieve your goals or reflect
-your values? Are there others counting on you to do this?&lt;/li&gt;
-      &lt;li&gt;For example, MCAT review is definitely important, but daily reflections for
-class may not be to you&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Next to each item, indicate with “RN” if it can be done Right Now
-    &lt;ul&gt;
-      &lt;li&gt;Would it take you five minutes or less?&lt;/li&gt;
-      &lt;li&gt;For example, sending an email, writing up finished homework, washing your
-face, etc.&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Once you’ve done that, fill out the square:
-&lt;img src=&quot;/assets/eisenhower.png&quot; alt=&quot;eisenhower&quot; /&gt;&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;Right Now (RN)
-    &lt;ul&gt;
-      &lt;li&gt;Do this stuff right now! The &lt;strong&gt;quick win&lt;/strong&gt; of acomplishing something will prep
- you to succeed all day long&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Important and Urgent (IU)
-    &lt;ul&gt;
-      &lt;li&gt;This stuff should be your &lt;strong&gt;Top Priority&lt;/strong&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Not Important, but Urgent (nIU)
-    &lt;ul&gt;
-      &lt;li&gt;Once the stuff above is done, evaluate these items. Can they be &lt;strong&gt;delegated&lt;/strong&gt;
- or &lt;strong&gt;postponed&lt;/strong&gt;?&lt;/li&gt;
-      &lt;li&gt;If not, get them done now, too. If you get daily, small assignments for
- example, they’ll
- probably land here.&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Important, but not Urgent (InU)
-    &lt;ul&gt;
-      &lt;li&gt;If you have extra time today, you might get to this stuff. But if not, don’t
- sweat it!&lt;/li&gt;
-      &lt;li&gt;What’s most valuable is to &lt;strong&gt;set a schedule&lt;/strong&gt; for when you will get these
- things done. Keep in mind due dates and size of the task.&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Not Important and Not Urgent (nInU)
-    &lt;ul&gt;
-      &lt;li&gt;&lt;strong&gt;Re-evaluate&lt;/strong&gt; why this stuff made it on your list at all. Is there any value
- here?&lt;/li&gt;
-      &lt;li&gt;Identify what value exists, and determine if this is something to &lt;strong&gt;scrap&lt;/strong&gt;,
- something to &lt;strong&gt;schedule&lt;/strong&gt;, or something to &lt;strong&gt;reconsider&lt;/strong&gt; in some other way.&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;Here’s my list for today. Next to each item, I indicate with I/nI, U/nU, or RN
-for right now.&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Finish 422 Homework - I,U&lt;/li&gt;
-  &lt;li&gt;Write up 422 - I,U&lt;/li&gt;
-  &lt;li&gt;Home Reading for 422 - I,nU&lt;/li&gt;
-  &lt;li&gt;read 319 Paper - I,nU&lt;/li&gt;
-  &lt;li&gt;flesh out simulations 319 - nI,nU&lt;/li&gt;
-  &lt;li&gt;practice email BAFI - Right Now&lt;/li&gt;
-  &lt;li&gt;readings BAFI - I,U&lt;/li&gt;
-  &lt;li&gt;send an email to the chapter - Right Now&lt;/li&gt;
-  &lt;li&gt;wash towels - Right Now&lt;/li&gt;
-  &lt;li&gt;clean bathroom - I,nU&lt;/li&gt;
-  &lt;li&gt;watch discrete lecture - I,nU&lt;/li&gt;
-  &lt;li&gt;watch MUTH lecture - nU,nI&lt;/li&gt;
-  &lt;li&gt;Do my taxes - I,nU&lt;/li&gt;
-  &lt;li&gt;clean desk - Right Now&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><summary type="html">The below is an email I sent to my fraternity chapter last semester, during the period where we fould ourselves stuck at home. I am the Director of Member Development, in charge of programming related to ‘development’, in all the forms that that takes, and a member of the executive board with the goal of forming a cohesive, growth-oriented experience across the 4 years any of our members are undergraduates. When the pandemic interrupted our plans for the semester, many of us in leadership roles adapted as best we could. I felt this was an interesting write-up on one of my favorite time management strategies. I include most of the email body below. Enjoy!</summary></entry><entry><title type="html">Theming KDE</title><link href="http://localhost:4000/workflow/2020/04/26/theming-KDE.html" rel="alternate" type="text/html" title="Theming KDE" /><published>2020-04-26T00:00:00-04:00</published><updated>2020-04-26T00:00:00-04:00</updated><id>http://localhost:4000/workflow/2020/04/26/theming-KDE</id><content type="html" xml:base="http://localhost:4000/workflow/2020/04/26/theming-KDE.html">&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;I was about 13 when I built my first PC with a combination of savings,
-birthday and christmas money, and help from a copious number of Youtube
-tutorials. I still remember my panic when the internet didn’t immediately work, and
-I had to run out to TigerDirect to buy a WiFi adapter (whoops!). Since then I’ve
-built about a dozen or so systems for family and friends, and found out I
-wasn’t alone - it seems to be a common beginner mistake to assume once you have
-all the parts put together, the machine should just work like a prebuilt.&lt;/p&gt;
-
-&lt;p&gt;The other side of this is the $100 cost for a Windows installation disk. Turns
-out there’s no better way to turn a 13 year old into a Linux user than to ask
-him for even more money after he’s made the biggest purchase of his life. While
-I eventually turned over the Microsoft tax (since Linux gaming support wasn’t exactly
-the best in 2013), I spent several weeks on Ubuntu 16.04 LTS, with the Gnome
-desktop environment.&lt;/p&gt;
-
-&lt;p&gt;This first foray into Linux and FOSS was pretty huge for me. While I didn’t
-understand what I was doing then, using the command line to install drivers and
-solving my own problems (while creating a good amount too!) was magical to me.
-When I left for college and got my first laptop, I immediately dual-booted it
-with Ubuntu 18.04 and Gnome.&lt;/p&gt;
-
-&lt;p&gt;This worked great for a while, and I steadily used Windows 10 less and less as I
-got more used to the configurability and ease of use of Ubuntu and gnome. When I
-started doing data science research with the Solar Durability and Lifetime
-Extension center on campus, being familiar with Linux was a huge bonus. All of
-the graduate students and PI’s used Ubuntu and KDE, and the Raspberry Pi’s we
-primarily used to connect to the University’s HPC were configured with Raspbian.&lt;/p&gt;
-
-&lt;p&gt;My laptop had a touchscreen, so I thought I was smart to be using Gnome with
-its larger UI and (in my mind) more elegant design compared to the slow,
-cluttered KDE environments I used on the HPC. But a friend of mine in the lab
-showed me his XFCE setup and how deeply customized he had made it. It was around
-this time that I switched to Manjaro just for the sake of more frequent updates
-and better driver support on my Razer Blade Stealth, and I decided to make the
-jump to KDE as well.&lt;/p&gt;
-
-&lt;h2 id=&quot;the-setup&quot;&gt;The Setup&lt;/h2&gt;
-&lt;h3 id=&quot;global-themeplasma-style&quot;&gt;Global Theme/Plasma Style&lt;/h3&gt;
-&lt;p&gt;I use &lt;a href=&quot;https://draculatheme.com/&quot;&gt;Dracula&lt;/a&gt; as my global theme. It’s a fantastic dark color scheme, with a
-lot of nice purples and greens, but perhaps most importantly, it exists for a
-ton of applications. The dracula theme is consistent across my desktop
-environment, my firefox top bar, my vim and konsole colors, etc. For the global
-theme, I opened system settings -&amp;gt; Appearance -&amp;gt; Global Themes -&amp;gt; Get New Global
-Themes.. and searched for it. I use it for my window decorations and Plasma
-style as well, both in the Appearance tab as well in KDE’s system settings.
-&lt;img src=&quot;/assets/Screenshot_20200426_175508.png&quot; alt=&quot;global theme&quot; /&gt;
-I’ve also tried out &lt;a href=&quot;https://github.com/EliverLara/Nordic&quot;&gt;Nordic&lt;/a&gt;, which is a gorgeous, more matte option. I prefer
-Dracula, but I have no qualms recommending that one as well.&lt;/p&gt;
-
-&lt;h3 id=&quot;icons&quot;&gt;Icons&lt;/h3&gt;
-&lt;p&gt;For Icons, I use &lt;a href=&quot;https://github.com/vinceliuice/Tela-icon-theme&quot;&gt;Tela&lt;/a&gt;. I really like how well the colors here pair with
-Dracula. You can follow the link to the github for installation instructions,
-but I just went from system settings -&amp;gt; Icons -&amp;gt; Get New Icons… since that was
-easy.&lt;/p&gt;
-
-&lt;h3 id=&quot;other-fun-stuff&quot;&gt;Other Fun Stuff&lt;/h3&gt;
-&lt;p&gt;I love using virtual desktops to keep some semblance of order between my various
-assignments and classes throughout the day. Often I’ll have 4 desktops: one for
-editing assignments and reading them from Canvas, one for textbook PDF’s and
-other reference material, one for reserve/putting other classwork out of mind,
-and one for Spotify and whatever else is running in the background. I already
-use hotkeys to open applications and for whatever is running, so having keys to
-switch between desktops can get tricky. I much prefer the MacOS approach of
-having decent touchpad support, but this isn’t built into KDE/Manjaro.&lt;/p&gt;
-
-&lt;p&gt;I use &lt;a href=&quot;https://github.com/bulletmark/libinput-gestures&quot;&gt;libinput-gestures&lt;/a&gt; for this. Simply put, it lets you configure your
-touchpad to recognize gesture inputs however you’d like. I followed it’s install
-guide to a T, installing the library from the AUR. I just use the defaults to
-3-finger swipe between virtual desktops, but there’s a ton of config options
-detailed on the github.&lt;/p&gt;
-
-&lt;p&gt;On the desktop, I use &lt;a href=&quot;https://github.com/KDE/latte-dock&quot;&gt;latte-dock&lt;/a&gt;, and specifically the Plasma layout. I’ve
-tried it at the top and bottom, and prefer having as small a GUI as possible to
-help me focus on whatever I’m working on. The bar is the least intrusive, most
-intuitive metaphor for me, since I often find using pop-up panels gets annoying
-when mousing around the screen. YMMV, of course.&lt;/p&gt;
-
-&lt;h4 id=&quot;command-line-goodies&quot;&gt;Command Line Goodies&lt;/h4&gt;
-&lt;p&gt;I really, really love the aesthetic and convenience of [yakuake]. It comes by
-default on Manjaro KDE and makes interacting with the command line super easy. I
-use Ctrl + Tab to bring it up, and F12 to fullscreen it (both set in System
-Settings -&amp;gt; Shortcuts). If I’m coding alongside a tutorial or something like
-that, I’ll split screen with Konsole, but usually I prefer the drop-down.&lt;/p&gt;
-
-&lt;p&gt;Within the console, I use &lt;a href=&quot;https://github.com/tmux/tmux&quot;&gt;tmux&lt;/a&gt; to organize my workspace. Tmux is a terminal
-multiplexer, which basically lets you interact with multiple instances of the
-command line in one window. I might use 10% of its capabilities – it’s a hugely
-useful app – but I can’t get by without it now. Ham Vocke has an awesome intro
-to it on &lt;a href=&quot;https://www.hamvocke.com/blog/a-quick-and-easy-guide-to-tmux/&quot;&gt;his website&lt;/a&gt; detailing how useful it is to him as a full-time
-programmer. I’d strongly suggest that post and his follow-ups as an intro to
-using the app. Here’s a link to my current config file, which is largely poached
-from various Reddit users and public github repos: 
-&lt;a href=&quot;/assets/tmux.conf&quot;&gt;.tmux.conf&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;Within the command line, I replaced my prompt with &lt;a href=&quot;https://starship.rs/&quot;&gt;starship.rs&lt;/a&gt;, which is
-wonderfully customizable. It lets me customize what the prompt looks like and
-what information is included with it each time a command runs. I use it to
-remind me what virtual environment I might be on, what git branch I’m on and
-whether it’s updated remotely, and get rough timings of commands.
-&lt;img src=&quot;/assets/Screenshot_20200426_182710.png&quot; alt=&quot;tmux and starship&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;And here’s a link to my configuration file: &lt;a href=&quot;/assets/starship.toml&quot;&gt;config&lt;/a&gt; I
-only use a small portion of the languages it can recognize. Checkout the
-website for more!&lt;/p&gt;
-
-&lt;p&gt;Lastly, it’s worth mentioning that I’ve themed out my Vim, Konsole, Firefox, and
-tmux with the &lt;a href=&quot;https://draculatheme.com/&quot;&gt;Dracula&lt;/a&gt; theme. Check out their documentation for installation of
-each of these. Unfortunately, since the theme supports so many platforms, the
-documentation is very general and I found myself going through a fair amount of
-stackoverflow threads looking for small fixes (including spending about 20
-minutes looking for a hidden file! fun times all around). Joking aside, I’ll
-link my .bashrc and .vimrc below for your utility/amusement:
-&lt;a href=&quot;/assets/bashrc&quot;&gt;.bashrc&lt;/a&gt;
-&lt;a href=&quot;/assets/vimrc&quot;&gt;.vimrc&lt;/a&gt;&lt;/p&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><category term="workflow" /><summary type="html">I was about 13 when I built my first PC...</summary></entry></feed>
+in a set which seems to be so small, is fascinating and beautiful.&lt;/p&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><category term="readings" /><summary type="html">(Similarly Quick) Forward I set out to write a post like this every Friday, so of course the second week in I had a massive influx of work topped by about 6 hours in Zoom meetings. Oh well! One of the perks of a personal project is that it’s totally under my control: convenient when other responsibilities get in the way.</summary></entry></feed>

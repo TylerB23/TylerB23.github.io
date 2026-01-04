@@ -64,4 +64,22 @@ var store = [{
         "tags": [],
         "url": "/2025/11/30/LA-Bond-Math.html",
         "teaser": null
+      },{
+        "title": "Fixing my Bond Math Code from the Last Post",
+        "excerpt":"While playing around with the Python I wrote in my last blog post, I realized that it had a fatal error. Muni bonds are typically sold in \\$5,000 lots, so in my first attempt I tried to deal with this by taking the floor of my calculated principal amounts element-wise....","categories": [],
+        "tags": [],
+        "url": "/2025/12/14/fixing-my-bond-math-code.html",
+        "teaser": null
+      },{
+        "title": "What's the Difference between Gambling and Investing?",
+        "excerpt":"In college, I took a class about fintech to satisfy one of the my general writing skills requirements. Since it was a special course to meet that requirement, rather than a business school course, we spent less time talking about the concrete details of fintech and more on the what...","categories": [],
+        "tags": [],
+        "url": "/2025/12/17/gambling-or-investing.html",
+        "teaser": null
+      },{
+        "title": "Analytic Solution to an Amortizing Bond Model",
+        "excerpt":"Introduction We’re picking up where we left off with using linear algebra to consider amortizing bond models like the ones I implement at work. Last time, we wrote the coefficients matrix which encodes the model: multiply the below matrix by a vector with annual principal payments, and you’ll get a...","categories": [],
+        "tags": [],
+        "url": "/2026/01/03/analytic-solutions-bond-model.html",
+        "teaser": null
       }]

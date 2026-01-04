@@ -1,7 +1,8 @@
 ---
 layout: post
 title: "What's the Difference between Gambling and Investing?"
-date: 2025-12-17
+header:
+    overlay_image: /assets/slot_machines.jpg
 ---
 In college, I took a class about fintech to satisfy one of the my general
 writing skills requirements. Since it was a special course to meet that

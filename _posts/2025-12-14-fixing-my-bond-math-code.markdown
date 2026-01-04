@@ -1,9 +1,10 @@
 ---
 layout: post
 title: "Fixing my Bond Math Code from the Last Post"
+excerpt: ""
 header:
     overlay_image: /assets/Dutch_Bond.jpg
-    overlay_filter: 0
+    overlay_filter: 0.25
 ---
 While playing around with the Python I wrote in my last blog post, I realized
 that it had a fatal error. Muni bonds are typically sold in \\$5,000 lots, so in

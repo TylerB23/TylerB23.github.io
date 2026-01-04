@@ -1,10 +1,11 @@
 ---
 layout: post
 title: "Analytic Solution to an Amortizing Bond Model"
-date: 2026-01-03
+excerpt: ""
+header:
+    overlay_image: /assets/pascals_triangle.jpg
+    overlay_filter: 0.5
 ---
-## Introduction ##
-
 We're picking up where we left off with using linear algebra to consider
 amortizing bond models like the ones I implement at work. Last time, we wrote
 the coefficients matrix which encodes the model: multiply the below matrix by a

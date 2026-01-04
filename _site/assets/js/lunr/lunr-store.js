@@ -78,7 +78,7 @@ var store = [{
         "teaser": null
       },{
         "title": "Analytic Solution to an Amortizing Bond Model",
-        "excerpt":"Introduction We’re picking up where we left off with using linear algebra to consider amortizing bond models like the ones I implement at work. Last time, we wrote the coefficients matrix which encodes the model: multiply the below matrix by a vector with annual principal payments, and you’ll get a...","categories": [],
+        "excerpt":"We’re picking up where we left off with using linear algebra to consider amortizing bond models like the ones I implement at work. Last time, we wrote the coefficients matrix which encodes the model: multiply the below matrix by a vector with annual principal payments, and you’ll get a vector...","categories": [],
         "tags": [],
         "url": "/2026/01/03/analytic-solutions-bond-model.html",
         "teaser": null

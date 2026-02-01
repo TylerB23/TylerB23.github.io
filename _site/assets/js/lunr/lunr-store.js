@@ -71,15 +71,15 @@ var store = [{
         "url": "/2025/12/14/fixing-my-bond-math-code.html",
         "teaser": null
       },{
-        "title": "What's the Difference between Gambling and Investing?",
-        "excerpt":"In college, I took a class about fintech to satisfy one of the my general writing skills requirements. Since it was a special course to meet that requirement, rather than a business school course, we spent less time talking about the concrete details of fintech and more on the what...","categories": [],
-        "tags": [],
-        "url": "/2025/12/17/gambling-or-investing.html",
-        "teaser": null
-      },{
         "title": "Analytic Solution to an Amortizing Bond Model",
         "excerpt":"We’re picking up where we left off with using linear algebra to consider amortizing bond models like the ones I implement at work. Last time, we wrote the coefficients matrix which encodes the model: multiply the below matrix by a vector with annual principal payments, and you’ll get a vector...","categories": [],
         "tags": [],
         "url": "/2026/01/03/analytic-solutions-bond-model.html",
+        "teaser": null
+      },{
+        "title": "Currency Markets Graphs",
+        "excerpt":"The US dollar hit a four-year low this month following some, uh, interesting policy coming from the White House as well as comments from the president indicating he doesn’t really mind the currency weakness. The New York Fed performed a rate check in Yen markets, pretty much the only major...","categories": [],
+        "tags": [],
+        "url": "/2026/02/01/currency-graphs.html",
         "teaser": null
       }]

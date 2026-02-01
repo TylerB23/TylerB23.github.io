@@ -1,4 +1,113 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2026-01-03T21:46:32-05:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Tyler’s Blog</title><subtitle>Welcome! | Tyler&apos;s Blog</subtitle><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><entry><title type="html">Analytic Solution to an Amortizing Bond Model</title><link href="http://localhost:4000/2026/01/03/analytic-solutions-bond-model.html" rel="alternate" type="text/html" title="Analytic Solution to an Amortizing Bond Model" /><published>2026-01-03T00:00:00-05:00</published><updated>2026-01-03T00:00:00-05:00</updated><id>http://localhost:4000/2026/01/03/analytic-solutions-bond-model</id><content type="html" xml:base="http://localhost:4000/2026/01/03/analytic-solutions-bond-model.html">&lt;p&gt;We’re picking up where we left off with using linear algebra to consider
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2026-02-01T12:12:18-05:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Tyler’s Blog</title><subtitle>Welcome! | Tyler&apos;s Blog</subtitle><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><entry><title type="html">Currency Markets Graphs</title><link href="http://localhost:4000/2026/02/01/currency-graphs.html" rel="alternate" type="text/html" title="Currency Markets Graphs" /><published>2026-02-01T00:00:00-05:00</published><updated>2026-02-01T00:00:00-05:00</updated><id>http://localhost:4000/2026/02/01/currency-graphs</id><content type="html" xml:base="http://localhost:4000/2026/02/01/currency-graphs.html">&lt;p&gt;The US dollar hit a four-year low this month following some, uh, interesting policy coming from the White House as well as comments from the president indicating he doesn’t really mind the currency weakness. The New York Fed performed a &lt;a href=&quot;https://www.ft.com/content/0cff24f9-3c5e-4aff-966a-ff34ef448a2d&quot;&gt;rate check&lt;/a&gt; in Yen markets, pretty much the only major currency that hasn’t been gaining on the dollar.&lt;/p&gt;
+
+&lt;p&gt;All of this has had me thinking more about currencies, one of the markets I know comparatively less about. One common way to display currency markets at a glance is a cross rates table showing conversion rates between major currencies. Here’s an example from &lt;a href=&quot;https://www.bloomberg.com/markets/currencies/cross-rates&quot;&gt;Bloomberg&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;While bored at work the other day, I played around with a graphical representation of that table. Here’s the basic idea:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Suppose there are $n$ different currencies (I’ll use five in the examples below).&lt;/li&gt;
+  &lt;li&gt;Each currency pair has a conversion rate. Suppose the rate going from $A$ to $B$ is $r_{AB}$. Then the rate going from $B$ to $A$ is $r_{BA} = 1 / r_{AB}$.&lt;/li&gt;
+  &lt;li&gt;No arbitrage is enforced. That means there shouldn’t be a way to convert a unit of one currency to another at a rate higher or lower than the direct conversion rate. Mathematically, that means $r_{AC} = r_{AB} r_{BC}$, for example.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Using those rules, we can build a cross rates table with just $n-1$ cross rates; specifically, we only need the conversion rates from one currency to all of the others in order to get the rest of the rates. I’ll demonstrate by building the table.&lt;/p&gt;
+
+&lt;p&gt;I’ll represent the table as an $n$-by-$n$ matrix, where the $(i,j)$ entry gives us how much of currency $i$ is equal to 1 unit of currency $j$.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;numpy&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;sympy&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Matrix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;init_printing&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;matplotlib.pyplot&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;networkx&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nx&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;rng&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;random&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;default_rng&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;set_printoptions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;suppress&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;True&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;precision&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# We&apos;ll work with just 5 currencies for legibility.
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# First, the conversion rate from a currency to itself is just one.
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cross_rates&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;eye&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;Matrix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cross_rates&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+\[\displaystyle \left[\begin{matrix}1.0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0\\0 &amp;amp; 1.0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0\\0
+&amp;amp; 0 &amp;amp; 1.0 &amp;amp; 0 &amp;amp; 0\\0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 1.0 &amp;amp; 0\\0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 1.0\end{matrix}\right]\]
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# Next, fill in our assumed conversion rates.
+# These are actual conversion rates from USD to 
+# EUR, JPY, GBP, and CHF pulled on February 1st, 2026.
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;primary_conv_rates&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;asarray&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.8438&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;154.7800&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.7307&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.7730&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;cross_rates&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;primary_conv_rates&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;Matrix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cross_rates&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+\[\displaystyle \left[\begin{matrix}1.0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0\\0.8438 &amp;amp; 1.0 &amp;amp; 0 &amp;amp; 0 &amp;amp;
+0\\154.78 &amp;amp; 0 &amp;amp; 1.0 &amp;amp; 0 &amp;amp; 0\\0.7307 &amp;amp; 0 &amp;amp; 0 &amp;amp; 1.0 &amp;amp; 0\\0.773 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 &amp;amp;
+1.0\end{matrix}\right]\]
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# The rates from USD to those currencies are just the inverse of
+# the rates from those currencies to USD.
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cross_rates&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;primary_conv_rates&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# I&apos;m printing the matrix with decimals rounded to 4 places for legibility.
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Matrix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cross_rates&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;applyfunc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;round&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+\[\displaystyle \left[\begin{matrix}1.0 &amp;amp; 1.1851 &amp;amp; 0.0065 &amp;amp; 1.3686 &amp;amp;
+1.2937\\0.8438 &amp;amp; 1.0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0\\154.78 &amp;amp; 0 &amp;amp; 1.0 &amp;amp; 0 &amp;amp; 0\\0.7307 &amp;amp; 0 &amp;amp; 0 &amp;amp; 1.0
+&amp;amp; 0\\0.773 &amp;amp; 0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 1.0\end{matrix}\right]\]
+
+&lt;p&gt;To fill in the rest of the table, we’ll take advantage of our third assumption. In order for there to be no arbitrage, it must be the case that $r_{BC} = r_{BA} r_{AC}$. Letting $A$ be USD, which is the currency whose cross rates we’re starting with, we can fill in the cross rates between other currencies by going through USD.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;j&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;range&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;cross_rates&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cross_rates&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cross_rates&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;cross_rates&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cross_rates&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;Matrix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cross_rates&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;applyfunc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;round&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+\[\displaystyle \left[\begin{matrix}1.0 &amp;amp; 1.1851 &amp;amp; 0.0065 &amp;amp; 1.3686 &amp;amp;
+1.2937\\0.8438 &amp;amp; 1.0 &amp;amp; 0.0055 &amp;amp; 1.1548 &amp;amp; 1.0916\\154.78 &amp;amp; 183.4321 &amp;amp; 1.0 &amp;amp;
+211.8243 &amp;amp; 200.2329\\0.7307 &amp;amp; 0.866 &amp;amp; 0.0047 &amp;amp; 1.0 &amp;amp; 0.9453\\0.773 &amp;amp; 0.9161 &amp;amp;
+0.005 &amp;amp; 1.0579 &amp;amp; 1.0\end{matrix}\right]\]
+
+&lt;p&gt;I used the networkx package to make a graph. Gemini is a great tool for people like myself, who have programming backgrounds but don’t do it every day. It made it really easy to find the right functions to use by just asking, “how do I do [x]?” and then looking the function up in the package’s documentation. I could probably have done this faster by describing exactly what I wanted to do to a thinking model, but doing it this way helped me learn the package.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# Generate the graph from the array.
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;G&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;from_numpy_array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cross_rates&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;create_using&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DiGraph&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# By default, the nodes are named with integers.
+# The below renames the nodes to the appropriate currencies.
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;node_names&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;USD&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;EUR&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;JPY&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;GBP&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;CHF&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;mapping&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;enumerate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;node_names&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)}&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;nx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;relabel_nodes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;G&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mapping&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;copy&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;False&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# Remove self-edges (i.e., the conversion rate from a currency to itself)
+# to make it easier to read.
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;G&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;remove_edges_from&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;selfloop_edges&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;G&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# Set the layout of the nodes and generate the pyplot graph
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pos&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;circular_layout&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;G&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;figure&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;figsize&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;nx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;draw&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;G&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pos&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;with_labels&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;True&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; 
+        &lt;span class=&quot;n&quot;&gt;node_color&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;lightblue&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;node_size&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;700&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; 
+        &lt;span class=&quot;n&quot;&gt;arrowsize&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;connectionstyle&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;arc3,rad=0.1&quot;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    
+&lt;span class=&quot;n&quot;&gt;elabels&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;u&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt; &lt;span class=&quot;sa&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;d&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;weight&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]:.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; (&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;u&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; / &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;)&quot;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;u&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;d&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;G&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;edges&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;True&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;nx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;draw_networkx_edge_labels&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;G&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pos&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;edge_labels&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;elabels&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;label_pos&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.25&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;font_size&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    
+&lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;show&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/CurrencyGraph.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;You could compare the table generated from one currency’s exchange rates to actual market exchange rates. Since the table is constructed assuming no arbitrage, any differences between its predicted rates and market rates presumably represent arbitrage opportunities. This is something researchers actually do, as in &lt;a href=&quot;https://www.sciencedirect.com/science/article/pii/S0304405X22001891&quot;&gt;this paper&lt;/a&gt;. From its abstract alone, you can immediately tell that the real world is much more complicated than this toy model, but it’s a useful framework all the same.&lt;/p&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><summary type="html">The US dollar hit a four-year low this month following some, uh, interesting policy coming from the White House as well as comments from the president indicating he doesn’t really mind the currency weakness. The New York Fed performed a rate check in Yen markets, pretty much the only major currency that hasn’t been gaining on the dollar.</summary></entry><entry><title type="html">Analytic Solution to an Amortizing Bond Model</title><link href="http://localhost:4000/2026/01/03/analytic-solutions-bond-model.html" rel="alternate" type="text/html" title="Analytic Solution to an Amortizing Bond Model" /><published>2026-01-03T00:00:00-05:00</published><updated>2026-01-03T00:00:00-05:00</updated><id>http://localhost:4000/2026/01/03/analytic-solutions-bond-model</id><content type="html" xml:base="http://localhost:4000/2026/01/03/analytic-solutions-bond-model.html">&lt;p&gt;We’re picking up where we left off with using linear algebra to consider
 amortizing bond models like the ones I implement at work. Last time, we wrote
 the coefficients matrix which encodes the model: multiply the below matrix by a
 vector with annual principal payments, and you’ll get a vector representing the
@@ -284,130 +393,7 @@ some numerical analyses. At work I’ve noticed that a 30-year term and a growth
 rate of 3% in the revenue constraint / payments tends to lead to trouble; it’d
 be helpful to run a bunch of these models in Python to see where we begin to run
 into issues with (i) higher growth rates, (ii) higher coupon rates, and (iii)
-longer maturities. That will be the topic of a future post.&lt;/p&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author></entry><entry><title type="html">What’s the Difference between Gambling and Investing?</title><link href="http://localhost:4000/2025/12/17/gambling-or-investing.html" rel="alternate" type="text/html" title="What’s the Difference between Gambling and Investing?" /><published>2025-12-17T00:00:00-05:00</published><updated>2025-12-17T00:00:00-05:00</updated><id>http://localhost:4000/2025/12/17/gambling-or-investing</id><content type="html" xml:base="http://localhost:4000/2025/12/17/gambling-or-investing.html">&lt;p&gt;In college, I took a class about fintech to satisfy one of the my general
-writing skills requirements. Since it was a special course to meet that
-requirement, rather than a business school course, we spent less time talking
-about the concrete details of fintech and more on the what it is,
-philosophically.&lt;/p&gt;
-
-&lt;p&gt;One of the focus areas of the class was crypto. This was in the fall of fall
-of 2020, when bitcoin was around \$8 to \$10 thousand and NFTs were just
-beginning to catch some publicity. It was also after the first round of stimulus
-checks, so bored at-home retail traders were definitely having a moment.&lt;/p&gt;
-
-&lt;p&gt;Since the class fulfilled a gen ed, the students came from all over the
-university. It being CWRU, it was mostly engineers and nursing students who
-didn’t spend much time thinking about investing. That meant some of the
-assumptions a finance major would come in with weren’t really present in that
-classroom, and so the discussion tended to go broad pretty quickly.&lt;/p&gt;
-
-&lt;p&gt;I clearly remember one day when we were talking about the fundamental drivers of
-the price of bitcoin (or really, the lack thereof), a student asked the
-professor, “isn’t this just gambling?”. To which he replied, “what do you think
-the difference between gambling and investing is?”.&lt;/p&gt;
-
-&lt;h4 id=&quot;my-answer-at-the-time&quot;&gt;My Answer at the Time&lt;/h4&gt;
-
-&lt;p&gt;I don’t remember if I volunteered this answer in the classroom, but at
-the time my thought was that what separated the two activities was &lt;strong&gt;positive
-expected value&lt;/strong&gt;. Most games at a casino have a house edge; over the long run,
-you expect to lose money. The things we typically think of as investing (fixed
-income and equities) have well-documented historic positive returns.&lt;/p&gt;
-
-&lt;p&gt;I’ve revisited the idea since taking the class, especially as I began my career
-in investment banking. When my team sells
-bonds, they’re usually financing public improvements like roadwork, utility line
-extensions, water and sewer, etc. The development increases the value of the
-parcel, and our investors get paid back from the subsequent increase in property
-taxes. It’s pretty classic investing - bondholders put up the money today that
-is used to build infrastructure which supports private development, and they get
-paid back from the cash flow coming off of the development.&lt;/p&gt;
-
-&lt;p&gt;Investors have a positive expected value; they get paid a steady stream of
-coupons which represent their return. There is some risk that the project
-doesn’t get built or the cash flows from it aren’t sufficient to pay off the
-bonds, but they’re compensated for those risks.&lt;/p&gt;
-
-&lt;p&gt;Whether investors are being compensated appropriately for the risk they’re
-taking, in my eyes, doesn’t affect whether they’re engaged in investing or
-gambling. Risk-adjusted returns are a measure of how good they are at investing,
-not a determinant of whether they’re engaged in the activity at all.&lt;/p&gt;
-
-&lt;p&gt;Equity investing is a bit different, but I think it feels like investing to most
-people for similar reasons. It’s well-documented that public equities have
-historically delivered positive returns to investors over most time horizons. If
-you take a 30,000 foot view, you could say that owning a bunch of different
-stocks which are exposed to many different aspects of the economy should more or
-less capture growth in the economy. Furthermore, owning a stock gives you an
-ownership claim over the company. You’re entitled to a share in the profits of
-the company, mediated through its leadership who may decide to invest back into
-the enterprise, issue a dividend, or do stock buybacks.&lt;/p&gt;
-
-&lt;h4 id=&quot;how-id-answer-today-a-two-prong-definition&quot;&gt;How I’d Answer Today (a Two-Prong Definition)&lt;/h4&gt;
-
-&lt;p&gt;Fixed income and equity investing are what most people think of when they think
-of investing, and I think the two key characteristics of them are that (1) you
-can generally expect a positive return from them, 
-and (2) they represent something which gives them fundamental
-economic value. For equities, it’s ownership; for fixed income, it’s a
-contractual obligation to be repaid.&lt;/p&gt;
-
-&lt;p&gt;Lately, I’ve been thinking those two qualities are what separate investing from
-gambling. Without the second, a lot of things that most people would say are
-definitely not investing would count.&lt;/p&gt;
-
-&lt;p&gt;For example, a pro poker player sitting at
-a table with a bunch of newbies would have a positive expected value from their
-play; we still wouldn’t say that they’re investing. Playing poker is clearly
-gambling in most people’s eyes. It’s a game of skill, which makes it
-qualitatively different from other forms of gambling like roulette, for example;
-but it doesn’t seem right to call it the same kind of activity as buying \$QQQ.&lt;/p&gt;
-
-&lt;p&gt;Similarly, a high frequency trading shop seems to be engaged in something other
-than investing. When you hold positions for an extremely short period of time,
-that just feels very different from buying an index fund or investing in a
-Treasury note. However, many HFT shops have done very well for themselves
-historically and we have no reason to think they won’t continue to do so. It’s
-not gambling either. I think it’s useful to think of short-term trading and
-market making activities as a third thing entirely.&lt;/p&gt;
-
-&lt;h4 id=&quot;other-examples-what-counts-and-what-doesnt&quot;&gt;Other Examples: What Counts and What Doesn’t&lt;/h4&gt;
-
-&lt;p&gt;Equities, fixed income, and real estate are commonly accepted categories of
-investing which clearly count under my definition. Commodities do, too; whether
-you own physical gold or an ETF which tracks its price, there’s ownership and
-(sometimes) reason to think it’ll go up. At the least, gold does have some basic
-value so long as its a necessary component in electronics and jewelry.&lt;/p&gt;
-
-&lt;p&gt;As discussed above, games of skill with financial stakes like poker don’t count
-as investing, nor do short term trading activities or market-making.&lt;/p&gt;
-
-&lt;p&gt;Interestingly, there’s a case to be made that sports betting could count as
-investing under this definition for a certain kind of bettor. There are people
-out there who develop good models for game outcomes or who find arbitrage
-opportunities between different sportsbooks. They can reasonably claim to have a
-positive expected value. The bets they place, arguably, represent a kind of
-ownership in the potential payoff if the bet goes their way. Since this is a
-rare edge case, I’m comfortable leaving my definition as-is. What is clear is
-that the nasty parlay you cooked up with your buddies last Saturday and lost
-20 bucks on is not investing.&lt;/p&gt;
-
-&lt;h4 id=&quot;returning-to-crypto&quot;&gt;Returning to Crypto&lt;/h4&gt;
-
-&lt;p&gt;Bitcoin and other crypto currencies present a more interesting case. Many would
-argue that they have no fundamental value, or, more snarkily, that the correct
-price for these tokens is \$0. I am pretty convinced that most cryptocurrencies
-trade on technicals and hype rather than fundamental value. However, if you’re
-knowledgeable in the space and have reason to think a greater fool is likely to
-come along, and you have the stomach for the volatility, perhaps you can decide
-that, for you, it is investing.&lt;/p&gt;
-
-&lt;p&gt;I imagine some readers have been shouting at their screens for a few paragraphs
-now, “what determines whether the expected value is positive or not?”. It’s
-really the key question if you buy into my definition. Many investors in the
-equity market are content to rely on historical data and a certain “come on,
-bro” mentality: come on, bro, do you REALLY think the S&amp;amp;P 500 is going to be
-lower 30 years from now?&lt;/p&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><summary type="html">In college, I took a class about fintech to satisfy one of the my general writing skills requirements. Since it was a special course to meet that requirement, rather than a business school course, we spent less time talking about the concrete details of fintech and more on the what it is, philosophically.</summary></entry><entry><title type="html">Fixing my Bond Math Code from the Last Post</title><link href="http://localhost:4000/2025/12/14/fixing-my-bond-math-code.html" rel="alternate" type="text/html" title="Fixing my Bond Math Code from the Last Post" /><published>2025-12-14T00:00:00-05:00</published><updated>2025-12-14T00:00:00-05:00</updated><id>http://localhost:4000/2025/12/14/fixing-my-bond-math-code</id><content type="html" xml:base="http://localhost:4000/2025/12/14/fixing-my-bond-math-code.html">&lt;p&gt;While playing around with the Python I wrote in my last blog post, I realized
+longer maturities. That will be the topic of a future post.&lt;/p&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author></entry><entry><title type="html">Fixing my Bond Math Code from the Last Post</title><link href="http://localhost:4000/2025/12/14/fixing-my-bond-math-code.html" rel="alternate" type="text/html" title="Fixing my Bond Math Code from the Last Post" /><published>2025-12-14T00:00:00-05:00</published><updated>2025-12-14T00:00:00-05:00</updated><id>http://localhost:4000/2025/12/14/fixing-my-bond-math-code</id><content type="html" xml:base="http://localhost:4000/2025/12/14/fixing-my-bond-math-code.html">&lt;p&gt;While playing around with the Python I wrote in my last blog post, I realized
 that it had a fatal error. Muni bonds are typically sold in \$5,000 lots, so in
 my first attempt I tried to deal with this by taking the floor of my calculated
 principal amounts element-wise. However, by doing that I ended up reducing the

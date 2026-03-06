@@ -1,5 +1,6 @@
 ---
 layout: post
+categories: Personal
 title: Time Management Strategies - The Eisenhower Square
 date: 2020-06-16
 ---

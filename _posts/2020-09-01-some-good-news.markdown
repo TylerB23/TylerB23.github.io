@@ -1,5 +1,6 @@
 ---
 layout: post
+categories: Personal
 title: "Quick Post: Some Good News"
 date: 2020-09-01
 ---

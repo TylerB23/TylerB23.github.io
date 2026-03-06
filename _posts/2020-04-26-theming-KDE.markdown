@@ -2,11 +2,11 @@
 layout: post
 title: "Theming KDE"
 date: 2020-04-26
-categories: workflow
+categories: Personal
 excerpt: "I was about 13 when I built my first PC..."
 header: 
   overlay_image: /assets/konsole.png
-  overlay_filter: 0
+  overlay_filter: 0.5
 ---
 ## Introduction ##
 I was about 13 when I built my first PC with a combination of savings,

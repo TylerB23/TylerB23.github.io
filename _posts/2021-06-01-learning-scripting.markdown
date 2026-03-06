@@ -1,5 +1,6 @@
 ---
 layout: post
+categories: Technical
 title: "Learning to Script"
 ---
 I'm pretty sure I first got interested in linux around the same time Edward

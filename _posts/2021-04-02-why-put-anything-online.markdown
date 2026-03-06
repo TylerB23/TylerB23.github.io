@@ -1,5 +1,6 @@
 ---
 layout: post
+categories: Personal
 title: "Why Put _Anything_ Online?"
 date: 2021-04-02
 ---

@@ -1,5 +1,6 @@
 ---
 layout: post
+categories: Personal
 title: "Covid Post, II"
 date: 2020-08-30
 ---

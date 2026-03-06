@@ -1,7 +1,68 @@
 ---
-# Feel free to add content and custom Front Matter to this file.
-# To modify the layout, see https://jekyllrb.com/docs/themes/#overriding-theme-defaults
+layout: splash
+permalink: /
+header:
+  overlay_image: assets/Dutch_Bond.jpg
+  overlay_filter: "0.7"
+excerpt: "Welcome! Click the \"Latest\" button below for my most recent post, or
+check out my Technical Posts, Personal Blog, or About Me page below that."
 
-layout: home
-author_profile: true
+feature_row:
+  - image_path: /assets/quant-finance-stock.jpg
+    title: "Technical Posts"
+    excerpt: "These posts tend to focus on math and computer science topics, especially related to finance."
+    url: "/technical-posts/"
+    btn_label: "Read Here"
+    btn_class: "btn--primary"
+  - image_path: /assets/konsole.png
+    title: "Personal Blog"
+    excerpt: "These posts are more typical personal blog posts, mostly written when I was an undergrad during the pandemic."
+    url: "/personal-posts/"
+    btn_label: "Read Here"
+    btn_class: "btn--info"
+  - image_path: /assets/Allen-Memorial-Library.jpg
+    title: "About Me"
+    excerpt: "Learn a bit more about me."
+    url: "/about/"
+    btn_label: "Read Here"
+    btn_class: "btn--success"
 ---
+
+{% assign latest_post = site.posts.first %}
+
+  <div class="feature__wrapper">
+    <a href="{{ latest_post.url | relative_url }}" class="btn btn--inverse btn--large">
+      Latest: {{ latest_post.title }}
+    </a>
+  </div>
+
+<section class="latest-call-to-action" style="padding: 0.5em 0;">
+  <div class="wrapper" style="text-align: center;">
+    </div>
+</section>
+
+<div class="feature__wrapper">
+  {% include feature_row %}
+  </div>
+
+<script>
+  // Wait for the page to load
+  document.addEventListener("DOMContentLoaded", function() {
+    // Find all feature items
+    const items = document.querySelectorAll('.feature__item');
+    
+    items.forEach(item => {
+      // Find the link inside this specific item (from the button or title)
+      const link = item.querySelector('a');
+      const img = item.querySelector('img');
+      
+      if (link && img) {
+        // Wrap the image in a link or make it clickable
+        img.style.cursor = 'pointer';
+        img.onclick = function() {
+          window.location.href = link.href;
+        };
+      }
+    });
+  });
+</script>

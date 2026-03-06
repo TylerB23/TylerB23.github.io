@@ -1,9 +1,10 @@
 ---
 layout: post
+categories: Technical
 title: "Currency Markets Graphs"
 header:
     overlay_image: /assets/CurrencyGraph.png
-    overlay_filter: 0.25
+    overlay_filter: 0.5
 ---
 
 The US dollar hit a four-year low this month following some, uh, interesting policy coming from the White House as well as comments from the president indicating he doesn't really mind the currency weakness. The New York Fed performed a [rate check](https://www.ft.com/content/0cff24f9-3c5e-4aff-966a-ff34ef448a2d) in Yen markets, pretty much the only major currency that hasn't been gaining on the dollar.

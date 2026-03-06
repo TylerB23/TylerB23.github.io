@@ -1,5 +1,6 @@
 ---
 layout: post
+categories: Personal
 title: "COVID Posts, I"
 date: 2020-08-22
 ---

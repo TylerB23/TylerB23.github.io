@@ -2,7 +2,7 @@
 layout: post
 title: "What I'm Reading this Week, Vol. 1"
 date: 2020-07-17
-categories: readings
+categories: Personal
 
 ---
 ## Quick Forward ##

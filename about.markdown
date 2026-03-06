@@ -1,5 +1,5 @@
 ---
-layout: single
+layout: post
 title: About
 permalink: /about/
 author_profile: true
@@ -21,24 +21,15 @@ biological applications. I took most of the core systems biology courses while
 in school. About midway through, I realized I had no real idea what I wanted to
 do after undergrad. That led me to the business school, where I developed an
 interest in finance and picked up the minor. After two summers spent doing
-research on campus (more on that below), I interned with KeyBanc Capital Markets
-and ultimately took a full-time position there after graduating.
+research on campus, I interned with KeyBanc Capital Markets
+and took a full-time position there after graduating.
 
-I enjoy my career and everything it's afforded me, from the personal development
-to the professional network with some really wonderful people. It's taught me a
-lot of the soft skills that math majors stereotypically don't have, but more
-than that, I like to say it's taught me competency. I suppose a psychologist
-might call it concientiousness. Being in the work environment, especially at an
-investment bank, has forced me to become much more organized and tenacious. In
-undergrad, I often agonized for a week or more about sending an email to someone
-I didn't know well. That obviously doesn't fly at the office. I've quickly grown as a
-professional and as a person in the time since graduating. 
-
-In college I used Linux on my personal computer. I built my first PC when I was
-13, but forgot to budget for the cost of Windows, which led me to using Ubuntu
-for a few months. I still enjoy messing around with hardware and software today,
-though I'm now using a Mac at home - fewer things go wrong with it, and I don't
-have the time to do the troubleshooting I used to do in college.
+I've grown tremendously as a person from investment banking. It's forced me to
+pick up the soft skills that math majors stereotypically lack, for one. My
+undergrad advisor often told students they should get at least a bit of work
+experience before going to grad school, to experience the working world before
+becoming locked away in academia. I didn't really get what he meant at the time
+but still took his advice. I'm very grateful for it.
 
 In 2019 and 2020, I conducted research in data science at the [Solar Durability and Lifetime
 Extension Center](https://engineering.case.edu/centers/sdle/), where I assisted
@@ -55,11 +46,6 @@ interesting to me, though by the end of my schooling I came to recognize that
 biological applications weren't totally for me. I was quickly becoming
 interested in financial mathematics, especially as I began to recognize some
 parallels between the two disciplines.
-
-I've played the french horn for about 10 years, and I've been recently learning to 
-play guitar. I'll listen to nearly anything, but some of my
-favorite artists include Kendrick Lamar, Radiohead, Kanye, Vulfpeck, Kamasi Washington, and
-Thundercat.
 
 If anything on this blog piques your interest, feel free to reach out via email:
 tylerburleyson23@gmail.com

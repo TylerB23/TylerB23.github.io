@@ -1,0 +1,72 @@
+---
+---
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+$sans-serif: "Roboto";
+$global-font-family: $sans-serif;
+$header-font-family: $sans-serif;
+
+@import "minimal-mistakes/skins/air";
+@import "minimal-mistakes";
+
+table {
+    font-feature-settings: "tnum";
+    font-variant-numeric: tabular-nums;
+}
+
+/* Keep the content readable and professional, not stretched */
+.archive, .page__content {
+  max-width: 900px; 
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Make the entire feature card clickable */
+.feature__item {
+  position: relative;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    opacity: 0.9;
+    transform: translateY(-3px);
+  }
+
+  /* This stretches the link of the title to cover the whole item */
+  .feature__item-title a::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+}
+
+/* Style the Resume link in the sidebar to look like a button 
+.author__urls.social-icons {
+  li:first-of-type {
+    a {
+      display: block;
+      background-color: #004d40; 
+      color: #fff !important;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 4px;
+      text-align: center;
+      font-weight: bold;
+      text-decoration: none;
+      transition: background-color 0.3s ease;
+
+      &:hover {
+        background-color: #00695c;
+        color: #fff !important;
+      }
+
+      i {
+        color: #fff !important; 
+      }
+    }
+  }
+}
+*/

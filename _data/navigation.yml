@@ -1,6 +1,8 @@
 
 main:
+  - title: "Technical Posts"
+    url: /technical-posts/
+  - title: "Personal Blog"
+    url: /personal-posts/
   - title: "About"
     url: /about/
-  - title: "What I'm Reading"
-    url: /reading-list/

@@ -1,10 +1,11 @@
 ---
 layout: post
+categories: Technical
 title: "Using Linear Algebra for Bond Math"
 excerpt: ""
 header:
     overlay_image: /assets/Dutch_Bond.jpg
-    overlay_filter: 0.25
+    overlay_filter: 0.7
 ---
 I'm training two new analysts at work, which means introducing them to bond
 math. This can be a steep learning curve for some new hires since it often isn't

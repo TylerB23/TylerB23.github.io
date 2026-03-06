@@ -1,10 +1,10 @@
 ---
 layout: post
+categories: Technical
 title: "Analytic Solution to an Amortizing Bond Model"
-excerpt: ""
 header:
     overlay_image: /assets/pascals_triangle.jpg
-    overlay_filter: 0.5
+    overlay_filter: 0.7
 ---
 We're picking up where we left off with using linear algebra to consider
 amortizing bond models like the ones I implement at work. Last time, we wrote

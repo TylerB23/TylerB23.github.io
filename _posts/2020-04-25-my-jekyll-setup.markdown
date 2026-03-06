@@ -2,11 +2,13 @@
 layout: post
 title: "My Jekyll Setup"
 date: 2020-04-25
-categories: website
+categories: 
+  - website
+  - Technical
 excerpt: ""
 header:
   overlay_image: assets/configyml.png
-  overlay_filter: 0.1
+  overlay_filter: 0.5
 ---
 A friend of mine introduced me to [github.io] a few back and showed me some of
 the personal projects he has on his blog.

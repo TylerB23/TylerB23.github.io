@@ -1,5 +1,7 @@
 
 main:
+  - title: "Bond Model App"
+    url: /simple-model-app/
   - title: "Technical Posts"
     url: /technical-posts/
   - title: "Personal Blog"

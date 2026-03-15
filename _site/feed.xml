@@ -1,4 +1,140 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2026-03-15T13:49:58-04:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Tyler’s Blog</title><subtitle>Welcome! | Tyler&apos;s Blog</subtitle><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><entry><title type="html">Amortizing Bond Models Investigation, Part 3</title><link href="http://localhost:4000/technical/2026/03/15/amortizing-bond-model-intuition.html" rel="alternate" type="text/html" title="Amortizing Bond Models Investigation, Part 3" /><published>2026-03-15T00:00:00-04:00</published><updated>2026-03-15T00:00:00-04:00</updated><id>http://localhost:4000/technical/2026/03/15/amortizing-bond-model-intuition</id><content type="html" xml:base="http://localhost:4000/technical/2026/03/15/amortizing-bond-model-intuition.html">&lt;h2 id=&quot;the-code&quot;&gt;The Code&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2026-03-15T17:57:49-04:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Tyler’s Blog</title><subtitle>Welcome! | Tyler&apos;s Blog</subtitle><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><entry><title type="html">What’s the Difference between Gambling and Investing?</title><link href="http://localhost:4000/personal/2026/03/15/gambling-or-investing.html" rel="alternate" type="text/html" title="What’s the Difference between Gambling and Investing?" /><published>2026-03-15T00:00:00-04:00</published><updated>2026-03-15T00:00:00-04:00</updated><id>http://localhost:4000/personal/2026/03/15/gambling-or-investing</id><content type="html" xml:base="http://localhost:4000/personal/2026/03/15/gambling-or-investing.html">&lt;p&gt;Like most universities, my college had a writing skills requirement but was a
+bit embarrassed about it. Rather than force the engineers to take actual liberal
+arts courses, they offered “current interest” courses which
+satisfied the requirement. One of mine was on fintech, which in 2020 mostly meant
+crypto.&lt;/p&gt;
+
+&lt;p&gt;One of the seminar sessions focused on the fundamental drivers of the price of
+bitcoin (or the lack thereof). One of the other students asked the professor,
+“isn’t this just gambling?”, to which he replied, “what do you think separates
+gambling from investing?”.&lt;/p&gt;
+
+&lt;p&gt;The question has stuck with me for a while, and I thought it’d be interesting to
+write a blog post about how my thoughts on the topic have evolved.&lt;/p&gt;
+
+&lt;h2 id=&quot;my-answer-at-the-time&quot;&gt;My Answer at the Time&lt;/h2&gt;
+
+&lt;p&gt;Gambling and investing both involve putting capital at risk, with some chance of
+“winning” and growing the capital and some chance of “losing” and reducing the
+capital.&lt;/p&gt;
+
+&lt;p&gt;My first thought was that what separated the two activities was &lt;strong&gt;positive
+expected value&lt;/strong&gt;. Most games at a casino have a house edge; over the long run,
+you expect to lose money. The things we typically think of as investing (fixed
+income and equities) have well-documented historic positive returns.
+&lt;a href=&quot;https://en.wikipedia.org/wiki/Investment&quot;&gt;Wikipedia&lt;/a&gt; agrees with my undergrad
+definition of investing:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Investment is traditionally defined as the “commitment of resources into something expected to gain value over time”.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;I’ve revisited the idea since taking the class, especially as I began my career
+in investment banking. When my team sells
+bonds, they’re usually financing public improvements like roadwork, utility line
+extensions, water and sewer, etc. The development increases the value of the
+parcel of land, and our investors get paid back from the subsequent increase in property
+taxes (or sales taxes or whatever else). It’s pretty classic investing - bondholders
+put up money today that is used to build some project, and they get
+paid back from part of the cash flow coming off of the project. My team sells
+muni bonds, so the cash flow stream is usually a tax stream, but this
+generalizes to other sorts of fixed income in a straightforward manner.&lt;/p&gt;
+
+&lt;p&gt;Investors are paid a steady stream of
+coupons which represent their return. There is some risk that the project
+doesn’t get built or the cash flows from it aren’t sufficient to pay off the
+bonds, and they’re compensated for those risks. The intent of all parties
+involved is for them to have a positive expected value.&lt;/p&gt;
+
+&lt;p&gt;Whether investors are being compensated appropriately for the risk they’re
+taking, in my eyes, doesn’t affect whether they’re engaged in investing or
+gambling. Risk-adjusted returns are a measure of how good they are at investing,
+not a determinant of whether they’re engaged in the activity.&lt;/p&gt;
+
+&lt;p&gt;Already, you’re probably seeing the problem with focusing on expected value.
+I’ll get to that, but first, let’s think about equities for a moment.&lt;/p&gt;
+
+&lt;p&gt;Equity investing is a bit different, but I think it feels like investing to most
+people for similar reasons. It’s well-documented that public equities have
+historically delivered positive returns to investors over most time horizons. If
+you take a 30,000 foot view, you could say that owning a bunch of different
+stocks which are exposed to many different aspects of the economy should more or
+less capture growth in the economy. Furthermore, owning a stock gives you an
+ownership claim over the company. You’re entitled to a share in the profits of
+the company, mediated through its leadership who may decide to invest back into
+the enterprise, issue a dividend, or do stock buybacks.&lt;/p&gt;
+
+&lt;h2 id=&quot;problems-with-the-definition&quot;&gt;Problems with the Definition&lt;/h2&gt;
+
+&lt;p&gt;The obvious question here is, how do you figure out if an activity has positive
+expected value?&lt;/p&gt;
+
+&lt;p&gt;First, let me defend my undergrad self just a bit. Clearly, traditional Vegas
+table games have a &lt;em&gt;negative&lt;/em&gt; expected value for the player; you can calculate the odds of different
+outcomes in a game of blackjack, for example, and realize that you’re not expected
+to win. So while it’s not easy to determine if a traditional investing
+activity has positive EV, you can label some things as gambling with this
+simple definition.&lt;/p&gt;
+
+&lt;p&gt;One more observation: casinos have a positive edge. So even in the most obvious
+example of gambling, one of the parties involved has positive EV. The problem is
+that not everyone does.&lt;/p&gt;
+
+&lt;p&gt;With that in mind, let’s complicate the definition: for an activity to be
+investing rather than gambling, everyone involved should have a positive
+expected value. The activity should be a &lt;strong&gt;positive sum game&lt;/strong&gt;, insofar as
+everyone involved thinks they’ll be better off for engaging in it.&lt;/p&gt;
+
+&lt;p&gt;Return to the example of debt financing for a real estate project. The developer
+expects to build their project and earn an acceptable return from it.
+The bond investor expects to invest their funds and earn an acceptable return
+from it. The money coming in to the system is from users of the project, who
+wouldn’t show up and spend their money if they didn’t feel like it was worth it.&lt;/p&gt;
+
+&lt;p&gt;Sounds like everybody wins. It’s easy to see that equity investing fits
+the bill, as well.&lt;/p&gt;
+
+&lt;h2 id=&quot;other-examples-what-counts-and-what-doesnt&quot;&gt;Other Examples: What Counts and What Doesn’t&lt;/h2&gt;
+
+&lt;p&gt;Consider a pro poker player sitting down at a table with a bunch of newbies. He
+or she has a positive expected value, while the rest of the table has a negative
+expected value. This should fit any reasonable definition of gambling, rather
+than investing. That’s an important point - you can engage in gambling with a
+positive EV, as long as your winnings are coming from others losing.&lt;/p&gt;
+
+&lt;p&gt;There’s a case to be made that sports betting could count as
+investing under this definition for a certain kind of bettor. There are people
+out there who develop good models for game outcomes or who find arbitrage
+opportunities between different sportsbooks. They can reasonably claim to have a
+positive expected value. The bets they place, arguably, represent a kind of
+ownership in the potential payoff if the bet goes their way. Predictions markets
+(which are mostly sportsbooks, by volume) look similar. Some market makers are
+beginning to &lt;a href=&quot;https://giftarticle.ft.com/giftarticle/actions/redeem/cb34168b-0d7d-466c-be5b-e856931e7b75&quot;&gt;wade into sports
+betting&lt;/a&gt;
+by way of prediction markets. This is a topic worthy of more discussion, but I
+don’t think it’s useful to write off sports betting or prediction markets as
+purely investing or gambling. There’re more interesting things going on in that
+space.&lt;/p&gt;
+
+&lt;p&gt;A high frequency trading shop also seems to be engaged in something other
+than investing. When you hold positions for an extremely short period of time,
+that just feels very different from buying an index fund or investing in a
+Treasury note. You don’t care about the long-term prospects of the business in
+the same way a traditional investor does. However, many HFT shops have done very well for themselves
+historically and we have no reason to think they won’t continue to do so. It’s
+not gambling either. I think it’s useful to think of short-term trading and
+market making activities as a third category.&lt;/p&gt;
+
+&lt;p&gt;Bitcoin and other crypto currencies present an interesting case. Many would
+argue that they have no fundamental value, or, more snarkily, that the correct
+price for these tokens is \$0.
+The market is clearly full of scams, too. Early investors in projects ride hype
+waves, wash trade to bring attention, then
+sell at the top. There’s no shortage of pundits who will tell you the whole thing is a ponzi
+scheme. For our purposes here, it’s sufficient to point out that there’s no
+economic activity at the bottom of most crypto projects. That doesn’t mean
+crypto isn’t interesting or useful, or that there’s no money to be made there. I
+just don’t think it’s quite right to say you’re “invested in crypto”.&lt;/p&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><category term="Personal" /><summary type="html">Like most universities, my college had a writing skills requirement but was a bit embarrassed about it. Rather than force the engineers to take actual liberal arts courses, they offered “current interest” courses which satisfied the requirement. One of mine was on fintech, which in 2020 mostly meant crypto.</summary></entry><entry><title type="html">Amortizing Bond Models Investigation, Part 3</title><link href="http://localhost:4000/technical/2026/03/15/amortizing-bond-model-intuition.html" rel="alternate" type="text/html" title="Amortizing Bond Models Investigation, Part 3" /><published>2026-03-15T00:00:00-04:00</published><updated>2026-03-15T00:00:00-04:00</updated><id>http://localhost:4000/technical/2026/03/15/amortizing-bond-model-intuition</id><content type="html" xml:base="http://localhost:4000/technical/2026/03/15/amortizing-bond-model-intuition.html">&lt;h2 id=&quot;the-code&quot;&gt;The Code&lt;/h2&gt;
 
 &lt;p&gt;After a long break, I’ve finally gotten back to my amortizing bond model investigation. The previous posts give the background on what I’m trying to accomplish here: let’s jump right in to the code.&lt;/p&gt;
 
@@ -1339,116 +1475,4 @@ their early 20’s, I’m not as shaken by what the future will look like given
 today. I currently have a lot to be excited about in the second half of my
 college career and beyond. A pretty important part of the second half of college
 is developing some of that long term vision, both for myself and the corner of
-the world in which I belong. With all that in mind, it’s hard not to be excited.&lt;/p&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><category term="Personal" /><summary type="html">It’s been nine days since I tested positive for COVID-19, and since I’ve been completely asymptomatic, that means tomorrow I’m allowed back on campus. The university isn’t retesting, and in fact will now exclude me from surveillance testing, meaning I won’t be retested unless I’m showing symptoms.</summary></entry><entry><title type="html">COVID Posts, I</title><link href="http://localhost:4000/personal/2020/08/22/COVID-post-one.html" rel="alternate" type="text/html" title="COVID Posts, I" /><published>2020-08-22T00:00:00-04:00</published><updated>2020-08-22T00:00:00-04:00</updated><id>http://localhost:4000/personal/2020/08/22/COVID-post-one</id><content type="html" xml:base="http://localhost:4000/personal/2020/08/22/COVID-post-one.html">&lt;p&gt;Seemingly on cue, as soon as I started writing weekly posts I ended up in the
-final sprint of my summer research project. That took away most of the time for
-writing I had each week, so I neglected to update the blog until today.&lt;/p&gt;
-
-&lt;p&gt;Which may not be such a bad thing, seeing as I have much more of interest going
-on now. On Thursday of this past week, I got tested for COVID-19 by my
-university. On Friday of this past week, I got a call from my university letting
-me know I tested positive, which really put a damper on my plans to start
-running more often which totally would have come to fruition otherwise.&lt;/p&gt;
-
-&lt;p&gt;Jokes aside, it was suggested that I try keeping a journal about my isolation
-experience. While my case came out of nowhere and is entirely asymptomatic so
-far, at a minimum I can talk your ear off about podcasts and Netflix.&lt;/p&gt;
-
-&lt;h2 id=&quot;summary-so-far&quot;&gt;Summary So Far&lt;/h2&gt;
-&lt;p&gt;I woke up earlier than normal on Thursday to walk to the testing site before it
-got too crowded. The line was still about half an hour long, but it went by
-uneventfully. When I got back to my apartment I just went about my day as
-normal, finishing off the coffee cake I had made the week before and playing
-some video games in my last few days before classes start back up.&lt;/p&gt;
-
-&lt;p&gt;I got the call from my university’s Health Services department the next day,
-maybe ~26 hours after being tested. It came as a total surprise – I’ve only
-been around maybe three people for any extended time in the past two weeks, and
-have only gone out for the occasional Target run. As mentioned above, I feel
-totally fine. Regardless, the positive test means spending at minimum 10 days
-isolated from everyone else.&lt;/p&gt;
-
-&lt;p&gt;I generally think my university is handling the situation well. There have been
-some hiccups – waiting till two weeks before class began to announce that half
-of the undergrads can’t live on campus was a bit of a stinker. However, the
-testing procedure and the choices about how to deliver classes have generally
-been sensible from a (more or less) layman’s point of view. I wonder how the
-experience has been from the faculty’s side.&lt;/p&gt;
-
-&lt;p&gt;I’m getting daily calls and surveys about symptoms from the university. Besides
-just physical health, they’re asking about how I’m holding up mentally and once
-classes start there’s a vague promise of academic support. I emailed my
-professors who I might have seen in person to let them know, and it didn’t
-present any problems thankfully. All in all, it’s been at most mildly
-inconvenient so far.&lt;/p&gt;
-
-&lt;p&gt;I also heard from the Cleveland Department of Public Health. They asked me a
-bunch of questions about where I’ve been in the past two weeks, what symptoms
-I’m feeling, and the like. They also sent me an email that included citations of
-the specific Cleveland and Ohio laws that require me to isolate for the next 10
-days, and at least until 72 hours pass symptom-free. Otherwise police may escort
-me back to my home, if they somehow identify me, which is a fun stipulation.
-Interestingly enough, they actually require me to get clearance before
-discontinuing isolation by calling a number which may take 24-48 hours to get
-back to me.&lt;/p&gt;
-
-&lt;p&gt;Anyways, the day I got the news I spent about 2-3 hours on the phone between my
-parents, the people I’d seen in the last week, and a prescheduled meeting on
-which I listened to the iPhone noise for getting a call while you’re on a call
-what seemed like half a dozen times. As a 2000’s baby, that probably tripled my
-average monthly time on a phone call.&lt;/p&gt;
-
-&lt;p&gt;A final note about the “experience of COVID (at least, for a healthy
-20-year-old)”: I felt oddly guilty about having the positive diagnosis and
-having to call all my contacts and parents and tell them I have it. I haven’t
-been around any crowds or really spent much time with friends since March; most
-of my time out of the house has been socially distanced grocery runs. It’s not
-as though I’ve been an idiot about it, but regardless I felt bad about
-inconveniencing my friends. I suppose I would expect to feel frustrated having
-gotten a positive test despite spending the past few months relatively isolated,
-but that hasn’t been among my reactions so far. And despite all the reports of
-everything from mild flu symptoms to permanent
-&lt;a href=&quot;https://www.theatlantic.com/health/archive/2020/08/long-haulers-covid-19-recognition-support-groups-symptoms/615382/&quot;&gt;disabilities&lt;/a&gt;  as a result of the
-virus, I’m not really scared either. Perhaps this is a side effect of the
-relatively good end to the summer I’m having otherwise: I was elected to a new
-position in my fraternity, I got an internship lined up for next summer, and my
-summer research went pretty well, all things considered. I’ve been having one of
-the best periods of my college years recently, and I may have some degree of
-blinders on towards bad news as a result. Only time will tell.&lt;/p&gt;
-
-&lt;h3 id=&quot;fun-quarantine-activities&quot;&gt;Fun Quarantine Activities&lt;/h3&gt;
-&lt;p&gt;Anyways, taking a 180 degree turn, let’s talk about banana bread! I made some on
-Friday after getting the test results. I only had two bananas, so it’s more like
-a banana-flavored cake-like bread thing. Regardless, anything with that much
-brown sugar and butter can’t be bad. It pairs really well with my cold brew for
-breakfast. Next I’m looking to make some chocolate chip cookies, if I can guilt
-one of my friends into bringing groceries to my door. Will update on that front
-soon!&lt;/p&gt;
-
-&lt;p&gt;Otherwise, the timing is basically perfect with the LCS/LEC Playoffs series.
-I’ve been following pro League of Legends for nearly the lifetime of the eSport,
-and with all the time on my hands I’ve been able to watch the North American,
-European, AND Chinese playoffs matches this year. It’s interesting seeing the
-relative levels of precautions in the three regions: in China, the teams and the
-broadcast squads are all in studio, just without crowds; European teams are
-playing from home in Berlin, but the broadcast team is running from the studio
-on a skeleton crew; and NA is being ran entirely remote out of Los Angeles. If
-you’re looking to get into it, the Worlds tournament is taking place in China in
-October. Fun stuff.&lt;/p&gt;
-
-&lt;p&gt;I’ve also been rewatching &lt;em&gt;Rhythm and Flow&lt;/em&gt; on Netflix, which at minimum has
-been a better competition show than &lt;em&gt;American Idol&lt;/em&gt; or &lt;em&gt;The Voice&lt;/em&gt; due to having
-much more interesting contestants. I think that comes out of the nature of hip
-hop music – it’s as much about having a unique voice and story as it is about
-being good at the technical parts of music. All the contestants are performing
-new, original music every episode. It’s an awesome show if you have any interest
-in the music.&lt;/p&gt;
-
-&lt;h3 id=&quot;closing-thoughts&quot;&gt;Closing Thoughts&lt;/h3&gt;
-
-&lt;p&gt;I’ll plan on posting again sometime early next week after classes have started.
-With any luck, it’ll be a largely boring update on Algorithms and Accounting
-classes instead of a sudden turn for the worse. Fingers crossed!&lt;/p&gt;
-
-&lt;p&gt;P.S. I’m proud of myself for writing an entire post about COVID without saying
-“unprecendented”, “Now more than ever”, or “our new normal” even once. Hopefully
-you appreciate it, too.&lt;/p&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><category term="Personal" /><summary type="html">Seemingly on cue, as soon as I started writing weekly posts I ended up in the final sprint of my summer research project. That took away most of the time for writing I had each week, so I neglected to update the blog until today.</summary></entry></feed>
+the world in which I belong. With all that in mind, it’s hard not to be excited.&lt;/p&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><category term="Personal" /><summary type="html">It’s been nine days since I tested positive for COVID-19, and since I’ve been completely asymptomatic, that means tomorrow I’m allowed back on campus. The university isn’t retesting, and in fact will now exclude me from surveillance testing, meaning I won’t be retested unless I’m showing symptoms.</summary></entry></feed>

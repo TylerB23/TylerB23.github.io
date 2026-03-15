@@ -88,4 +88,10 @@ var store = [{
         "tags": [],
         "url": "/technical/2026/03/15/amortizing-bond-model-intuition.html",
         "teaser": null
+      },{
+        "title": "What's the Difference between Gambling and Investing?",
+        "excerpt":"Like most universities, my college had a writing skills requirement but was a bit embarrassed about it. Rather than force the engineers to take actual liberal arts courses, they offered “current interest” courses which satisfied the requirement. One of mine was on fintech, which in 2020 mostly meant crypto. One...","categories": ["Personal"],
+        "tags": [],
+        "url": "/personal/2026/03/15/gambling-or-investing.html",
+        "teaser": null
       }]

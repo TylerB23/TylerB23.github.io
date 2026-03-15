@@ -10,39 +10,35 @@
   <head>
     <meta charset="utf-8">
 
-<!-- begin _includes/seo.html --><title>Why Put Anything Online? - Tyler’s Blog</title>
-<meta name="description" content="I haven’t written to this blog in long while. There’s a few reasons for this. I made this at the tail end of two semesters of pretty much just math and CS courses, and desperately needed a creative outlet: now, my courseload is a good bit more balanced and the itch is scratched. Also, I’ve been struggling to come up with ideas to write about that merited being shared.">
+<!-- begin _includes/seo.html --><title>Simple Amortizing Bond Model App - Tyler’s Blog</title>
+<meta name="description" content="Welcome!       Tyler’s Blog">
 
 
   <meta name="author" content="Tyler Burleyson">
   
-  <meta property="article:author" content="Tyler Burleyson">
-  
 
 
-<meta property="og:type" content="article">
+<meta property="og:type" content="website">
 <meta property="og:locale" content="en_US">
 <meta property="og:site_name" content="Tyler&#39;s Blog">
-<meta property="og:title" content="Why Put Anything Online?">
-<meta property="og:url" content="http://localhost:4000/personal/2021/04/02/why-put-anything-online.html">
+<meta property="og:title" content="Simple Amortizing Bond Model App">
+<meta property="og:url" content="http://localhost:4000/simple-model-app/">
 
 
-  <meta property="og:description" content="I haven’t written to this blog in long while. There’s a few reasons for this. I made this at the tail end of two semesters of pretty much just math and CS courses, and desperately needed a creative outlet: now, my courseload is a good bit more balanced and the itch is scratched. Also, I’ve been struggling to come up with ideas to write about that merited being shared.">
-
-
-
-
-
-
-
-  <meta property="article:published_time" content="2021-04-02T00:00:00-04:00">
+  <meta property="og:description" content="Welcome!       Tyler’s Blog">
 
 
 
 
 
 
-<link rel="canonical" href="http://localhost:4000/personal/2021/04/02/why-put-anything-online.html">
+
+
+
+
+
+
+<link rel="canonical" href="http://localhost:4000/simple-model-app/">
 
 
 
@@ -262,37 +258,19 @@
 
 
   <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
-    <meta itemprop="headline" content="Why Put Anything Online?">
-    <meta itemprop="description" content="I haven’t written to this blog in long while. There’s a few reasons for this.I made this at the tail end of two semesters of pretty much just math and CScourses, and desperately needed a creative outlet: now, my courseload is a goodbit more balanced and the itch is scratched. Also, I’ve been struggling to comeup with ideas to write about that merited being shared.">
-    <meta itemprop="datePublished" content="2021-04-02T00:00:00-04:00">
+    <meta itemprop="headline" content="Simple Amortizing Bond Model App">
+    
+    
     
 
     <div class="page__inner-wrap">
       
         <header>
           <h1 id="page-title" class="page__title" itemprop="headline">
-            <a href="http://localhost:4000/personal/2021/04/02/why-put-anything-online.html" itemprop="url">Why Put <em>Anything</em> Online?
+            <a href="http://localhost:4000/simple-model-app/" itemprop="url">Simple Amortizing Bond Model App
 </a>
           </h1>
           
-
-  <p class="page__meta">
-    
-
-    
-
-    
-      
-      
-
-      <span class="page__meta-readtime">
-        <i class="far fa-clock" aria-hidden="true"></i>
-        
-          4 minute read
-        
-      </span>
-    
-  </p>
 
 
         </header>
@@ -300,7 +278,7 @@
 
       <section class="page__content" itemprop="text">
         
-        <p>02 Apr 2021</p>
+        <p></p>
 
 <script type="text/javascript"
         src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
@@ -340,79 +318,39 @@
 
 
 
-<p>I haven’t written to this blog in <em>long</em> while. There’s a few reasons for this.
-I made this at the tail end of two semesters of pretty much just math and CS
-courses, and desperately needed a creative outlet: now, my courseload is a good
-bit more balanced and the itch is scratched. Also, I’ve been struggling to come
-up with ideas to write about that merited being shared.</p>
+<p>I built a simple amortizing bond model application using python and Streamlit.
+This is a follow-up to my series of posts on amortizing bond models. The app
+lets the user quickly examine a bunch of simple models by varying the
+parameters.</p>
 
-<p>What could I possibly put up on the internet that would be of value to anyone? I
-don’t think what I’ve written is particularly interesting, entertaining, or
-informative to anyone who isn’t invested in me as a person. But at the same
-time, the posts I’ve written aren’t just for me - it’d be a bit strange to link
-to your dotfiles in diary. Instead, these posts have been in a middle ground:
-clearly written for an audience other than me, but that audience is not well
-defined.</p>
+<p>This is version one of the app. It implements a simple bond model with a simple
+growing/shrinking revenue curve which the user controls. It’s set up to be one
+term bond, priced to maturity. It can handle premium and discount pricing. It
+also generates a simple sources and uses table, including percentage-based cost
+of issuance and a toggle for a market-standard debt service reserve fund.</p>
 
-<p>I have two strains of thought writing this post. Firstly, that I don’t want to
-shout into the internet void simply to ‘build a brand’ or ‘market myself’. I
-read an excellent piece by Sean Blanda at 99U about the purported <a href="https://99u.adobe.com/articles/55974/the-creative-worlds-bullshit-industrial-complex">“Creative
-World’s Bullshit Industrial
-Complex”</a>
-that got me thinking about what exactly this. Even if building a brand was part
-of my intention with this blog, how could I begin to do that without
-regurgitating learnings from elsewhere?</p>
+<div class="streamlit-wrapper">
+  <iframe src="https://simple-amortizing-bond-model.streamlit.app/?embed=true" style="width:100%; height:800px; border:none;"></iframe>
+</div>
 
-<p>Secondly, I do write quite a bit just for myself. Most of this is frustrations
-with current events or things going on in my life, or structural changes I’d
-like to see, and the personal beliefs that underly either of those two. However,
-to be frank, I’m 21 years old and I know practically nothing. The chances that
-in 4-5 years I stand behind 100% of what I write today are slim to none - yet if
-I were to post those things today, and this blog were still around then or had
-been archived, the words attributed to me would be 100% the same then. What do I
-gain from going on the record publicly today?</p>
+<p>For version two, I’m planning to implement the following changes:</p>
+<ul>
+  <li>Arbitrary revenue curve input;</li>
+  <li>Automatically calculated capitalized interest with a toggle for whether or not
+to respect the IRS 3-year limit;</li>
+  <li>Arbitrary ongoing fees, on top of debt service;</li>
+  <li>A debt service coverage ratio calculation; and</li>
+  <li>Date-based inputs for dated date, maturity date, and principal payments.</li>
+</ul>
 
-<p>Journalists and politicians write publicly all the time, but with purpose. It
-comes back to bite them in the ass regularly, but the risk:reward makes sense
-for them – communication is integral to their careers. People in both of those
-roles, though politicians much more so, often can’t afford to change their
-positions when presented with new information. The expectation is that they have
-thought this stuff out so well, and so thoroughly, and that they stand behind
-their beliefs so strongly, that any shift in opinion needs to have a great deal
-of impetus. So the question is, would that be (to any extent) my fate were I to
-publish what I’m thinking today?</p>
+<p>For version three, I’m planning to add even more features:</p>
+<ul>
+  <li>Arbitrary pricing scale inputs, including serial/term bond structures;</li>
+  <li>TIC and arb yield calculations;</li>
+  <li>Annual/semiannual amortization options; and</li>
+  <li>Warning messages pointing out common structuring issues.</li>
+</ul>
 
-<p>These two concerns point towards a potential test for whether to post something:
-Is it original or transformative, and is it objective or low stakes? Let’s
-demonstrate this with some examples.</p>
-
-<p>Say I were to post about implementing a pre-existing algorithm in a niche
-programming language. This is reasonably original, since if it has been done
-before, it is likely not a very common project. It’s also objective - the code
-either works or it doesn’t. If it doesn’t, then that’s embarrassing perhaps, but
-fixable with relative ease.</p>
-
-<p>Say I were to post a collection of thoughts on the positions of a politician.
-This could very well be original, but it’s not objective. Is it low stakes?
-Maybe! Depends on what the positions are and what my thoughts are. Revealing
-myself as a radical communist (which I am not), for example, could be a very
-bad thing were I ever to run for office or attempt to exist in a political
-sphere. Providing my take on gun control may not win me any friends, but it also
-likely won’t get me fired. What is difficult here is that it’s not easy to gauge
-how others may react to what I have to say. This sort of post would be a
-judgement call.</p>
-
-<p>Say, for a final example, that I were to get on here and repackage the
-entrepreneurship advice I’ve collected from listening to <em>The Knowledge Project</em>
-(big plug for that podcast, by the way). That’s not original, and likely not
-transformative either. While it may be low stakes to post something like that,
-it’s intellectually lazy, and were I to do it enough, I’d start to sound like
-any one of the workfluencer grifters on LinkedIn.</p>
-
-<p>All of this is to say, I’m probably overthinking the burden of having a personal
-blog. Regardless, since I’m the sort of person that likes a procedure to follow,
-I’m going to try to stick with that test of what deserves to be thrown up on the
-internet and attached to my name.</p>
 
 
         
@@ -425,22 +363,11 @@ internet and attached to my name.</p>
 
         
 
-  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2021-04-02T00:00:00-04:00">April 2, 2021</time></p>
-
       </footer>
 
       
 
       
-  <nav class="pagination">
-    
-      <a href="/personal/2020/09/01/some-good-news.html" class="pagination--pager" title="Quick Post: Some Good News">Previous</a>
-    
-    
-      <a href="/technical/2021/06/01/learning-scripting.html" class="pagination--pager" title="Learning to Script">Next</a>
-    
-  </nav>
-
 
     </div>
 

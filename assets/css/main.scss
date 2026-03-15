@@ -43,6 +43,23 @@ table {
   }
 }
 
+/* Make Streamlit apps look good on mobile */
+.streamlit-wrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  /* Adds a subtle border to separate the app from your white background */
+  border: 1px solid #e1e4e8;
+  border-radius: 6px;
+  background: #f6f8fa;
+}
+
+@media (max-width: 600px) {
+  .streamlit-wrapper iframe {
+    height: 600px; /* Shorter for mobile */
+  }
+}
+
 /* Style the Resume link in the sidebar to look like a button 
 .author__urls.social-icons {
   li:first-of-type {

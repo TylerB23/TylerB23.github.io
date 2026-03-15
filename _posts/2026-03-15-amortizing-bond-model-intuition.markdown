@@ -6,6 +6,8 @@ header:
     overlay_image: /assets/amortizing_bond_model_3/slide_0.png
     overlay_filter: 0.7
 excerpt: "Wrapping up simple revenue curves & developing heuristics."
+toc: true
+show_date: false
 ---
 
 ## The Code

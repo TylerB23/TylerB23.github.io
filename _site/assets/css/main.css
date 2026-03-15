@@ -1326,6 +1326,10 @@ table { font-feature-settings: "tnum"; font-variant-numeric: tabular-nums; }
 .feature__item:hover { opacity: 0.9; transform: translateY(-3px); }
 .feature__item .feature__item-title a::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
 
+/* Make Streamlit apps look good on mobile */
+.streamlit-wrapper { position: relative; width: 100%; overflow: hidden; /* Adds a subtle border to separate the app from your white background */ border: 1px solid #e1e4e8; border-radius: 6px; background: #f6f8fa; }
+
+@media (max-width: 600px) { .streamlit-wrapper iframe { height: 600px; /* Shorter for mobile */ } }
 /* Style the Resume link in the sidebar to look like a button 
 .author__urls.social-icons { li:first-of-type { a { display: block; background-color: #004d40;  color: #fff !important; padding: 10px; margin-bottom: 15px; border-radius: 4px; text-align: center; font-weight: bold; text-decoration: none; transition: background-color 0.3s ease;
  &:hover { background-color: #00695c; color: #fff !important; }

@@ -1,8 +1,10 @@
 ---
 layout: post
+categories: Personal
 title: "What's the Difference between Gambling and Investing?"
 header:
     overlay_image: /assets/slot_machines.jpg
+    overlay_filter: 0.6
 ---
 Like most universities, my college had a writing skills requirement but was a
 bit embarrassed about it. Rather than force the engineers to take actual liberal
@@ -11,12 +13,12 @@ satisfied the requirement. One of mine was on fintech, which in 2020 mostly mean
 crypto.
 
 One of the seminar sessions focused on the fundamental drivers of the price of
-bitcoin (or the lacak thereof). One of the other students asked the professor,
+bitcoin (or the lack thereof). One of the other students asked the professor,
 "isn't this just gambling?", to which he replied, "what do you think separates
 gambling from investing?".
 
 The question has stuck with me for a while, and I thought it'd be interesting to
-write a blog post about how my thoughts have evolved.
+write a blog post about how my thoughts on the topic have evolved.
 
 ## My Answer at the Time ##
 
@@ -29,16 +31,20 @@ expected value__. Most games at a casino have a house edge; over the long run,
 you expect to lose money. The things we typically think of as investing (fixed
 income and equities) have well-documented historic positive returns.
 [Wikipedia](https://en.wikipedia.org/wiki/Investment) agrees with my undergrad
-definition of investing.
+definition of investing:
+
+> Investment is traditionally defined as the "commitment of resources into something expected to gain value over time".
 
 I've revisited the idea since taking the class, especially as I began my career
 in investment banking. When my team sells
 bonds, they're usually financing public improvements like roadwork, utility line
 extensions, water and sewer, etc. The development increases the value of the
-parcel, and our investors get paid back from the subsequent increase in property
-taxes. It's pretty classic investing - bondholders put up the money today that
-is used to build infrastructure which supports private development, and they get
-paid back from part of the cash flow coming off of the development. 
+parcel of land, and our investors get paid back from the subsequent increase in property
+taxes (or sales taxes or whatever else). It's pretty classic investing - bondholders
+put up money today that is used to build some project, and they get
+paid back from part of the cash flow coming off of the project. My team sells
+muni bonds, so the cash flow stream is usually a tax stream, but this
+generalizes to other sorts of fixed income in a straightforward manner.
 
 Investors are paid a steady stream of
 coupons which represent their return. There is some risk that the project
@@ -49,7 +55,7 @@ involved is for them to have a positive expected value.
 Whether investors are being compensated appropriately for the risk they're
 taking, in my eyes, doesn't affect whether they're engaged in investing or
 gambling. Risk-adjusted returns are a measure of how good they are at investing,
-not a determinant of whether they're engaged in the activity at all.
+not a determinant of whether they're engaged in the activity. 
 
 Already, you're probably seeing the problem with focusing on expected value.
 I'll get to that, but first, let's think about equities for a moment.
@@ -64,14 +70,14 @@ ownership claim over the company. You're entitled to a share in the profits of
 the company, mediated through its leadership who may decide to invest back into
 the enterprise, issue a dividend, or do stock buybacks.
 
-### Problems with the Definition ###
+## Problems with the Definition ##
 
 The obvious question here is, how do you figure out if an activity has positive
 expected value?
 
 First, let me defend my undergrad self just a bit. Clearly, traditional Vegas
 table games have a _negative_ expected value for the player; you can calculate the odds of different
-outcomes at a blackjack table, for example, and realize that you're not expected
+outcomes in a game of blackjack, for example, and realize that you're not expected
 to win. So while it's not easy to determine if a traditional investing
 activity has positive EV, you can label some things as gambling with this
 simple definition.
@@ -82,18 +88,19 @@ that not everyone does.
 
 With that in mind, let's complicate the definition: for an activity to be
 investing rather than gambling, everyone involved should have a positive
-expected value. The activity should be a positive sum game.
+expected value. The activity should be a __positive sum game__, insofar as
+everyone involved thinks they'll be better off for engaging in it.
 
 Return to the example of debt financing for a real estate project. The developer
-expects to build their project and make an acceptable amount of money from it.
+expects to build their project and earn an acceptable return from it.
 The bond investor expects to invest their funds and earn an acceptable return
 from it. The money coming in to the system is from users of the project, who
-wouldn't show up and spend their money if they didn't feel like it was worth it
-to them.
+wouldn't show up and spend their money if they didn't feel like it was worth it.
 
-Obviously, equity financing fits this new definition just as well.
+Sounds like everybody wins. It's easy to see that equity investing fits
+the bill, as well.
 
-### Other Examples: What Counts and What Doesn't ###
+## Other Examples: What Counts and What Doesn't ##
 
 Consider a pro poker player sitting down at a table with a bunch of newbies. He
 or she has a positive expected value, while the rest of the table has a negative
@@ -112,21 +119,23 @@ beginning to [wade into sports
 betting](https://giftarticle.ft.com/giftarticle/actions/redeem/cb34168b-0d7d-466c-be5b-e856931e7b75)
 by way of prediction markets. This is a topic worthy of more discussion, but I
 don't think it's useful to write off sports betting or prediction markets as
-purely investing or gambling. There's more interesting things going on in that
+purely investing or gambling. There're more interesting things going on in that
 space.
 
 A high frequency trading shop also seems to be engaged in something other
 than investing. When you hold positions for an extremely short period of time,
 that just feels very different from buying an index fund or investing in a
-Treasury note. However, many HFT shops have done very well for themselves
+Treasury note. You don't care about the long-term prospects of the business in
+the same way a traditional investor does. However, many HFT shops have done very well for themselves
 historically and we have no reason to think they won't continue to do so. It's
 not gambling either. I think it's useful to think of short-term trading and
 market making activities as a third category.
 
 Bitcoin and other crypto currencies present an interesting case. Many would
 argue that they have no fundamental value, or, more snarkily, that the correct
-price for these tokens is \\$0. I think crypto bears more resemblance to
-gambling in most situations. Early investors in projects ride hype waves and
+price for these tokens is \\$0.
+The market is clearly full of scams, too. Early investors in projects ride hype
+waves, wash trade to bring attention, then
 sell at the top. There's no shortage of pundits who will tell you the whole thing is a ponzi
 scheme. For our purposes here, it's sufficient to point out that there's no
 economic activity at the bottom of most crypto projects. That doesn't mean

@@ -1,0 +1,719 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.27.3 by Michael Rose
+  Copyright 2013-2025 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+
+<html lang="en-US" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Amortizing Bond Models Investigation, Part 3 - Tyler’s Blog</title>
+<meta name="description" content="Wrapping up simple revenue curves &amp; developing heuristics.">
+
+
+  <meta name="author" content="Tyler Burleyson">
+  
+  <meta property="article:author" content="Tyler Burleyson">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Tyler&#39;s Blog">
+<meta property="og:title" content="Amortizing Bond Models Investigation, Part 3">
+<meta property="og:url" content="http://localhost:4000/technical/2026/03/15/amortizing-bond-model-intuition.html">
+
+
+  <meta property="og:description" content="Wrapping up simple revenue curves &amp; developing heuristics.">
+
+
+
+  <meta property="og:image" content="http://localhost:4000/assets/amortizing_bond_model_3/slide_0.png">
+
+
+
+
+
+  <meta property="article:published_time" content="2026-03-15T00:00:00-04:00">
+
+
+
+
+
+
+<link rel="canonical" href="http://localhost:4000/technical/2026/03/15/amortizing-bond-model-intuition.html">
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Tyler's Blog Feed">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+  window.enable_copy_code_button = true;
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--post wide" dir="ltr">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          Tyler&#39;s Blog
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a
+                href="/technical-posts/"
+                
+                
+              >Technical Posts</a>
+            </li><li class="masthead__menu-item">
+              <a
+                href="/personal-posts/"
+                
+                
+              >Personal Blog</a>
+            </li><li class="masthead__menu-item">
+              <a
+                href="/about/"
+                
+                
+              >About</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+  
+
+
+
+
+
+
+
+<div class="page__hero--overlay"
+  style=" background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/assets/amortizing_bond_model_3/slide_0.png');"
+>
+  
+    <div class="wrapper">
+      <h1 id="page-title" class="page__title" itemprop="headline">
+        
+          Amortizing Bond Models Investigation, Part 3
+
+        
+      </h1>
+      
+        <p class="page__lead">Wrapping up simple revenue curves &amp; developing heuristics.
+</p>
+      
+      
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2026-03-15T00:00:00-04:00">March 15, 2026</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          7 minute read
+        
+      </span>
+    
+  </p>
+
+
+      
+    </div>
+  
+  
+</div>
+
+
+
+
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person" class="h-card">
+
+  
+
+  <div class="author__content">
+    <h3 class="author__name p-name" itemprop="name">
+      <a class="u-url" rel="me" href="http://localhost:4000/" itemprop="url">Tyler Burleyson</a>
+    </h3>
+    
+      <div class="author__bio p-note" itemprop="description">
+        <p>Welcome to my blog!</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+
+      
+        
+          
+            <li><a href="https://github.com/TylerB23" rel="nofollow noopener noreferrer me" itemprop="sameAs"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">Github</span></a></li>
+          
+        
+          
+            <li><a href="https://linkedin.com/in/tyler-burleyson" rel="nofollow noopener noreferrer me" itemprop="sameAs"><i class="fa-brands fa-linkedin" aria-hidden="true"></i><span class="label">LinkedIn</span></a></li>
+          
+        
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:tylerburleyson23@gmail.com" rel="me" class="u-email">
+            <meta itemprop="email" content="tylerburleyson23@gmail.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span>
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer me">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Amortizing Bond Models Investigation, Part 3">
+    <meta itemprop="description" content="Wrapping up simple revenue curves &amp; developing heuristics.">
+    <meta itemprop="datePublished" content="2026-03-15T00:00:00-04:00">
+    
+
+    <div class="page__inner-wrap">
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p>15 Mar 2026</p>
+
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+
+<script type="text/x-mathjax-config">
+
+    MathJax.Hub.Config({
+
+    tex2jax: {
+
+    inlineMath: [['$','$'], ['\\(','\\)']],
+
+    processEscapes: true},
+
+    jax: ["input/TeX","input/MathML","input/AsciiMath","output/CommonHTML"],
+
+    extensions:
+    ["tex2jax.js","mml2jax.js","asciimath2jax.js","MathMenu.js","MathZoom.js","AssistiveMML.js",
+    "[Contrib]/a11y/accessibility-menu.js"],
+
+    TeX: {
+
+    extensions: ["AMSmath.js","AMSsymbols.js","noErrors.js","noUndefined.js"],
+
+    equationNumbers: {
+
+    autoNumber: "AMS"
+
+    }
+
+    }
+
+    });
+
+</script>
+
+
+
+
+<h2 id="the-code">The Code</h2>
+
+<p>After a long break, I’ve finally gotten back to my amortizing bond model investigation. The previous posts give the background on what I’m trying to accomplish here: let’s jump right in to the code.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">from</span> <span class="nn">sympy</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">dill</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="n">np</span><span class="p">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">formatter</span><span class="o">=</span><span class="p">{</span><span class="s">'float'</span><span class="p">:</span><span class="s">'{:,.4f}'</span><span class="p">.</span><span class="nb">format</span><span class="p">})</span>
+<span class="o">%</span><span class="n">matplotlib</span> <span class="n">widget</span>
+
+<span class="c1"># R is the annual revenue constraint
+# r is the coupon rate
+# g is the annual revenue growth rate
+</span><span class="n">R</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">g</span> <span class="o">=</span> <span class="n">symbols</span><span class="p">(</span><span class="s">'R r g'</span><span class="p">)</span>
+
+<span class="c1"># Parameters
+# Maturities is the maturities we're testing
+# Coupons is the coupon rates we're testing
+# GrowthRates is the growth rates we're testing
+</span><span class="n">Maturities</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">41</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">Coupons</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.02</span><span class="p">,</span><span class="mf">0.125</span><span class="p">,</span><span class="mf">0.0025</span><span class="p">)</span>
+<span class="n">GrowthRates</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.06</span><span class="p">,</span><span class="mf">0.01</span><span class="p">)</span>
+
+<span class="c1"># This lambda expression makes it easier to fill in the revenues
+</span><span class="n">growth_rate</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">i</span><span class="p">,</span> <span class="n">n</span> <span class="p">:</span> <span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">g</span><span class="p">)</span><span class="o">**</span><span class="n">i</span>
+
+<span class="c1"># Generate the expressions for the first year's principal
+</span><span class="n">FirstYrPrincipal</span> <span class="o">=</span> <span class="n">Matrix</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">zeros</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">Maturities</span><span class="p">)]))</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">maturity</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">Maturities</span><span class="p">):</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">Matrix</span><span class="p">((</span><span class="mi">1</span><span class="o">+</span><span class="n">r</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="n">eye</span><span class="p">(</span><span class="n">maturity</span><span class="p">)</span> <span class="o">+</span> <span class="n">r</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="n">triu</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">ones</span><span class="p">([</span><span class="n">maturity</span><span class="p">,</span><span class="n">maturity</span><span class="p">]),</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">revenue</span> <span class="o">=</span> <span class="n">Matrix</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">fromfunction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">j</span><span class="p">:</span> <span class="n">growth_rate</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">maturity</span><span class="p">)</span> <span class="o">*</span> <span class="n">R</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">maturity</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">))</span>
+    <span class="n">FirstYrPrincipal</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">A</span><span class="p">.</span><span class="n">solve</span><span class="p">(</span><span class="n">revenue</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+</code></pre></div></div>
+
+<p>Generating all of those expressions is computationally expensive. It took my M2
+Mac Mini about 11 minutes to run the code up to here. I used the
+<a href="https://docs.python.org/3/library/pickle.html">Pickle</a> and
+<a href="https://pypi.org/project/dill/">Dill</a> libraries to save down the expressions as
+both Python objects and functions. By default, the functions save everything
+into the present working directory. The code for saving / loading the expressions is below.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Save the expressions with Pickle
+</span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">'FirstYrPrincipal.pkl'</span><span class="p">,</span> <span class="s">'wb'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">pickle</span><span class="p">.</span><span class="n">dump</span><span class="p">(</span><span class="n">FirstYrPrincipal</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Save them as functions with Dill
+</span><span class="n">PrincipalFunctions</span> <span class="o">=</span> <span class="n">lambdify</span><span class="p">((</span><span class="n">R</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">),</span> <span class="n">FirstYrPrincipal</span><span class="p">,</span> <span class="s">'numpy'</span><span class="p">)</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">'PrincipalFunctions.dill'</span><span class="p">,</span><span class="s">'wb'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">dill</span><span class="p">.</span><span class="n">dump</span><span class="p">(</span><span class="n">PrincipalFunctions</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Load in the functions
+</span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">'PrincipalFunctions.dill'</span><span class="p">,</span><span class="s">'rb'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">PrincipalFunctions</span> <span class="o">=</span> <span class="n">dill</span><span class="p">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Now that we have all of our symbolic expressions, we can calculate the first
+year’s principal amount for each maturity, coupon, and growth rate. As a
+reminder, a negative calculated first year principal indicates that the bond
+model doesn’t pencil for the parameters - that is, we can’t have a fully
+amortizing bond model with this combination of maturity, coupon, and growth
+rate. You can think of a negative calculated principal amount as meaning the
+issuer would need to borrow funds in that year to pay interest on the principal
+due in later years. There is a workaround for this we’ll discuss later.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Calculate everything
+</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">zeros</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">Maturities</span><span class="p">),</span><span class="nb">len</span><span class="p">(</span><span class="n">Coupons</span><span class="p">),</span><span class="nb">len</span><span class="p">(</span><span class="n">GrowthRates</span><span class="p">)])</span>
+
+<span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">coupon</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">Coupons</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">growth</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">GrowthRates</span><span class="p">):</span>
+        <span class="n">principals</span> <span class="o">=</span> <span class="n">PrincipalFunctions</span><span class="p">(</span><span class="mi">1000000</span><span class="p">,</span> <span class="n">coupon</span><span class="p">,</span> <span class="n">growth</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">values</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">principals</span><span class="p">):</span>
+            <span class="n">results</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">values</span><span class="p">.</span><span class="n">item</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>Below, I create a slideshow of graphs showing when we get a negative first
+principal payment for different maturities, coupon rates, and growth rates. The
+slider lets you change the growth rate assumption. I played around with 3D
+visualizations, but they were all much clunkier to interpret.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># We'll create a new array with boolean values indicating whether the first
+# principal payment is zero
+</span><span class="n">ZeroPrincipals</span> <span class="o">=</span> <span class="n">results</span> <span class="o">&lt;</span> <span class="mi">0</span>
+
+<span class="c1"># The Graph
+</span><span class="kn">from</span> <span class="nn">matplotlib.widgets</span> <span class="kn">import</span> <span class="n">Slider</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">bottom</span><span class="o">=</span><span class="mf">0.25</span><span class="p">)</span> <span class="c1"># makes room for slider
+</span><span class="n">initial_slice</span> <span class="o">=</span> <span class="n">ZeroPrincipals</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">//</span> <span class="mi">2</span> <span class="c1"># midpoint of our growth axis
+</span><span class="n">img</span> <span class="o">=</span> <span class="n">ax</span><span class="p">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">ZeroPrincipals</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">initial_slice</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="s">'coolwarm'</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s">'lower'</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">"Maturity (years)"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">"Coupon (percentage)"</span><span class="p">)</span>
+
+<span class="n">coupon_labels</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">v</span><span class="o">*</span><span class="mi">100</span><span class="p">:.</span><span class="mi">0</span><span class="n">f</span><span class="si">}</span><span class="s">%"</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">Coupons</span><span class="p">]</span>
+<span class="n">coupon_indices</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">Coupons</span><span class="p">))</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">ticks</span><span class="o">=</span><span class="n">coupon_indices</span><span class="p">[</span><span class="mi">0</span><span class="p">::</span><span class="mi">4</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="n">coupon_labels</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">coupon_indices</span><span class="p">[</span><span class="mi">0</span><span class="p">::</span><span class="mi">4</span><span class="p">]])</span>
+
+<span class="n">mat_labels</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">v</span><span class="p">:.</span><span class="mi">0</span><span class="n">f</span><span class="si">}</span><span class="s">"</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">Maturities</span><span class="p">]</span>
+<span class="n">mat_indices</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">Maturities</span><span class="p">))</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">yticks</span><span class="p">(</span><span class="n">ticks</span><span class="o">=</span><span class="n">mat_indices</span><span class="p">[</span><span class="mi">0</span><span class="p">::</span><span class="mi">5</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="n">mat_labels</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">mat_indices</span><span class="p">[</span><span class="mi">0</span><span class="p">::</span><span class="mi">5</span><span class="p">]])</span>
+
+<span class="n">plt</span><span class="p">.</span><span class="n">grid</span><span class="p">(</span><span class="n">visible</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">'white'</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s">'--'</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.7</span><span class="p">)</span>
+
+<span class="n">ax_slider</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">axes</span><span class="p">([</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">])</span> <span class="c1"># Just places the slider on the plot
+</span><span class="n">slice_slider</span> <span class="o">=</span> <span class="n">Slider</span><span class="p">(</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">ax_slider</span><span class="p">,</span>
+    <span class="n">label</span><span class="o">=</span><span class="s">'Growth Rate'</span><span class="p">,</span>
+    <span class="n">valmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">valmax</span><span class="o">=</span><span class="n">ZeroPrincipals</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">valinit</span><span class="o">=</span><span class="n">initial_slice</span><span class="p">,</span>
+    <span class="n">valstep</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">valfmt</span><span class="o">=</span><span class="s">'%0.0f%%'</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">slice_slider</span><span class="p">.</span><span class="n">val</span><span class="p">)</span>
+    <span class="n">img</span><span class="p">.</span><span class="n">set_data</span><span class="p">(</span><span class="n">ZeroPrincipals</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">idx</span><span class="p">])</span> <span class="c1"># sets the image data
+</span>    <span class="n">fig</span><span class="p">.</span><span class="n">canvas</span><span class="p">.</span><span class="n">draw_idle</span><span class="p">()</span> <span class="c1"># redraws the plot
+</span>
+<span class="n">slice_slider</span><span class="p">.</span><span class="n">on_changed</span><span class="p">(</span><span class="n">update</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="interactive-plot" style="text-align: center; margin: 2em 0;">
+  <img id="plot-frame" src="/assets/amortizing_bond_model_3/slide_2.png" style="width: 100%; max-width: 800px; border-radius: 8px;" />
+  
+  <div style="margin-top: 20px;">
+    <label for="plot-slider" style="display: block; font-weight: bold; margin-bottom: 10px;">
+      Growth Rate: <span id="slider-value">2</span>%
+    </label>
+    <input type="range" id="plot-slider" min="0" max="5" value="2" step="1" style="width: 80%;" />
+  </div>
+</div>
+
+<script>
+  const slider = document.getElementById('plot-slider');
+  const output = document.getElementById('slider-value');
+  const plot = document.getElementById('plot-frame');
+
+  slider.oninput = function() {
+    const val = this.value;
+    output.innerHTML = val;
+    // Update the image source based on the slider value
+    plot.src = `/assets/amortizing_bond_model_3/slide_${val}.png`;
+  };
+</script>
+
+<p>The red area indicates models with negative first principal payments.</p>
+
+<p>I’m using some HTML and Javascript to generate the slider above, since matplotlib
+does’t play nicely with static websites. I learned how to make graphs with
+matplotlib over a decade ago, but it seems like plotly is much better nowadays.
+I didn’t want to rebuild my graph using plotly just to make the graph look nicer
+on this site simply because I wanted to get this blog post up already.</p>
+
+<h2 id="analysis">Analysis</h2>
+
+<p>A growth rate of 0% means we can extend the maturity out to 40 years regardless
+of our (reasonable choice of) coupon rate. That follows the result from my post
+on January 3rd. The more interesting cases involve growing revenues. With 2%
+annual growth, we can get out to about 30 years with coupons below about 6%.</p>
+
+<p>In practice, we can fund some of the early interest costs from bond proceeds -
+you’ll see that referred to as capitalizing the interest. That means that we can
+get a little bit into the red in the graphs above by funding the deficit (i.e.,
+the ‘negative principal payment’) up front.</p>
+
+<p>The IRS limits tax-exempt
+bonds to three year’s worth of capitalized interest, however, so we can’t get
+too far into the red before we jeopardize the tax status of our muni bond. More
+practically, you don’t want to be capitalizing a bunch of interest if you can
+avoid it. It lowers how much in proceeds the issuer gets from the bond sale
+dollar-for-dollar, not to mention it just feels bad. Why are you borrowing money
+to pay the interest on the money you borrowed? A better tool in this situation
+is a <a href="https://www.nabl.org/bond-basics/cabs/">Capital Appreciation Bond</a>, 
+the muni market equivalent of a zero coupon bond. This accretes the interest to
+the principal amount rather than needing to fund interest payments from bond
+proceeds.</p>
+
+<p>Where on these graphs are most muni bonds? Well, most bonds are General
+Obligation Bonds with level debt service (i.e., no growth in debt service year
+over year). Those deals don’t need to worry about this analysis at all.</p>
+
+<p>How about Revenue Bonds, especially in Project Finance? These deals will often
+structure debt service around some assumed revenue curve with some growth
+assumption built in. This is where I got the idea to do this analysis in the
+first place.</p>
+
+<p>2% growth is a good estimate for the growth of most tax streams because it’s
+what the Fed targets for inflation. Sales taxes and income taxes are pretty
+clearly connected with inflation, and in many states property taxes are also
+limited to growing by inflation plus some fixed amount. So, most of the time
+we’re focused on that slide.</p>
+
+<p>Most Project Finance deals have 25-30 year maturities, and most are sold
+non-rated with interest rates (in today’s market) around 5.50% to 6.50%. What we see in the
+graph above is that we should have no problem structuring fully amortizing bonds
+under these constraints.</p>
+
+<p>However, when we push the growth rate up to 3% or higher, we start to run into
+problems that capitalized interest can’t handle.</p>
+
+<h2 id="solutions-for-high-growth-rates-and-coupons">Solutions for High Growth Rates and Coupons</h2>
+
+<p>The first tool issuers and their bankers reach for is capitalized interest.
+There’s usually a 1-3 year delay between issuance and when revenue is available
+to pay debt service anyways, during which the project is being built and
+stabilized. If there’s still space under the IRS 3-year limit, issuers can fund
+some of the interest upfront and delay paying principal by another year or two
+to make the model pencil.</p>
+
+<p>When that doesn’t work, the next option to consider is a Capital Appreciation
+Bond (CAB). These can be set up as Convertible CABs which accrete interest until
+some predetermined date and then ‘convert’ into current interest bonds with
+regular interest payments. Anecdotally, I’ve seen this structure used in
+Colorado and Utah recently for single-family home developments which may have
+4-5 year periods before sufficient absorption has occured to generate the
+property taxes needed to pay debt service.</p>
+
+<p>In my experience, that’s the best tool available. Some borrowers don’t like the
+CAB structure because the interest accretion means the bonds are effectively
+sold with a steep discount to par. Some states place limitations on the discount
+at issuance, as well. When a CAB is ruled out, the last ditch resort is to
+revise the revenue projections: assume 2% growth instead of 3%, for example,  and show
+investors the coverage ratio resulting from the higher growth rate to try to get
+a lower spread out of them.</p>
+
+<h2 id="further-exploration">Further Exploration</h2>
+
+<p>We’ve gone from no-growth revenue scenarios to steady growth rates. The natural
+next step would be to consider arbitrary revenue curves. This becomes
+analytically untractable quickly, so I’m switching gears.</p>
+
+<p>For my next post,
+I’m planning to build a simple bond model app with Streamlit that lets you
+quickly mock up a bond model with some simplified assumptions. Version one will
+let the user quickly build models like the ones I’ve been working with in this
+post series, with fixed growth rate revenue curves. Version two will expand that
+to allow arbitrary revenue curves with automatically calculated capitalized
+interest. Stay tuned.</p>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2026-03-15T00:00:00-04:00">March 15, 2026</time></p>
+
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/technical/2026/02/01/currency-graphs.html" class="pagination--pager" title="Currency Markets Graphs">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+</div>
+
+      
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        
+
+<div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+          <li><a href="https://github.com/TylerB23" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> Github</a></li>
+        
+      
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+
+<div class="page__footer-copyright">&copy; 2026 <a href="http://localhost:4000">Tyler&#39;s Blog</a>. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/jekyll-themes/minimal-mistakes/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+  </body>
+</html>

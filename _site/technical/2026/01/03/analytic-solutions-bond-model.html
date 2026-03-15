@@ -10,8 +10,8 @@
   <head>
     <meta charset="utf-8">
 
-<!-- begin _includes/seo.html --><title>Analytic Solution to an Amortizing Bond Model - Tyler’s Blog</title>
-<meta name="description" content="We’re picking up where we left off with using linear algebra to consider amortizing bond models like the ones I implement at work. Last time, we wrote the coefficients matrix which encodes the model: multiply the below matrix by a vector with annual principal payments, and you’ll get a vector representing the total annual payment.">
+<!-- begin _includes/seo.html --><title>Amortizing Bond Models Investigation, Part 2 - Tyler’s Blog</title>
+<meta name="description" content="Analytic solution to an amortizing bond model.">
 
 
   <meta name="author" content="Tyler Burleyson">
@@ -23,11 +23,11 @@
 <meta property="og:type" content="article">
 <meta property="og:locale" content="en_US">
 <meta property="og:site_name" content="Tyler&#39;s Blog">
-<meta property="og:title" content="Analytic Solution to an Amortizing Bond Model">
+<meta property="og:title" content="Amortizing Bond Models Investigation, Part 2">
 <meta property="og:url" content="http://localhost:4000/technical/2026/01/03/analytic-solutions-bond-model.html">
 
 
-  <meta property="og:description" content="We’re picking up where we left off with using linear algebra to consider amortizing bond models like the ones I implement at work. Last time, we wrote the coefficients matrix which encodes the model: multiply the below matrix by a vector with annual principal payments, and you’ll get a vector representing the total annual payment.">
+  <meta property="og:description" content="Analytic solution to an amortizing bond model.">
 
 
 
@@ -157,17 +157,12 @@
     <div class="wrapper">
       <h1 id="page-title" class="page__title" itemprop="headline">
         
-          Analytic Solution to an Amortizing Bond Model
+          Amortizing Bond Models Investigation, Part 2
 
         
       </h1>
       
-        <p class="page__lead">We’re picking up where we left off with using linear algebra to consider
-amortizing bond models like the ones I implement at work. Last time, we wrote
-the coefficients matrix which encodes the model: multiply the below matrix by a
-vector with annual principal payments, and you’ll get a vector representing the
-total annual payment.
-
+        <p class="page__lead">Analytic solution to an amortizing bond model.
 </p>
       
       
@@ -321,8 +316,8 @@ total annual payment.
 
 
   <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
-    <meta itemprop="headline" content="Analytic Solution to an Amortizing Bond Model">
-    <meta itemprop="description" content="We’re picking up where we left off with using linear algebra to consideramortizing bond models like the ones I implement at work. Last time, we wrotethe coefficients matrix which encodes the model: multiply the below matrix by avector with annual principal payments, and you’ll get a vector representing thetotal annual payment.">
+    <meta itemprop="headline" content="Amortizing Bond Models Investigation, Part 2">
+    <meta itemprop="description" content="Analytic solution to an amortizing bond model.">
     <meta itemprop="datePublished" content="2026-01-03T00:00:00-05:00">
     
 
@@ -476,8 +471,7 @@ factor: \(R_k = R_0 (1+g)^k\).</p>
 </span><span class="n">g</span> <span class="o">=</span> <span class="n">symbols</span><span class="p">(</span><span class="s">'g'</span><span class="p">)</span>
 
 <span class="n">revenue2</span> <span class="o">=</span> <span class="n">Matrix</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
-<span class="c1"># growth_rate = lambda i, n : (1+g)**(i-n)
-</span><span class="n">growth_rate</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">i</span><span class="p">,</span> <span class="n">n</span> <span class="p">:</span> <span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">g</span><span class="p">)</span><span class="o">**</span><span class="n">i</span>
+<span class="n">growth_rate</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">i</span><span class="p">,</span> <span class="n">n</span> <span class="p">:</span> <span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">g</span><span class="p">)</span><span class="o">**</span><span class="n">i</span>
 
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">):</span>
     <span class="n">revenue2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">growth_rate</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">9</span><span class="p">)</span> <span class="o">*</span> <span class="n">R</span>
@@ -679,7 +673,7 @@ longer maturities. That will be the topic of a future post.</p>
       
   <nav class="pagination">
     
-      <a href="/technical/2025/12/14/fixing-my-bond-math-code.html" class="pagination--pager" title="Fixing my Bond Math Code from the Last Post">Previous</a>
+      <a href="/technical/2025/12/14/fixing-my-bond-math-code.html" class="pagination--pager" title="Amortizing Bond Models Investigation, Part 1.5">Previous</a>
     
     
       <a href="/technical/2026/02/01/currency-graphs.html" class="pagination--pager" title="Currency Markets Graphs">Next</a>

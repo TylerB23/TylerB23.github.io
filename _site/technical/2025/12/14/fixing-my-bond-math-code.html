@@ -10,8 +10,8 @@
   <head>
     <meta charset="utf-8">
 
-<!-- begin _includes/seo.html --><title>Fixing my Bond Math Code from the Last Post - Tyler’s Blog</title>
-<meta name="description" content="While playing around with the Python I wrote in my last blog post, I realized that it had a fatal error. Muni bonds are typically sold in \$5,000 lots, so in my first attempt I tried to deal with this by taking the floor of my calculated principal amounts element-wise. However, by doing that I ended up reducing the interest that needed to be paid in earlier periods, since I was reducing the principal due in later periods by rounding down. That meant that, especially for longer maturities, my solutions weren’t solving for debt service up to the full revenue constraint. Whoops.">
+<!-- begin _includes/seo.html --><title>Amortizing Bond Models Investigation, Part 1.5 - Tyler’s Blog</title>
+<meta name="description" content="Fixing my bond math code from the last post.">
 
 
   <meta name="author" content="Tyler Burleyson">
@@ -23,11 +23,11 @@
 <meta property="og:type" content="article">
 <meta property="og:locale" content="en_US">
 <meta property="og:site_name" content="Tyler&#39;s Blog">
-<meta property="og:title" content="Fixing my Bond Math Code from the Last Post">
+<meta property="og:title" content="Amortizing Bond Models Investigation, Part 1.5">
 <meta property="og:url" content="http://localhost:4000/technical/2025/12/14/fixing-my-bond-math-code.html">
 
 
-  <meta property="og:description" content="While playing around with the Python I wrote in my last blog post, I realized that it had a fatal error. Muni bonds are typically sold in \$5,000 lots, so in my first attempt I tried to deal with this by taking the floor of my calculated principal amounts element-wise. However, by doing that I ended up reducing the interest that needed to be paid in earlier periods, since I was reducing the principal due in later periods by rounding down. That meant that, especially for longer maturities, my solutions weren’t solving for debt service up to the full revenue constraint. Whoops.">
+  <meta property="og:description" content="Fixing my bond math code from the last post.">
 
 
 
@@ -157,20 +157,12 @@
     <div class="wrapper">
       <h1 id="page-title" class="page__title" itemprop="headline">
         
-          Fixing my Bond Math Code from the Last Post
+          Amortizing Bond Models Investigation, Part 1.5
 
         
       </h1>
       
-        <p class="page__lead">While playing around with the Python I wrote in my last blog post, I realized
-that it had a fatal error. Muni bonds are typically sold in \$5,000 lots, so in
-my first attempt I tried to deal with this by taking the floor of my calculated
-principal amounts element-wise. However, by doing that I ended up reducing the
-interest that needed to be paid in earlier periods, since I was reducing the
-principal due in later periods by rounding down. That meant that, especially for
-longer maturities, my solutions weren’t solving for debt service up to the full
-revenue constraint. Whoops.
-
+        <p class="page__lead">Fixing my bond math code from the last post.
 </p>
       
       
@@ -324,8 +316,8 @@ revenue constraint. Whoops.
 
 
   <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
-    <meta itemprop="headline" content="Fixing my Bond Math Code from the Last Post">
-    <meta itemprop="description" content="While playing around with the Python I wrote in my last blog post, I realizedthat it had a fatal error. Muni bonds are typically sold in \$5,000 lots, so inmy first attempt I tried to deal with this by taking the floor of my calculatedprincipal amounts element-wise. However, by doing that I ended up reducing theinterest that needed to be paid in earlier periods, since I was reducing theprincipal due in later periods by rounding down. That meant that, especially forlonger maturities, my solutions weren’t solving for debt service up to the fullrevenue constraint. Whoops.">
+    <meta itemprop="headline" content="Amortizing Bond Models Investigation, Part 1.5">
+    <meta itemprop="description" content="Fixing my bond math code from the last post.">
     <meta itemprop="datePublished" content="2025-12-14T00:00:00-05:00">
     
 
@@ -436,11 +428,11 @@ the bonds. It’s much more practical, but not as analytically tractable.</p>
     <span class="c1"># Calculate the last year's principal and interest
 </span>    <span class="c1"># I'm creating the arrays backwards because it makes the indexing easier
 </span>    <span class="c1"># the '.T' at the end flips them so the first entry is the first year
-</span>    <span class="n">principal</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">floor</span><span class="p">((</span><span class="n">r</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">c</span><span class="p">))</span> <span class="o">/</span> <span class="mi">5000</span><span class="p">)</span> <span class="o">*</span> <span class="mi">5000</span>
-    <span class="n">interest</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">principal</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">c</span>
+</span>    <span class="n">principal</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">floor</span><span class="p">((</span><span class="n">R</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">r</span><span class="p">))</span> <span class="o">/</span> <span class="mi">5000</span><span class="p">)</span> <span class="o">*</span> <span class="mi">5000</span>
+    <span class="n">interest</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">principal</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">r</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-        <span class="n">principal</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">floor</span><span class="p">(((</span><span class="n">r</span> <span class="o">-</span> <span class="n">interest</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">c</span><span class="p">))</span> <span class="o">/</span> <span class="mi">5000</span><span class="p">)</span> <span class="o">*</span> <span class="mi">5000</span>
-        <span class="n">interest</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">interest</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">principal</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">c</span>
+        <span class="n">principal</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">floor</span><span class="p">(((</span><span class="n">R</span> <span class="o">-</span> <span class="n">interest</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">r</span><span class="p">))</span> <span class="o">/</span> <span class="mi">5000</span><span class="p">)</span> <span class="o">*</span> <span class="mi">5000</span>
+        <span class="n">interest</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">interest</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">principal</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">r</span>
 
     <span class="k">return</span> <span class="n">principal</span><span class="p">.</span><span class="n">T</span><span class="p">,</span> <span class="n">interest</span><span class="p">.</span><span class="n">T</span></code></pre></figure>
 
@@ -465,10 +457,10 @@ the bonds. It’s much more practical, but not as analytically tractable.</p>
       
   <nav class="pagination">
     
-      <a href="/technical/2025/11/30/LA-Bond-Math.html" class="pagination--pager" title="Using Linear Algebra for Bond Math">Previous</a>
+      <a href="/technical/2025/11/30/LA-Bond-Math.html" class="pagination--pager" title="Amortizing Bond Models Investigation, Part 1">Previous</a>
     
     
-      <a href="/technical/2026/01/03/analytic-solutions-bond-model.html" class="pagination--pager" title="Analytic Solution to an Amortizing Bond Model">Next</a>
+      <a href="/technical/2026/01/03/analytic-solutions-bond-model.html" class="pagination--pager" title="Amortizing Bond Models Investigation, Part 2">Next</a>
     
   </nav>
 

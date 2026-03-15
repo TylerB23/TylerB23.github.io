@@ -1,8 +1,8 @@
 ---
 layout: post
 categories: Technical
-title: "Using Linear Algebra for Bond Math"
-excerpt: ""
+title: "Amortizing Bond Models Investigation, Part 1"
+excerpt: "Using linear algebra for bond math."
 header:
     overlay_image: /assets/Dutch_Bond.jpg
     overlay_filter: 0.7

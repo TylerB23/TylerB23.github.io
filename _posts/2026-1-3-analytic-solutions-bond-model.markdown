@@ -1,7 +1,8 @@
 ---
 layout: post
 categories: Technical
-title: "Analytic Solution to an Amortizing Bond Model"
+title: "Amortizing Bond Models Investigation, Part 2"
+excerpt: "Analytic solution to an amortizing bond model."
 header:
     overlay_image: /assets/pascals_triangle.jpg
     overlay_filter: 0.7
@@ -120,7 +121,6 @@ factor: $$R_k = R_0 (1+g)^k$$.
 g = symbols('g')
 
 revenue2 = Matrix(np.zeros(10))
-# growth_rate = lambda i, n : (1+g)**(i-n)
 growth_rate = lambda i, n : (1+g)**i
 
 for i in range(0,10):

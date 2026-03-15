@@ -59,19 +59,19 @@ var store = [{
         "url": "/technical/2021/06/01/learning-scripting.html",
         "teaser": null
       },{
-        "title": "Using Linear Algebra for Bond Math",
+        "title": "Amortizing Bond Models Investigation, Part 1",
         "excerpt":"I’m training two new analysts at work, which means introducing them to bond math. This can be a steep learning curve for some new hires since it often isn’t covered in their finance classes as undergrads. Luckily it’s not too difficult, and Excel really is an excellent tool for both...","categories": ["Technical"],
         "tags": [],
         "url": "/technical/2025/11/30/LA-Bond-Math.html",
         "teaser": null
       },{
-        "title": "Fixing my Bond Math Code from the Last Post",
+        "title": "Amortizing Bond Models Investigation, Part 1.5",
         "excerpt":"While playing around with the Python I wrote in my last blog post, I realized that it had a fatal error. Muni bonds are typically sold in \\$5,000 lots, so in my first attempt I tried to deal with this by taking the floor of my calculated principal amounts element-wise....","categories": ["Technical"],
         "tags": [],
         "url": "/technical/2025/12/14/fixing-my-bond-math-code.html",
         "teaser": null
       },{
-        "title": "Analytic Solution to an Amortizing Bond Model",
+        "title": "Amortizing Bond Models Investigation, Part 2",
         "excerpt":"We’re picking up where we left off with using linear algebra to consider amortizing bond models like the ones I implement at work. Last time, we wrote the coefficients matrix which encodes the model: multiply the below matrix by a vector with annual principal payments, and you’ll get a vector...","categories": ["Technical"],
         "tags": [],
         "url": "/technical/2026/01/03/analytic-solutions-bond-model.html",
@@ -81,5 +81,11 @@ var store = [{
         "excerpt":"The US dollar hit a four-year low this month following some, uh, interesting policy coming from the White House as well as comments from the president indicating he doesn’t really mind the currency weakness. The New York Fed performed a rate check in Yen markets, pretty much the only major...","categories": ["Technical"],
         "tags": [],
         "url": "/technical/2026/02/01/currency-graphs.html",
+        "teaser": null
+      },{
+        "title": "Amortizing Bond Models Investigation, Part 3",
+        "excerpt":"The Code After a long break, I’ve finally gotten back to my amortizing bond model investigation. The previous posts give the background on what I’m trying to accomplish here: let’s jump right in to the code. import numpy as np from sympy import * import pickle import dill import matplotlib.pyplot...","categories": ["Technical"],
+        "tags": [],
+        "url": "/technical/2026/03/15/amortizing-bond-model-intuition.html",
         "teaser": null
       }]

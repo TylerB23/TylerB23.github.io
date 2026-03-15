@@ -1,7 +1,8 @@
 ---
 layout: post
 categories: Technical
-title: "Fixing my Bond Math Code from the Last Post"
+title: "Amortizing Bond Models Investigation, Part 1.5"
+excerpt: "Fixing my bond math code from the last post."
 header:
     overlay_image: /assets/Dutch_Bond.jpg
     overlay_filter: 0.7
@@ -69,11 +70,11 @@ def better_solve(n, R, r):
     # Calculate the last year's principal and interest
     # I'm creating the arrays backwards because it makes the indexing easier
     # the '.T' at the end flips them so the first entry is the first year
-    principal[0] = np.floor((r / (1 + c)) / 5000) * 5000
-    interest[0] = principal[0] * c
+    principal[0] = np.floor((R / (1 + r)) / 5000) * 5000
+    interest[0] = principal[0] * r
     for i in range(n-1):
-        principal[i+1] = np.floor(((r - interest[i]) / (1 + c)) / 5000) * 5000
-        interest[i+1] = interest[i] + principal[i+1] * c
+        principal[i+1] = np.floor(((R - interest[i]) / (1 + r)) / 5000) * 5000
+        interest[i+1] = interest[i] + principal[i+1] * r
 
     return principal.T, interest.T
 

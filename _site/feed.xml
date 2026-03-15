@@ -1,4 +1,252 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2026-03-05T19:23:50-05:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Tyler’s Blog</title><subtitle>Welcome! | Tyler&apos;s Blog</subtitle><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><entry><title type="html">Currency Markets Graphs</title><link href="http://localhost:4000/technical/2026/02/01/currency-graphs.html" rel="alternate" type="text/html" title="Currency Markets Graphs" /><published>2026-02-01T00:00:00-05:00</published><updated>2026-02-01T00:00:00-05:00</updated><id>http://localhost:4000/technical/2026/02/01/currency-graphs</id><content type="html" xml:base="http://localhost:4000/technical/2026/02/01/currency-graphs.html">&lt;p&gt;The US dollar hit a four-year low this month following some, uh, interesting policy coming from the White House as well as comments from the president indicating he doesn’t really mind the currency weakness. The New York Fed performed a &lt;a href=&quot;https://www.ft.com/content/0cff24f9-3c5e-4aff-966a-ff34ef448a2d&quot;&gt;rate check&lt;/a&gt; in Yen markets, pretty much the only major currency that hasn’t been gaining on the dollar.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2026-03-15T13:49:58-04:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Tyler’s Blog</title><subtitle>Welcome! | Tyler&apos;s Blog</subtitle><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><entry><title type="html">Amortizing Bond Models Investigation, Part 3</title><link href="http://localhost:4000/technical/2026/03/15/amortizing-bond-model-intuition.html" rel="alternate" type="text/html" title="Amortizing Bond Models Investigation, Part 3" /><published>2026-03-15T00:00:00-04:00</published><updated>2026-03-15T00:00:00-04:00</updated><id>http://localhost:4000/technical/2026/03/15/amortizing-bond-model-intuition</id><content type="html" xml:base="http://localhost:4000/technical/2026/03/15/amortizing-bond-model-intuition.html">&lt;h2 id=&quot;the-code&quot;&gt;The Code&lt;/h2&gt;
+
+&lt;p&gt;After a long break, I’ve finally gotten back to my amortizing bond model investigation. The previous posts give the background on what I’m trying to accomplish here: let’s jump right in to the code.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;numpy&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;sympy&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;pickle&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;dill&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;matplotlib.pyplot&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;set_printoptions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;formatter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;float&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;{:,.4f}&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;format&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;%&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;matplotlib&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;widget&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# R is the annual revenue constraint
+# r is the coupon rate
+# g is the annual revenue growth rate
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;R&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;g&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;symbols&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;R r g&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# Parameters
+# Maturities is the maturities we&apos;re testing
+# Coupons is the coupon rates we&apos;re testing
+# GrowthRates is the growth rates we&apos;re testing
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Maturities&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arange&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;41&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;Coupons&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arange&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.02&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.125&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.0025&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;GrowthRates&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arange&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.06&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.01&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# This lambda expression makes it easier to fill in the revenues
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;growth_rate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;**&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# Generate the expressions for the first year&apos;s principal
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;FirstYrPrincipal&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Matrix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;zeros&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;len&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Maturities&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)]))&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;maturity&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;enumerate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Maturities&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;A&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Matrix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;eye&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;maturity&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;triu&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ones&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;maturity&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;maturity&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]),&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;revenue&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Matrix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fromfunction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;growth_rate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;maturity&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;R&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;shape&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;maturity&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dtype&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;float&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;FirstYrPrincipal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;solve&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;revenue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Generating all of those expressions is computationally expensive. It took my M2
+Mac Mini about 11 minutes to run the code up to here. I used the
+&lt;a href=&quot;https://docs.python.org/3/library/pickle.html&quot;&gt;Pickle&lt;/a&gt; and
+&lt;a href=&quot;https://pypi.org/project/dill/&quot;&gt;Dill&lt;/a&gt; libraries to save down the expressions as
+both Python objects and functions. By default, the functions save everything
+into the present working directory. The code for saving / loading the expressions is below.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# Save the expressions with Pickle
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;with&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;open&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;FirstYrPrincipal.pkl&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&apos;wb&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;pickle&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dump&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;FirstYrPrincipal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# Save them as functions with Dill
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;PrincipalFunctions&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;lambdify&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;R&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;FirstYrPrincipal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&apos;numpy&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;with&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;open&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;PrincipalFunctions.dill&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;wb&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;dill&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dump&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;PrincipalFunctions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# Load in the functions
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;with&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;open&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;PrincipalFunctions.dill&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;rb&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;PrincipalFunctions&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dill&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;load&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now that we have all of our symbolic expressions, we can calculate the first
+year’s principal amount for each maturity, coupon, and growth rate. As a
+reminder, a negative calculated first year principal indicates that the bond
+model doesn’t pencil for the parameters - that is, we can’t have a fully
+amortizing bond model with this combination of maturity, coupon, and growth
+rate. You can think of a negative calculated principal amount as meaning the
+issuer would need to borrow funds in that year to pay interest on the principal
+due in later years. There is a workaround for this we’ll discuss later.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# Calculate everything
+&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;results&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;zeros&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;len&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Maturities&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;len&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Coupons&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;len&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GrowthRates&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)])&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;coupon&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;enumerate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Coupons&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;growth&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;enumerate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GrowthRates&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;principals&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;PrincipalFunctions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1000000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;coupon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;growth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;values&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;enumerate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;principals&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;results&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;values&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Below, I create a slideshow of graphs showing when we get a negative first
+principal payment for different maturities, coupon rates, and growth rates. The
+slider lets you change the growth rate assumption. I played around with 3D
+visualizations, but they were all much clunkier to interpret.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# We&apos;ll create a new array with boolean values indicating whether the first
+# principal payment is zero
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ZeroPrincipals&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;results&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# The Graph
+&lt;/span&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;matplotlib.widgets&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Slider&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;fig&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ax&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;subplots&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;subplots_adjust&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bottom&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.25&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# makes room for slider
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;initial_slice&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ZeroPrincipals&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;shape&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;//&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# midpoint of our growth axis
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;img&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ax&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;imshow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ZeroPrincipals&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[:,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;initial_slice&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cmap&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;coolwarm&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;origin&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;lower&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ylabel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Maturity (years)&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;xlabel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Coupon (percentage)&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;coupon_labels&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;sa&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;%&quot;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;v&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Coupons&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;coupon_indices&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arange&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;len&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Coupons&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;xticks&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ticks&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;coupon_indices&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;labels&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;coupon_labels&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;coupon_indices&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]])&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;mat_labels&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;sa&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;v&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Maturities&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;mat_indices&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arange&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;len&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Maturities&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;yticks&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ticks&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mat_indices&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;labels&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mat_labels&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mat_indices&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]])&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;grid&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;visible&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;True&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;color&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;white&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;linestyle&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;--&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;linewidth&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;alpha&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.7&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;ax_slider&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;axes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.25&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.03&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# Just places the slider on the plot
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;slice_slider&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Slider&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;ax&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ax_slider&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;label&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;Growth Rate&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;valmin&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;valmax&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ZeroPrincipals&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;shape&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;valinit&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;initial_slice&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;valstep&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;valfmt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;%0.0f%%&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;update&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;idx&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;slice_slider&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;img&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;set_data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ZeroPrincipals&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[:,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;idx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# sets the image data
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;fig&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;canvas&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;draw_idle&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# redraws the plot
+&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;slice_slider&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;on_changed&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;update&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;show&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;interactive-plot&quot; style=&quot;text-align: center; margin: 2em 0;&quot;&gt;
+  &lt;img id=&quot;plot-frame&quot; src=&quot;/assets/amortizing_bond_model_3/slide_2.png&quot; style=&quot;width: 100%; max-width: 800px; border-radius: 8px;&quot; /&gt;
+  
+  &lt;div style=&quot;margin-top: 20px;&quot;&gt;
+    &lt;label for=&quot;plot-slider&quot; style=&quot;display: block; font-weight: bold; margin-bottom: 10px;&quot;&gt;
+      Growth Rate: &lt;span id=&quot;slider-value&quot;&gt;2&lt;/span&gt;%
+    &lt;/label&gt;
+    &lt;input type=&quot;range&quot; id=&quot;plot-slider&quot; min=&quot;0&quot; max=&quot;5&quot; value=&quot;2&quot; step=&quot;1&quot; style=&quot;width: 80%;&quot; /&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+  const slider = document.getElementById(&apos;plot-slider&apos;);
+  const output = document.getElementById(&apos;slider-value&apos;);
+  const plot = document.getElementById(&apos;plot-frame&apos;);
+
+  slider.oninput = function() {
+    const val = this.value;
+    output.innerHTML = val;
+    // Update the image source based on the slider value
+    plot.src = `/assets/amortizing_bond_model_3/slide_${val}.png`;
+  };
+&lt;/script&gt;
+
+&lt;p&gt;The red area indicates models with negative first principal payments.&lt;/p&gt;
+
+&lt;p&gt;I’m using some HTML and Javascript to generate the slider above, since matplotlib
+does’t play nicely with static websites. I learned how to make graphs with
+matplotlib over a decade ago, but it seems like plotly is much better nowadays.
+I didn’t want to rebuild my graph using plotly just to make the graph look nicer
+on this site simply because I wanted to get this blog post up already.&lt;/p&gt;
+
+&lt;h2 id=&quot;analysis&quot;&gt;Analysis&lt;/h2&gt;
+
+&lt;p&gt;A growth rate of 0% means we can extend the maturity out to 40 years regardless
+of our (reasonable choice of) coupon rate. That follows the result from my post
+on January 3rd. The more interesting cases involve growing revenues. With 2%
+annual growth, we can get out to about 30 years with coupons below about 6%.&lt;/p&gt;
+
+&lt;p&gt;In practice, we can fund some of the early interest costs from bond proceeds -
+you’ll see that referred to as capitalizing the interest. That means that we can
+get a little bit into the red in the graphs above by funding the deficit (i.e.,
+the ‘negative principal payment’) up front.&lt;/p&gt;
+
+&lt;p&gt;The IRS limits tax-exempt
+bonds to three year’s worth of capitalized interest, however, so we can’t get
+too far into the red before we jeopardize the tax status of our muni bond. More
+practically, you don’t want to be capitalizing a bunch of interest if you can
+avoid it. It lowers how much in proceeds the issuer gets from the bond sale
+dollar-for-dollar, not to mention it just feels bad. Why are you borrowing money
+to pay the interest on the money you borrowed? A better tool in this situation
+is a &lt;a href=&quot;https://www.nabl.org/bond-basics/cabs/&quot;&gt;Capital Appreciation Bond&lt;/a&gt;, 
+the muni market equivalent of a zero coupon bond. This accretes the interest to
+the principal amount rather than needing to fund interest payments from bond
+proceeds.&lt;/p&gt;
+
+&lt;p&gt;Where on these graphs are most muni bonds? Well, most bonds are General
+Obligation Bonds with level debt service (i.e., no growth in debt service year
+over year). Those deals don’t need to worry about this analysis at all.&lt;/p&gt;
+
+&lt;p&gt;How about Revenue Bonds, especially in Project Finance? These deals will often
+structure debt service around some assumed revenue curve with some growth
+assumption built in. This is where I got the idea to do this analysis in the
+first place.&lt;/p&gt;
+
+&lt;p&gt;2% growth is a good estimate for the growth of most tax streams because it’s
+what the Fed targets for inflation. Sales taxes and income taxes are pretty
+clearly connected with inflation, and in many states property taxes are also
+limited to growing by inflation plus some fixed amount. So, most of the time
+we’re focused on that slide.&lt;/p&gt;
+
+&lt;p&gt;Most Project Finance deals have 25-30 year maturities, and most are sold
+non-rated with interest rates (in today’s market) around 5.50% to 6.50%. What we see in the
+graph above is that we should have no problem structuring fully amortizing bonds
+under these constraints.&lt;/p&gt;
+
+&lt;p&gt;However, when we push the growth rate up to 3% or higher, we start to run into
+problems that capitalized interest can’t handle.&lt;/p&gt;
+
+&lt;h2 id=&quot;solutions-for-high-growth-rates-and-coupons&quot;&gt;Solutions for High Growth Rates and Coupons&lt;/h2&gt;
+
+&lt;p&gt;The first tool issuers and their bankers reach for is capitalized interest.
+There’s usually a 1-3 year delay between issuance and when revenue is available
+to pay debt service anyways, during which the project is being built and
+stabilized. If there’s still space under the IRS 3-year limit, issuers can fund
+some of the interest upfront and delay paying principal by another year or two
+to make the model pencil.&lt;/p&gt;
+
+&lt;p&gt;When that doesn’t work, the next option to consider is a Capital Appreciation
+Bond (CAB). These can be set up as Convertible CABs which accrete interest until
+some predetermined date and then ‘convert’ into current interest bonds with
+regular interest payments. Anecdotally, I’ve seen this structure used in
+Colorado and Utah recently for single-family home developments which may have
+4-5 year periods before sufficient absorption has occured to generate the
+property taxes needed to pay debt service.&lt;/p&gt;
+
+&lt;p&gt;In my experience, that’s the best tool available. Some borrowers don’t like the
+CAB structure because the interest accretion means the bonds are effectively
+sold with a steep discount to par. Some states place limitations on the discount
+at issuance, as well. When a CAB is ruled out, the last ditch resort is to
+revise the revenue projections: assume 2% growth instead of 3%, for example,  and show
+investors the coverage ratio resulting from the higher growth rate to try to get
+a lower spread out of them.&lt;/p&gt;
+
+&lt;h2 id=&quot;further-exploration&quot;&gt;Further Exploration&lt;/h2&gt;
+
+&lt;p&gt;We’ve gone from no-growth revenue scenarios to steady growth rates. The natural
+next step would be to consider arbitrary revenue curves. This becomes
+analytically untractable quickly, so I’m switching gears.&lt;/p&gt;
+
+&lt;p&gt;For my next post,
+I’m planning to build a simple bond model app with Streamlit that lets you
+quickly mock up a bond model with some simplified assumptions. Version one will
+let the user quickly build models like the ones I’ve been working with in this
+post series, with fixed growth rate revenue curves. Version two will expand that
+to allow arbitrary revenue curves with automatically calculated capitalized
+interest. Stay tuned.&lt;/p&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><category term="Technical" /><summary type="html">Wrapping up simple revenue curves &amp; developing heuristics.</summary></entry><entry><title type="html">Currency Markets Graphs</title><link href="http://localhost:4000/technical/2026/02/01/currency-graphs.html" rel="alternate" type="text/html" title="Currency Markets Graphs" /><published>2026-02-01T00:00:00-05:00</published><updated>2026-02-01T00:00:00-05:00</updated><id>http://localhost:4000/technical/2026/02/01/currency-graphs</id><content type="html" xml:base="http://localhost:4000/technical/2026/02/01/currency-graphs.html">&lt;p&gt;The US dollar hit a four-year low this month following some, uh, interesting policy coming from the White House as well as comments from the president indicating he doesn’t really mind the currency weakness. The New York Fed performed a &lt;a href=&quot;https://www.ft.com/content/0cff24f9-3c5e-4aff-966a-ff34ef448a2d&quot;&gt;rate check&lt;/a&gt; in Yen markets, pretty much the only major currency that hasn’t been gaining on the dollar.&lt;/p&gt;
 
 &lt;p&gt;All of this has had me thinking more about currencies, one of the markets I know comparatively less about. One common way to display currency markets at a glance is a cross rates table showing conversion rates between major currencies. Here’s an example from &lt;a href=&quot;https://www.bloomberg.com/markets/currencies/cross-rates&quot;&gt;Bloomberg&lt;/a&gt;.&lt;/p&gt;
 
@@ -107,7 +355,7 @@
 
 &lt;p&gt;&lt;img src=&quot;/assets/CurrencyGraph.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;You could compare the table generated from one currency’s exchange rates to actual market exchange rates. Since the table is constructed assuming no arbitrage, any differences between its predicted rates and market rates presumably represent arbitrage opportunities. This is something researchers actually do, as in &lt;a href=&quot;https://www.sciencedirect.com/science/article/pii/S0304405X22001891&quot;&gt;this paper&lt;/a&gt;. From its abstract alone, you can immediately tell that the real world is much more complicated than this toy model, but it’s a useful framework all the same.&lt;/p&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><category term="Technical" /><summary type="html">The US dollar hit a four-year low this month following some, uh, interesting policy coming from the White House as well as comments from the president indicating he doesn’t really mind the currency weakness. The New York Fed performed a rate check in Yen markets, pretty much the only major currency that hasn’t been gaining on the dollar.</summary></entry><entry><title type="html">Analytic Solution to an Amortizing Bond Model</title><link href="http://localhost:4000/technical/2026/01/03/analytic-solutions-bond-model.html" rel="alternate" type="text/html" title="Analytic Solution to an Amortizing Bond Model" /><published>2026-01-03T00:00:00-05:00</published><updated>2026-01-03T00:00:00-05:00</updated><id>http://localhost:4000/technical/2026/01/03/analytic-solutions-bond-model</id><content type="html" xml:base="http://localhost:4000/technical/2026/01/03/analytic-solutions-bond-model.html">&lt;p&gt;We’re picking up where we left off with using linear algebra to consider
+&lt;p&gt;You could compare the table generated from one currency’s exchange rates to actual market exchange rates. Since the table is constructed assuming no arbitrage, any differences between its predicted rates and market rates presumably represent arbitrage opportunities. This is something researchers actually do, as in &lt;a href=&quot;https://www.sciencedirect.com/science/article/pii/S0304405X22001891&quot;&gt;this paper&lt;/a&gt;. From its abstract alone, you can immediately tell that the real world is much more complicated than this toy model, but it’s a useful framework all the same.&lt;/p&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><category term="Technical" /><summary type="html">The US dollar hit a four-year low this month following some, uh, interesting policy coming from the White House as well as comments from the president indicating he doesn’t really mind the currency weakness. The New York Fed performed a rate check in Yen markets, pretty much the only major currency that hasn’t been gaining on the dollar.</summary></entry><entry><title type="html">Amortizing Bond Models Investigation, Part 2</title><link href="http://localhost:4000/technical/2026/01/03/analytic-solutions-bond-model.html" rel="alternate" type="text/html" title="Amortizing Bond Models Investigation, Part 2" /><published>2026-01-03T00:00:00-05:00</published><updated>2026-01-03T00:00:00-05:00</updated><id>http://localhost:4000/technical/2026/01/03/analytic-solutions-bond-model</id><content type="html" xml:base="http://localhost:4000/technical/2026/01/03/analytic-solutions-bond-model.html">&lt;p&gt;We’re picking up where we left off with using linear algebra to consider
 amortizing bond models like the ones I implement at work. Last time, we wrote
 the coefficients matrix which encodes the model: multiply the below matrix by a
 vector with annual principal payments, and you’ll get a vector representing the
@@ -212,8 +460,7 @@ factor: \(R_k = R_0 (1+g)^k\).&lt;/p&gt;
 &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;symbols&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;g&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 
 &lt;span class=&quot;n&quot;&gt;revenue2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Matrix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;zeros&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;# growth_rate = lambda i, n : (1+g)**(i-n)
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;growth_rate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;**&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;growth_rate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;**&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;
 
 &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
     &lt;span class=&quot;n&quot;&gt;revenue2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;growth_rate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;9&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;R&lt;/span&gt;
@@ -393,7 +640,7 @@ some numerical analyses. At work I’ve noticed that a 30-year term and a growth
 rate of 3% in the revenue constraint / payments tends to lead to trouble; it’d
 be helpful to run a bunch of these models in Python to see where we begin to run
 into issues with (i) higher growth rates, (ii) higher coupon rates, and (iii)
-longer maturities. That will be the topic of a future post.&lt;/p&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><category term="Technical" /><summary type="html">We’re picking up where we left off with using linear algebra to consider amortizing bond models like the ones I implement at work. Last time, we wrote the coefficients matrix which encodes the model: multiply the below matrix by a vector with annual principal payments, and you’ll get a vector representing the total annual payment.</summary></entry><entry><title type="html">Fixing my Bond Math Code from the Last Post</title><link href="http://localhost:4000/technical/2025/12/14/fixing-my-bond-math-code.html" rel="alternate" type="text/html" title="Fixing my Bond Math Code from the Last Post" /><published>2025-12-14T00:00:00-05:00</published><updated>2025-12-14T00:00:00-05:00</updated><id>http://localhost:4000/technical/2025/12/14/fixing-my-bond-math-code</id><content type="html" xml:base="http://localhost:4000/technical/2025/12/14/fixing-my-bond-math-code.html">&lt;p&gt;While playing around with the Python I wrote in my last blog post, I realized
+longer maturities. That will be the topic of a future post.&lt;/p&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><category term="Technical" /><summary type="html">Analytic solution to an amortizing bond model.</summary></entry><entry><title type="html">Amortizing Bond Models Investigation, Part 1.5</title><link href="http://localhost:4000/technical/2025/12/14/fixing-my-bond-math-code.html" rel="alternate" type="text/html" title="Amortizing Bond Models Investigation, Part 1.5" /><published>2025-12-14T00:00:00-05:00</published><updated>2025-12-14T00:00:00-05:00</updated><id>http://localhost:4000/technical/2025/12/14/fixing-my-bond-math-code</id><content type="html" xml:base="http://localhost:4000/technical/2025/12/14/fixing-my-bond-math-code.html">&lt;p&gt;While playing around with the Python I wrote in my last blog post, I realized
 that it had a fatal error. Muni bonds are typically sold in \$5,000 lots, so in
 my first attempt I tried to deal with this by taking the floor of my calculated
 principal amounts element-wise. However, by doing that I ended up reducing the
@@ -455,13 +702,13 @@ the bonds. It’s much more practical, but not as analytically tractable.&lt;/p&
     &lt;span class=&quot;c1&quot;&gt;# Calculate the last year&apos;s principal and interest
 &lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;# I&apos;m creating the arrays backwards because it makes the indexing easier
 &lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;# the &apos;.T&apos; at the end flips them so the first entry is the first year
-&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;principal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;floor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;r&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5000&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;interest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;principal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;principal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;floor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;R&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5000&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;interest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;principal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;
     &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;principal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;floor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;r&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;interest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5000&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;interest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;interest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;principal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;principal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;floor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;R&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;interest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5000&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;interest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;interest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;principal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;
 
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;principal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;interest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><category term="Technical" /><summary type="html">While playing around with the Python I wrote in my last blog post, I realized that it had a fatal error. Muni bonds are typically sold in \$5,000 lots, so in my first attempt I tried to deal with this by taking the floor of my calculated principal amounts element-wise. However, by doing that I ended up reducing the interest that needed to be paid in earlier periods, since I was reducing the principal due in later periods by rounding down. That meant that, especially for longer maturities, my solutions weren’t solving for debt service up to the full revenue constraint. Whoops.</summary></entry><entry><title type="html">Using Linear Algebra for Bond Math</title><link href="http://localhost:4000/technical/2025/11/30/LA-Bond-Math.html" rel="alternate" type="text/html" title="Using Linear Algebra for Bond Math" /><published>2025-11-30T00:00:00-05:00</published><updated>2025-11-30T00:00:00-05:00</updated><id>http://localhost:4000/technical/2025/11/30/LA-Bond-Math</id><content type="html" xml:base="http://localhost:4000/technical/2025/11/30/LA-Bond-Math.html">&lt;p&gt;I’m training two new analysts at work, which means introducing them to bond
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;principal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;interest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><category term="Technical" /><summary type="html">Fixing my bond math code from the last post.</summary></entry><entry><title type="html">Amortizing Bond Models Investigation, Part 1</title><link href="http://localhost:4000/technical/2025/11/30/LA-Bond-Math.html" rel="alternate" type="text/html" title="Amortizing Bond Models Investigation, Part 1" /><published>2025-11-30T00:00:00-05:00</published><updated>2025-11-30T00:00:00-05:00</updated><id>http://localhost:4000/technical/2025/11/30/LA-Bond-Math</id><content type="html" xml:base="http://localhost:4000/technical/2025/11/30/LA-Bond-Math.html">&lt;p&gt;I’m training two new analysts at work, which means introducing them to bond
 math. This can be a steep learning curve for some new hires since it often isn’t
 covered in their finance classes as undergrads. Luckily it’s not too difficult,
 and Excel really is an excellent tool for both doing it and building intuition
@@ -610,7 +857,7 @@ client.&lt;/p&gt;
 &lt;p&gt;It’d be nice to develop some heuristics around what kinds of revenue curves
 result in “nice” bond models, where we don’t need too much capitalized interest
 and we’re able to make efficient use of the revenues. That will be the subject
-of future blog posts.&lt;/p&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><category term="Technical" /></entry><entry><title type="html">Learning to Script</title><link href="http://localhost:4000/technical/2021/06/01/learning-scripting.html" rel="alternate" type="text/html" title="Learning to Script" /><published>2021-06-01T00:00:00-04:00</published><updated>2021-06-01T00:00:00-04:00</updated><id>http://localhost:4000/technical/2021/06/01/learning-scripting</id><content type="html" xml:base="http://localhost:4000/technical/2021/06/01/learning-scripting.html">&lt;p&gt;I’m pretty sure I first got interested in linux around the same time Edward
+of future blog posts.&lt;/p&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><category term="Technical" /><summary type="html">Using linear algebra for bond math.</summary></entry><entry><title type="html">Learning to Script</title><link href="http://localhost:4000/technical/2021/06/01/learning-scripting.html" rel="alternate" type="text/html" title="Learning to Script" /><published>2021-06-01T00:00:00-04:00</published><updated>2021-06-01T00:00:00-04:00</updated><id>http://localhost:4000/technical/2021/06/01/learning-scripting</id><content type="html" xml:base="http://localhost:4000/technical/2021/06/01/learning-scripting.html">&lt;p&gt;I’m pretty sure I first got interested in linux around the same time Edward
 Snowden fled the US. I was 13 years old and captivated by how much one could
 determine from the metadata and other stuff the NSA was collecting. There was also
 some part of me that really, really hated the idea that someone out there knew
@@ -1204,184 +1451,4 @@ classes instead of a sudden turn for the worse. Fingers crossed!&lt;/p&gt;
 
 &lt;p&gt;P.S. I’m proud of myself for writing an entire post about COVID without saying
 “unprecendented”, “Now more than ever”, or “our new normal” even once. Hopefully
-you appreciate it, too.&lt;/p&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><category term="Personal" /><summary type="html">Seemingly on cue, as soon as I started writing weekly posts I ended up in the final sprint of my summer research project. That took away most of the time for writing I had each week, so I neglected to update the blog until today.</summary></entry><entry><title type="html">What I’m Reading this Week, Vol. 2</title><link href="http://localhost:4000/personal/2020/07/26/readings2.html" rel="alternate" type="text/html" title="What I’m Reading this Week, Vol. 2" /><published>2020-07-26T00:00:00-04:00</published><updated>2020-07-26T00:00:00-04:00</updated><id>http://localhost:4000/personal/2020/07/26/readings2</id><content type="html" xml:base="http://localhost:4000/personal/2020/07/26/readings2.html">&lt;h2 id=&quot;similarly-quick-forward&quot;&gt;(Similarly Quick) Forward&lt;/h2&gt;
-&lt;p&gt;I set out to write a post like this every Friday, so of course the second week
-in I had a massive influx of work topped by about 6 hours in Zoom meetings. Oh
-well! One of the perks of a personal project is that it’s totally under my
-control: convenient when other responsibilities get in the way.&lt;/p&gt;
-
-&lt;p&gt;To try to make up for the short delay, I’m going to challenge myself to write
-about one of my favorite “Cool Math Things” this week, the Cantor Set. Variety
-is the spice of life and blogs and all that.&lt;/p&gt;
-
-&lt;h3 id=&quot;vaccines-stop-diseases-safely---why-all-the-suspicion&quot;&gt;Vaccines stop diseases safely - why all the suspicion?&lt;/h3&gt;
-&lt;h4 id=&quot;joan-donovan&quot;&gt;Joan Donovan&lt;/h4&gt;
-
-&lt;p&gt;The &lt;em&gt;Nature&lt;/em&gt; newsletter is a great source for quick science readings, and for
-the past few months, of coronavirus updates from scientists (rather than
-journalists and politicians). This piece is a review of a book by Heidi Larson,
-&lt;em&gt;Stuck: How Vaccine Rumours start - And Why They Don’t Go Away&lt;/em&gt;. The problem of
-vaccine rejection is a multidisciplinary, community one. Since a vaccine isn’t
-just for yourself, but has important ramifications for the health of all those
-around you, public officials have a vested interest in collective vaccination.
-The observation that having a choice to vaccinate is a matter of not only
-information and disinformation, but of liberty and dignity, is an excellent
-nuance on a “debate” that is often the product of inflammatory Facebook posts.&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Vaccine hesitancy is a problem of dignity as much as of the abundance of
-falsehoods: individuals want to have their choices respected, amid growing
-distrust in authority.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;The role that social media plays is fascinating as well. Social media and the
-internet are both incredibly liberating in that they empower the individual to
-reach large numbers of people, while allowing users to get content from other
-users. But, in the opposite vein, social media pushes groupthink in the way that
-posts are selected to be viewed by algorithms based on popularity. Tack on the
-particular gimmick of each site (brevity on Twitter, images or video on
-Instagram, and group associations on Facebook) and each gets their own way to
-game the system in interesting and potentially harmful ways.&lt;/p&gt;
-
-&lt;p&gt;Read the article &lt;a href=&quot;https://www.nature.com/articles/d41586-020-02192-w?utm_source=Nature+Briefing&amp;amp;utm_campaign=a0e80cbbed-briefing-dy-20200724&amp;amp;utm_medium=email&amp;amp;utm_term=0_c9dfd39373-a0e80cbbed-44568457&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h3 id=&quot;how-capitalism-drives-cancel-culture&quot;&gt;How Capitalism Drives Cancel Culture&lt;/h3&gt;
-&lt;h4 id=&quot;helen-lewis&quot;&gt;Helen Lewis&lt;/h4&gt;
-
-&lt;p&gt;Moving past the clickbait-y title for a moment, this article gives a compelling
-explanation of some of the trends which make up “cancel culture”. Lewis’s “Iron
-Law of Woke Capitalism”, that “Brands will gravitate toward low-cost, high-noise
-signals as a substitute for genuine reform, to ensure their survival” definitely
-appeases the cynic inside all of us. It explains the football team in Washington
-and the various brands with new, all-black or rainbow logos. While I am a big
-believer in the fact that language matters - how we communicate impacts
-ourselves in others - it’s hard not to roll your eyes at a lot of what is done
-to catch consumer’s attention. I also appreciated her assessment of the
-popularity of &lt;em&gt;White Fragility&lt;/em&gt; a book supposedly about racism which is, in
-fact, a book about white people, for white people, written by a white women.
-John McWhorter has a piece in &lt;em&gt;The Atlantic&lt;/em&gt; recently where he claims the book
-condescends on people of color in the way it demands its readers walk on
-eggshells around topics of racism and social injustice.&lt;/p&gt;
-
-&lt;p&gt;The final section, where Lewis disambiguates economic and social radicalism, is
-a wonderful dichotomy for analysing positions on racism. It reminds me of a
-question I first encountered in Peggy McIntosh’s seminal essay, &lt;em&gt;White
-Privilege: Unpacking the Invisible Knapsack&lt;/em&gt;: in order to create equality,
-whether between genders or races or levels of ability, do the dominant groups
-need to give up some of their power? There are some great conversations to be
-had about what exactly constitutes “power” and “privilege”. While many of the
-writers at &lt;em&gt;The Atlantic&lt;/em&gt; are progressives, I appreciate the level of nuance
-given to contentious social debates like this one.&lt;/p&gt;
-
-&lt;p&gt;Read the articles by &lt;a href=&quot;https://www.theatlantic.com/international/archive/2020/07/cancel-culture-and-problem-woke-capitalism/614086/&quot;&gt;Lewis&lt;/a&gt;, &lt;a href=&quot;https://www.theatlantic.com/ideas/archive/2020/07/dehumanizing-condescension-white-fragility/614146/&quot;&gt;McWhorter&lt;/a&gt;, and &lt;a href=&quot;https://www.racialequitytools.org/resourcefiles/mcintosh.pdf&quot;&gt;McIntosh&lt;/a&gt; at the links on their
-names.&lt;/p&gt;
-
-&lt;h3 id=&quot;something-completely-different-now-the-cantor-set&quot;&gt;Something completely different now: The Cantor Set&lt;/h3&gt;
-
-&lt;p&gt;I promised I’d write a little something about one of my favorite math topics,
-the Cantor Set. It’s a great example of one of objects of curiousity which I
-love in math, namely, the concepts of finite and infinite and their interplay. I
-first heard about the Cantor Set from my advisor, Dr. Peter Thomas, during an
-office hours discussion. I’m going to walk through the construction of the
-ternary set, then talk about some of its coolest properties.&lt;/p&gt;
-
-&lt;p&gt;Imagine the real number line as you were first taught it in elementary school.
-We have at the center the number zero, with all positive numbers in increasing
-order on its right, and all negative numbers in decreasing order on its left.
-There are are infinite amount of numbers in each direction. Imagine walking
-along this line in either direction: you’d never stop walking. Alternatively,
-imagine trying to write down every whole number: 0, 1, 2, 3, 4, 5, 6, …&lt;/p&gt;
-
-&lt;p&gt;You’ll never finish.&lt;/p&gt;
-
-&lt;p&gt;But, for now, we only care about the numbers between 0 and 1. That includes
-numbers like 0.25 and 3/4, as well as numbers like half the square root of two
-and pi over four. These are all equally valid real numbers who lay between 0 and
-1 in value.&lt;/p&gt;
-
-&lt;p&gt;What is the length of this interval, from 0 to 1? It’s a more complex question
-than it may seem at first. Often, mathematicians define length as the difference
-between the furthest apart points: 1 - 0 = 1. This is a sensible measurement
-system. In the real world, you may say you’re six feet tall, because if you
-stand next to a measuring tape, the difference between what it reads at the
-bottom of your foot and its reading at the top of your head is six feet. We also
-naturally talk about distance as ratios - you may say your commute is a 20
-minute car ride, and getting to the park takes about half that time. Therefore,
-your commute is twice as long as the trip to the park.&lt;/p&gt;
-
-&lt;p&gt;What we will aim to do with the interval from 0 to 1 is use this concept of
-ratios to try to ‘cut out’ all of the numbers in this interval. First, cut the
-set into thirds. Let $p=[0,1]$, which is a notation for defining $p$ as the set
-of all numbers between 0 and 1, including 0 and 1. Now, let $p_1 = [0,1/3)$,
-$p_2 = (1/3, 2/3)$, and $p_3 = (2/3, 1]$ where the parentheses signify excluding
-the endpoint.&lt;/p&gt;
-
-&lt;p&gt;It is fairly obvious that $p_1 + p_2 + p_3 = p$, that is, if we consider all
-three of these sets $p_i$ we get all of the points that are in $p$.&lt;/p&gt;
-
-&lt;p&gt;Now, define a set $q = p_1 + p_3$. That is, $q$ is just $p=[0,1]$ without the
-middle third. You would agree, of course, that this set is ‘smaller’ than our
-original set $p$, since all of it’s numbers are in $p$ but not all of $p$ is in
-$q$. This is a different notion of size than before – now we are interested in
-how many things are in a set, rather than just the distance between its furthest
-points. This is perhaps an even more natural way to think about things: we count
-apples in a basket and say there are 10 apples, or see another basket with 5
-pears and say there are more apples than pears, or even that there are twice as
-many apples as there are pears in the baskets. We’ve simply moved to a more
-abstract space, where we consider an infinite number of objects at a time. Here,
-the objects are individual numbers, also called ‘points’ on the real number
-line. Observe that while there is a clear ‘next step’ in counting discrete
-objects in real life. If you have 5 apples, the smallest change you can make to
-that quantity is to add or subtract exactly one apple. You can’t take away a
-third of apple. However, that’s what we just did with our set of numbers between
-0 and 1.&lt;/p&gt;
-
-&lt;p&gt;Now, repeat this process of chopping out the middle there ad infinitum. So we go
-from $[0,1/3) + (2/3, 1)$ to $[0,1/9) + (2/9,3/9) + (6/9,7/9) + (8/9,1]$, and so
-on, so forth. How many numbers are left?&lt;/p&gt;
-
-&lt;p&gt;Well, we certainly still have 0 and 1,, so we have at least two numbers. It can
-also be shown that we have all numbers which can be expressed of the form $x =
-c_1/3 + c_2/3^2 + … + c_n/3^n + …$, where $n$ is a natural number (the
-naturals are all whole numbers 1 and above, the numbers which make sense to
-count with) and where $c_i$ is either 0 or 2 for all $n$. Here’s an image from
-Wolfram Mathworld:
-&lt;img src=&quot;/assets/CantorSet_900.png&quot; alt=&quot;Cantor Set&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Without giving the detailed, analysis-based proofs, that statement above can be
-shown as well as the fact that it describes an infinite amount of numbers
-between 0 and 1. The difference between the largest and smallest elements in our
-final set is still 1, but there are clearly much, much fewer points than started
-with. Certainly, there are more points which were discarded than there are left.
-Regardless, we have an infinite number of points remaining – just a “smaller”
-infinity than those discarded. Of course, we also started with a “larger”
-infinity of points than is either our final set or all of our discarded points.&lt;/p&gt;
-
-&lt;p&gt;This, as it turns out, satisfies a quite a few set descriptions in mathematics.
-The Cantor Set, as constructed above, is totaly disconnected, perfect, nowhere
-dense, closed, compact, and of measure zero. Those of you with formal
-mathematics training are smiling along knowingly, and for the rest of you, well,
-none of that needs to be meaningful to appreciate the beauty of the set. How can
-you take infinity away from infinity, and be left with infinity? How do we
-quantify this set – how large is it, how long is it, how does it compare in
-various ideas of size with other sets of objects?&lt;/p&gt;
-
-&lt;p&gt;It’s interesting, as well, to think about jumping around between the points in
-the set. What is the next biggest number after 0? Is it 1? No, because $0 &amp;lt; 1/2
-&amp;lt; 1$. So is it $1/2$? No, because $0 &amp;lt; 1/4 &amp;lt; 1/2$. Continue ad infinitum, and
-you begin to recognize a similarity with the construction of the Cantor Set.
-Namely, there are no two points which are ‘next to each other’ in the final set,
-since in the process of pruning down the set, we always remove the middle third
-of any subinterval of points.&lt;/p&gt;
-
-&lt;p&gt;In other words, if given a point in $[0,1]$, we could tell you whether or not it
-is in the Cantor Set by seeing if it can be written with the series expansion
-above, $x = c_1/3 + c_2/3^2 + …$. However, we could not then write down the
-next largest number in the set. This describes infinity.&lt;/p&gt;
-
-&lt;p&gt;There’s a ton of other cool stuff about the Cantor Set, like how the
-construction we did (called the Cantor Ternary Set) describes all numbers
-between 0 and 1 which can be written in ternary without using 1’s. However, what
-I first found so fascinating about it is the ideas of infinity encapsulated
-within. That fundamental idea of always being able to find a closer value, even
-in a set which seems to be so small, is fascinating and beautiful.&lt;/p&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><category term="Personal" /><summary type="html">(Similarly Quick) Forward I set out to write a post like this every Friday, so of course the second week in I had a massive influx of work topped by about 6 hours in Zoom meetings. Oh well! One of the perks of a personal project is that it’s totally under my control: convenient when other responsibilities get in the way.</summary></entry></feed>
+you appreciate it, too.&lt;/p&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><category term="Personal" /><summary type="html">Seemingly on cue, as soon as I started writing weekly posts I ended up in the final sprint of my summer research project. That took away most of the time for writing I had each week, so I neglected to update the blog until today.</summary></entry></feed>

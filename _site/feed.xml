@@ -1,140 +1,472 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2026-03-15T17:57:49-04:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Tyler’s Blog</title><subtitle>Welcome! | Tyler&apos;s Blog</subtitle><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><entry><title type="html">What’s the Difference between Gambling and Investing?</title><link href="http://localhost:4000/personal/2026/03/15/gambling-or-investing.html" rel="alternate" type="text/html" title="What’s the Difference between Gambling and Investing?" /><published>2026-03-15T00:00:00-04:00</published><updated>2026-03-15T00:00:00-04:00</updated><id>http://localhost:4000/personal/2026/03/15/gambling-or-investing</id><content type="html" xml:base="http://localhost:4000/personal/2026/03/15/gambling-or-investing.html">&lt;p&gt;Like most universities, my college had a writing skills requirement but was a
-bit embarrassed about it. Rather than force the engineers to take actual liberal
-arts courses, they offered “current interest” courses which
-satisfied the requirement. One of mine was on fintech, which in 2020 mostly meant
-crypto.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2026-04-24T20:23:50-04:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Tyler’s Blog</title><subtitle>Welcome! | Tyler&apos;s Blog</subtitle><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><entry><title type="html">I Built an AI Job Scout</title><link href="http://localhost:4000/technical/2026/04/24/AI-job-scout.html" rel="alternate" type="text/html" title="I Built an AI Job Scout" /><published>2026-04-24T00:00:00-04:00</published><updated>2026-04-24T00:00:00-04:00</updated><id>http://localhost:4000/technical/2026/04/24/AI-job-scout</id><content type="html" xml:base="http://localhost:4000/technical/2026/04/24/AI-job-scout.html">&lt;h1 id=&quot;project-overview&quot;&gt;Project Overview&lt;/h1&gt;
 
-&lt;p&gt;One of the seminar sessions focused on the fundamental drivers of the price of
-bitcoin (or the lack thereof). One of the other students asked the professor,
-“isn’t this just gambling?”, to which he replied, “what do you think separates
-gambling from investing?”.&lt;/p&gt;
+&lt;p&gt;There are a lot of different job posting sites out there, and keeping up with
+them all can be annoying. I thought it’d be a fun weekend project to build an
+AI-enabled script to look at job postings for me. This project uses some cool
+python packages to pull job descriptions from websites and feed them to
+Google Gemini, which evaluates the job based on a pre-baked prompt and sends a
+notification to my phone if it’s something I’d be interested in. I used Github
+Actions to run it automatically throughout the week.&lt;/p&gt;
 
-&lt;p&gt;The question has stuck with me for a while, and I thought it’d be interesting to
-write a blog post about how my thoughts on the topic have evolved.&lt;/p&gt;
+&lt;p&gt;This was a fun way to learn some new python tools and to play around with
+AI tools. It’s not very practical yet - it only looks at
+one website for job postings and doesn’t have any feedback mechanisms to improve
+over time - but putting it together was a worthwhile exercise that’s already
+given me ideas for future projects.&lt;/p&gt;
 
-&lt;h2 id=&quot;my-answer-at-the-time&quot;&gt;My Answer at the Time&lt;/h2&gt;
+&lt;p&gt;This project is made up of just a few simple files:&lt;/p&gt;
 
-&lt;p&gt;Gambling and investing both involve putting capital at risk, with some chance of
-“winning” and growing the capital and some chance of “losing” and reducing the
-capital.&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;scrape_sites.py&lt;/code&gt;, a python script using the Playwright package to pull job
+descriptions from a job posting site.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;gemini_call.py&lt;/code&gt;, a python script which takes that list of job descriptions
+and sends it in a pre-baked prompt to gemini-2.5-flash for evaluation.
+    &lt;ul&gt;
+      &lt;li&gt;Why gemini-2.5-flash? Because I’m using the free tier of Gemini and I don’t
+want the AI doing the thinking for me. It’s literally job applications.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;script.py&lt;/code&gt;, a python script which calls the functions in the other scripts.
+This is the script where all the action happens, including the code to send
+interesting job postings directly to my phone.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;instructions.txt&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;examples.txt&lt;/code&gt;, text files for the Gemini prompt
+containing the basic instructions for the AI and some example job descriptions
+to give it some guidance.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;job_scout.yml&lt;/code&gt;, a config file that sets up the Github Action which runs the
+script at predetermined times on a virtual machine.&lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;p&gt;My first thought was that what separated the two activities was &lt;strong&gt;positive
-expected value&lt;/strong&gt;. Most games at a casino have a house edge; over the long run,
-you expect to lose money. The things we typically think of as investing (fixed
-income and equities) have well-documented historic positive returns.
-&lt;a href=&quot;https://en.wikipedia.org/wiki/Investment&quot;&gt;Wikipedia&lt;/a&gt; agrees with my undergrad
-definition of investing:&lt;/p&gt;
+&lt;p&gt;The remainder of this post provides a brief overview of each of these, with the
+code.&lt;/p&gt;
 
-&lt;blockquote&gt;
-  &lt;p&gt;Investment is traditionally defined as the “commitment of resources into something expected to gain value over time”.&lt;/p&gt;
-&lt;/blockquote&gt;
+&lt;h2 id=&quot;scrape-pulling-job-descriptions-with-playwright&quot;&gt;Scrape: Pulling Job Descriptions with Playwright&lt;/h2&gt;
 
-&lt;p&gt;I’ve revisited the idea since taking the class, especially as I began my career
-in investment banking. When my team sells
-bonds, they’re usually financing public improvements like roadwork, utility line
-extensions, water and sewer, etc. The development increases the value of the
-parcel of land, and our investors get paid back from the subsequent increase in property
-taxes (or sales taxes or whatever else). It’s pretty classic investing - bondholders
-put up money today that is used to build some project, and they get
-paid back from part of the cash flow coming off of the project. My team sells
-muni bonds, so the cash flow stream is usually a tax stream, but this
-generalizes to other sorts of fixed income in a straightforward manner.&lt;/p&gt;
+&lt;p&gt;First, we need a way to pull the job descriptions off of the job posting
+website. &lt;a href=&quot;https://playwright.dev/python/&quot;&gt;Playwright&lt;/a&gt; is a neat python package which can do exactly that.&lt;/p&gt;
 
-&lt;p&gt;Investors are paid a steady stream of
-coupons which represent their return. There is some risk that the project
-doesn’t get built or the cash flows from it aren’t sufficient to pay off the
-bonds, and they’re compensated for those risks. The intent of all parties
-involved is for them to have a positive expected value.&lt;/p&gt;
+&lt;p&gt;Playwright is a full suite of browser automation tools aimed
+towards site testing. It boots up test browsers and takes actions like clicking
+or hovering over web elements in a way that feels very intuitive.&lt;/p&gt;
 
-&lt;p&gt;Whether investors are being compensated appropriately for the risk they’re
-taking, in my eyes, doesn’t affect whether they’re engaged in investing or
-gambling. Risk-adjusted returns are a measure of how good they are at investing,
-not a determinant of whether they’re engaged in the activity.&lt;/p&gt;
+&lt;p&gt;Here’s the outline of my workflow:&lt;/p&gt;
 
-&lt;p&gt;Already, you’re probably seeing the problem with focusing on expected value.
-I’ll get to that, but first, let’s think about equities for a moment.&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;Open an instance of chromium, and open the webpage I want to pull job
+descriptions from.&lt;/li&gt;
+  &lt;li&gt;Create a list of the page elements that contain the individual job
+descriptions.&lt;/li&gt;
+  &lt;li&gt;Iterate through that, saving down each job description.&lt;/li&gt;
+  &lt;li&gt;Return a list of the job descriptions.&lt;/li&gt;
+&lt;/ol&gt;
 
-&lt;p&gt;Equity investing is a bit different, but I think it feels like investing to most
-people for similar reasons. It’s well-documented that public equities have
-historically delivered positive returns to investors over most time horizons. If
-you take a 30,000 foot view, you could say that owning a bunch of different
-stocks which are exposed to many different aspects of the economy should more or
-less capture growth in the economy. Furthermore, owning a stock gives you an
-ownership claim over the company. You’re entitled to a share in the profits of
-the company, mediated through its leadership who may decide to invest back into
-the enterprise, issue a dividend, or do stock buybacks.&lt;/p&gt;
+&lt;p&gt;(for an overview of how Playwright works, you should check out its
+&lt;a href=&quot;https://playwright.dev/python/docs/intro&quot;&gt;documentation&lt;/a&gt; directly.)&lt;/p&gt;
 
-&lt;h2 id=&quot;problems-with-the-definition&quot;&gt;Problems with the Definition&lt;/h2&gt;
+&lt;p&gt;The best thing about the package is the intuitive debugging: by inserting pauses in
+the script and running it in headed mode (i.e., with the test browser visible),
+it’s easy to identify what is and isn’t working. It has a GUI tool which pops
+up and lets you hover over elements on the webpage to identify the code
+you need to interact with that web element in your script. Here’s an example:&lt;/p&gt;
 
-&lt;p&gt;The obvious question here is, how do you figure out if an activity has positive
-expected value?&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/AI_job_scout/playwright_gui.png&quot; alt=&quot;playwright gui&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;First, let me defend my undergrad self just a bit. Clearly, traditional Vegas
-table games have a &lt;em&gt;negative&lt;/em&gt; expected value for the player; you can calculate the odds of different
-outcomes in a game of blackjack, for example, and realize that you’re not expected
-to win. So while it’s not easy to determine if a traditional investing
-activity has positive EV, you can label some things as gambling with this
-simple definition.&lt;/p&gt;
+&lt;p&gt;The &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;test_example.py&lt;/code&gt; script is in the top left, above the tmux pane which is
+running it via &lt;a href=&quot;https://docs.pytest.org/en/stable/&quot;&gt;pytest&lt;/a&gt;.
+The Playwright Inspector GUI tool is
+below that, open to the python code currently running when we hit the
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;page.pause()&lt;/code&gt; command, which pauses execution of the script. I entered the “pick
+locator” mode, which lets you hover your mouse over a web page element and get
+the locator function that lets you interact with the element in the
+script.&lt;/p&gt;
 
-&lt;p&gt;One more observation: casinos have a positive edge. So even in the most obvious
-example of gambling, one of the parties involved has positive EV. The problem is
-that not everyone does.&lt;/p&gt;
+&lt;p&gt;On OpenQuant, the employer logos can be accessed with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;get_by_role(&quot;img&quot;,
+name=&quot;logo&quot;)&lt;/code&gt; Adding &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.all()&lt;/code&gt; on the end of that creates a list of all
+those logos. Once I have that list, I can tell Playwright to click on each logo, wait for the
+job description to load, and put the text into a list.&lt;/p&gt;
 
-&lt;p&gt;With that in mind, let’s complicate the definition: for an activity to be
-investing rather than gambling, everyone involved should have a positive
-expected value. The activity should be a &lt;strong&gt;positive sum game&lt;/strong&gt;, insofar as
-everyone involved thinks they’ll be better off for engaging in it.&lt;/p&gt;
+&lt;p&gt;The screenshot shows some test code I put together to figure out how the package
+works. Here’s the full script:&lt;/p&gt;
 
-&lt;p&gt;Return to the example of debt financing for a real estate project. The developer
-expects to build their project and earn an acceptable return from it.
-The bond investor expects to invest their funds and earn an acceptable return
-from it. The money coming in to the system is from users of the project, who
-wouldn’t show up and spend their money if they didn’t feel like it was worth it.&lt;/p&gt;
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;playwright.sync_api&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Page&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;expect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sync_playwright&lt;/span&gt;
 
-&lt;p&gt;Sounds like everybody wins. It’s easy to see that equity investing fits
-the bill, as well.&lt;/p&gt;
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;scrape_openquant&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;with&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sync_playwright&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;browser&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;chromium&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;launch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;headless&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;True&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;page&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;browser&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new_page&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;page&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;goto&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;https://openquant.co/quant-trader-jobs&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 
-&lt;h2 id=&quot;other-examples-what-counts-and-what-doesnt&quot;&gt;Other Examples: What Counts and What Doesn’t&lt;/h2&gt;
+        &lt;span class=&quot;c1&quot;&gt;# Creates a list of the company logos on the page
+&lt;/span&gt;        &lt;span class=&quot;n&quot;&gt;job_cards&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;page&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get_by_role&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;img&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;logo&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;all&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
 
-&lt;p&gt;Consider a pro poker player sitting down at a table with a bunch of newbies. He
-or she has a positive expected value, while the rest of the table has a negative
-expected value. This should fit any reasonable definition of gambling, rather
-than investing. That’s an important point - you can engage in gambling with a
-positive EV, as long as your winnings are coming from others losing.&lt;/p&gt;
+        &lt;span class=&quot;c1&quot;&gt;# The function returns this list of job descriptions
+&lt;/span&gt;        &lt;span class=&quot;n&quot;&gt;job_des&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
 
-&lt;p&gt;There’s a case to be made that sports betting could count as
-investing under this definition for a certain kind of bettor. There are people
-out there who develop good models for game outcomes or who find arbitrage
-opportunities between different sportsbooks. They can reasonably claim to have a
-positive expected value. The bets they place, arguably, represent a kind of
-ownership in the potential payoff if the bet goes their way. Predictions markets
-(which are mostly sportsbooks, by volume) look similar. Some market makers are
-beginning to &lt;a href=&quot;https://giftarticle.ft.com/giftarticle/actions/redeem/cb34168b-0d7d-466c-be5b-e856931e7b75&quot;&gt;wade into sports
-betting&lt;/a&gt;
-by way of prediction markets. This is a topic worthy of more discussion, but I
-don’t think it’s useful to write off sports betting or prediction markets as
-purely investing or gambling. There’re more interesting things going on in that
-space.&lt;/p&gt;
+        &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;card&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;job_cards&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;try&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;card&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;scroll_into_view_if_needed&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;card&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;click&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
 
-&lt;p&gt;A high frequency trading shop also seems to be engaged in something other
-than investing. When you hold positions for an extremely short period of time,
-that just feels very different from buying an index fund or investing in a
-Treasury note. You don’t care about the long-term prospects of the business in
-the same way a traditional investor does. However, many HFT shops have done very well for themselves
-historically and we have no reason to think they won’t continue to do so. It’s
-not gambling either. I think it’s useful to think of short-term trading and
-market making activities as a third category.&lt;/p&gt;
+                &lt;span class=&quot;c1&quot;&gt;# this selector grabs all of the description text
+&lt;/span&gt;                &lt;span class=&quot;n&quot;&gt;des_selector&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;.prose&quot;&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;page&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;wait_for_selector&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;des_selector&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;timeout&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 
-&lt;p&gt;Bitcoin and other crypto currencies present an interesting case. Many would
-argue that they have no fundamental value, or, more snarkily, that the correct
-price for these tokens is \$0.
-The market is clearly full of scams, too. Early investors in projects ride hype
-waves, wash trade to bring attention, then
-sell at the top. There’s no shortage of pundits who will tell you the whole thing is a ponzi
-scheme. For our purposes here, it’s sufficient to point out that there’s no
-economic activity at the bottom of most crypto projects. That doesn’t mean
-crypto isn’t interesting or useful, or that there’s no money to be made there. I
-just don’t think it’s quite right to say you’re “invested in crypto”.&lt;/p&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><category term="Personal" /><summary type="html">Like most universities, my college had a writing skills requirement but was a bit embarrassed about it. Rather than force the engineers to take actual liberal arts courses, they offered “current interest” courses which satisfied the requirement. One of mine was on fintech, which in 2020 mostly meant crypto.</summary></entry><entry><title type="html">Amortizing Bond Models Investigation, Part 3</title><link href="http://localhost:4000/technical/2026/03/15/amortizing-bond-model-intuition.html" rel="alternate" type="text/html" title="Amortizing Bond Models Investigation, Part 3" /><published>2026-03-15T00:00:00-04:00</published><updated>2026-03-15T00:00:00-04:00</updated><id>http://localhost:4000/technical/2026/03/15/amortizing-bond-model-intuition</id><content type="html" xml:base="http://localhost:4000/technical/2026/03/15/amortizing-bond-model-intuition.html">&lt;h2 id=&quot;the-code&quot;&gt;The Code&lt;/h2&gt;
+                &lt;span class=&quot;n&quot;&gt;des_text&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;page&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;locator&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;des_selector&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;inner_text&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+
+                &lt;span class=&quot;c1&quot;&gt;# Add the job description to the list
+&lt;/span&gt;                &lt;span class=&quot;n&quot;&gt;job_des&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;append&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;des_text&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+                &lt;span class=&quot;c1&quot;&gt;#click again to collapse the current job card
+&lt;/span&gt;                &lt;span class=&quot;c1&quot;&gt;# Otherwise, the first description will print repeatedly
+&lt;/span&gt;                &lt;span class=&quot;n&quot;&gt;card&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;click&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+
+            &lt;span class=&quot;k&quot;&gt;except&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Exception&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;sa&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Could not expand card: &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+        &lt;span class=&quot;n&quot;&gt;browser&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;close&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;job_des&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The GUI interface was super helpful for figuring out how to reference each of the
+job posting elements on the site. I couldn’t make heads or tails of the site
+structure just poking around in inspect element, so this was crucial in getting
+the script to work.&lt;/p&gt;
+
+&lt;p&gt;You might point out that I could just ask Gemini to pull jobs from a specific
+website for me. And you’d be right, but I have a few reasons for choosing to do
+it this way. For one, I learned a new tool while setting this up which may come
+in handy on future projects. Doing it this way, I also know for a fact I’m
+reviewing all the jobs on a specific site that I know will have good leads. AI
+is famously a black box, so this way of doing things helps me maintain some
+control.&lt;/p&gt;
+
+&lt;h2 id=&quot;analyze-crafting-the-prompt-for-gemini&quot;&gt;Analyze: Crafting the Prompt for Gemini&lt;/h2&gt;
+
+&lt;p&gt;Once I gather the job descriptions, I want to use Gemini to evaluate them for
+me. Gemini should “read” each of the job descriptions to (i) summarize it, and 
+(ii) give it a 0-10 “match score” for how well it fits what I’m looking for.&lt;/p&gt;
+
+&lt;p&gt;To facilitate that, I provide it with a description of myself and what I’m
+interested in. I also provide it with several example job
+postings to get it started.&lt;/p&gt;
+
+&lt;p&gt;This provides an informal feedback
+mechanism; if I find more job postings I’m really interested in, I can add them
+to the examples for the prompt and dial it in over time. What I’d really like to
+do is give it feedback after each run on how well it scored each of the job
+opportunities. If I end up adding that feature, I’ll write a follow up to this
+post.&lt;/p&gt;
+
+&lt;p&gt;Google Gemini has an easy to use python package you can use to automatically
+send prompts. It requires an API key, but Google’s free tier is generous enough
+to let me run this prompt regularly without needing to upgrade to a paid
+account.&lt;/p&gt;
+
+&lt;p&gt;I’m batching the job descriptions into one, long prompt in order
+to make fewer requests. In testing this project, I made four requests peaking at
+about 11k tokens per minute. That compares to a daily limit of 20 requests and
+a rate limit of 250k tokens per minute on the free tier at time of writing.
+The prompt is wordy but it doesn’t require the fancy, expensive models.
+It’s a pretty light lift.&lt;/p&gt;
+
+&lt;p&gt;Here’s the code:&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;os&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;google&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;genai&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;google.genai&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;types&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# provide my Gemini API key
+# In practice, this is set up as a Github Secret
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;client&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;genai&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Client&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;api_key&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;environ&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;GEMINI_API_KEY&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;evaluate_jobs_with_gemini&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;job_descriptions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;base_instructions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;examples&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;# job_descriptions is a list of strings containing job descriptions
+&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;# base_instructions is a string read in from a text file
+&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;# examples is a stirng read in from a text file
+&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;formatted_jobs&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;join&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;sa&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;JOB#&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;text&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;text&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;enumerate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;job_descriptions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)])&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;# Construct the prompt
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;prompt&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;sa&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&quot;&quot;
+    &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;base_instructions&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;
+
+    Here are some examples of jobs I like:
+    &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;examples&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;
+
+    Please evaluate the following &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;len&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;job_descriptions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; job postings.
+    return a JSON list of objects Each object must have:
+    - &quot;opportunity&quot;: The name of the company and the title of the role (e.g.,
+      &quot;Jane Street Trading Internship - Summer 2027&quot;)
+    - &quot;score&quot;: A match score from 0-10. The long-run average score should be 5.
+    - &quot;reasoning&quot;: An explanation for the score.
+    - &quot;should_notify&quot;: Boolean (true if score &amp;gt; 6).
+
+    JOBS TO EVALUATE:
+    &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;formatted_jobs&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;
+    &quot;&quot;&quot;&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;# 3. Call the model
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;client&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;models&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;generate_content&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;gemini-2.5-flash&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;response_mime_type&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;application/json&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;contents&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;prompt&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;text&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The output is formatted in JSON. I set it up that way to make it easy to access
+the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;should_notify&lt;/code&gt; boolean later on, where it’s used to decide whether or not
+to send a notification to my phone about the posting.&lt;/p&gt;
+
+&lt;h2 id=&quot;notify-putting-it-all-together&quot;&gt;Notify: Putting It All Together&lt;/h2&gt;
+
+&lt;h3 id=&quot;building-the-prompt--calling-the-function&quot;&gt;Building the Prompt &amp;amp; Calling the Function&lt;/h3&gt;
+
+&lt;p&gt;In the code above, I’m passing my instructions into the prompt as arguments.
+I did that so I can make tweaks to the specifics of the prompt without having to
+edit the actual script. That keeps the code separate while letting me
+make small tweaks in a simple .txt file.&lt;/p&gt;
+
+&lt;p&gt;Loading those in is pretty simple with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;open()&lt;/code&gt; when I run the script locally.
+Here’s how I read in the text files:&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;os&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;pathlib&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Path&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# set the base directory explicitly
+# this is necessary once the code is on github
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;BASE_DIR&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;PATH&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;__name__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;resolve&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;parent&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;load_text_file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;file_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;path&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;BASE_DIR&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;file_name&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;read_text&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;encoding&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;utf-8&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# Make sure instructions.txt and examples.text are saved in the same folder 
+# as the script running this code.
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;instructions&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;load_text_file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;instructions.txt&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;examples&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;load_text_file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;examples.txt&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Next, call our functions:&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;json&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;scrape_sites&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# this is the file with the function to pull job descriptions
+&lt;/span&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;gemini_call&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# this is the file with the function that calls Gemini
+&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;jobs_list&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;scrape_sites&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;scrape_openquant&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;raw_json&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;gemini_call&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;evaluate_jobs_with_gemini&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;jobs_list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;instructions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;examples&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;evaluations&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;json&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;loads&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;raw_json&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;texting-myself-with-ntfy&quot;&gt;Texting Myself with ntfy&lt;/h3&gt;
+
+&lt;p&gt;Gemini recommended I use &lt;a href=&quot;https://ntfy.sh/&quot;&gt;nfty.sh&lt;/a&gt;, a nifty tool for sending
+push notifications to its related iPhone app. It’s a beautifully simple tool:
+you set a topic name and then use your favorite programming language (or even just curl) to send a
+message to anyone who subscribes to that topic. I subscribed to my topic name on
+the app on my phone, so I get a notification every time the script sends me a
+job posting.&lt;/p&gt;
+
+&lt;p&gt;The topic names are not password-protected, so anyone can send anything to any
+topic name they know. I set up my topic name as a Github Secret for that reason.&lt;/p&gt;
+
+&lt;p&gt;Here’s the full script to pull the job descriptions, send them to Gemini, and
+then send the best ones according to Gemini directly to your phone:&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;os&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;json&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;gemini_call&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;scrape_sites&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;pathlib&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Path&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;requests&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;ntfy_topic&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;environ&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;NTFY_TOPIC&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;BASE_DIR&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;__name__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;resolve&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;parent&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;load_text_file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;file_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;path&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;BASE_DIR&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;file_name&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;read_text&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;encoding&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;utf-8&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;instructions&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;load_text_file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;instructions.txt&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;examples&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;load_text_file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;examples.txt&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;jobs_list&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;scrape_sites&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;scrape_openquant&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;raw_json&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;gemini_call&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;evaluate_jobs_with_gemini&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;jobs_list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;instructions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;examples&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;evaluations&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;json&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;loads&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;raw_json&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;eva&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;evaluations&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;eva&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;should_notify&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]:&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;requests&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;sa&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;https://ntfy.sh/&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ntfy_topic&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;json&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;eva&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;And here’s what the notification looks like on my phone:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/AI_job_scout/ntfy_screenshot.jpg&quot; alt=&quot;phone screenshot&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I redacted the channel name so you can’t spam me with notifications, and
+Gemini’s summary of the role to keep what I’m looking for close to the
+chest.&lt;/p&gt;
+
+&lt;h3 id=&quot;github-actions-workflow&quot;&gt;Github Actions Workflow&lt;/h3&gt;
+
+&lt;p&gt;With what we’ve described so far, I can run the script manually on my own
+machine. I’d like to have it run automatically on a schedule - otherwise, I may
+as well just check the job board myself.&lt;/p&gt;
+
+&lt;p&gt;One easy, free tool for this is &lt;a href=&quot;https://docs.github.com/en/actions&quot;&gt;Github Actions&lt;/a&gt;.
+All I needed to do was:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Create a private github repo, and add my Gemini API key and ntfy.sh topic as
+secrets.&lt;/li&gt;
+  &lt;li&gt;Put together a workflow file, a set of instructions for Github Actions in
+YAML format. It needs to be saved in /.github/workflow for Github Actions to
+work.&lt;/li&gt;
+  &lt;li&gt;Push my scripts, text files, and workflow file to the repo.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Here’s my full script, which is almost unchanged from what Gemini gave me. I did
+have to change the timing to the early morning in the Eastern time zone; I
+initially set it at 9am ET, which resulted in the job failing due to too many
+requests going to Gemini at that time (surprise surprise).&lt;/p&gt;
+
+&lt;div class=&quot;language-yaml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;Name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;AI Job Scout&lt;/span&gt;
+
+&lt;span class=&quot;na&quot;&gt;on&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;schedule&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;cron&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;11&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;1,3,5&apos;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# runs at 10:11am UTC (5:11am ET) on Mon, Wed, Fri&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;workflow_dispatch&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# allows the job to be run manually&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# This section sets the job parameters&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;jobs&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;scrape_and_analyze&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;runs-on&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;ubuntu-latest&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;steps&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;Checkout code&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;uses&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;actions/checkout@v4&lt;/span&gt;
+
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;Set up Python&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;uses&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;actions/setup-python@v5&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;with&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+          &lt;span class=&quot;na&quot;&gt;python-version&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;3.11&apos;&lt;/span&gt;
+
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;Install dependencies&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;pi&quot;&gt;|&lt;/span&gt;
+          &lt;span class=&quot;s&quot;&gt;python -m pip install --upgrade pip&lt;/span&gt;
+          &lt;span class=&quot;s&quot;&gt;pip install -r requirements.txt&lt;/span&gt;
+
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;Install Playwright Browsers&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;pi&quot;&gt;|&lt;/span&gt;
+          &lt;span class=&quot;s&quot;&gt;python -m playwright install --with-deps chromium&lt;/span&gt;
+
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;Run Job Scout&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+          &lt;span class=&quot;na&quot;&gt;GEMINI_API_KEY&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;$&lt;/span&gt;
+          &lt;span class=&quot;na&quot;&gt;NTFY_TOPIC&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;$&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;pi&quot;&gt;|&lt;/span&gt;
+          &lt;span class=&quot;s&quot;&gt;python script.py&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;And with that, we’re done. The script will run automatically three times
+a week, sending me notifications for any interesting job postings. This’ll
+become very useful once I’m searching for internships and full time positions.
+In the meantime, it’ll help me keep up with what’s on offer.&lt;/p&gt;
+
+&lt;h1 id=&quot;bonus-script-to-gather-internship-programs&quot;&gt;Bonus: Script to Gather Internship Programs&lt;/h1&gt;
+
+&lt;p&gt;I keep a tracker of companies I may be interested in applying to in a google
+doc. While all of the above gives me a good way to pull job postings from
+curated websites I know I want to review, it leaves plenty of blind spots. I’m
+supplementing it with an AI-enabled script to survey my full lists of potential
+employers and gather info on their internship programs. It’s not that useful
+right now, since most programs haven’t posted the applications, but I expect
+it’ll come in handy this summer and fall.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;os&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;json&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;requests&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;pandas&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pd&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;google&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;genai&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;google.genai&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;types&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;pathlib&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Path&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;datetime&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;datetime&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# provide my Gemini API key and ntfy topic
+# these are stored either in my local environment (if run locally),
+# or as github secrets (if run by Github Actions)
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;client&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;genai&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Client&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;api_key&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;environ&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;GEMINI_API_KEY&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;ntfy_topic&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;environ&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;NTFY_TOPIC&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# Load in the text files
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;BASE_DIR&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;__name__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;resolve&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;parent&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;load_text_file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;file_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;path&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;BASE_DIR&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;file_name&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;read_text&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;encoding&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;utf-8&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# there are four types of firms I&apos;m tracking, written in this list
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;firm_types&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;asset_mgmt&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&apos;hedge_funds&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&apos;prop_trading&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&apos;sell_side&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;firm_lists&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;load_text_file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;sa&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;.txt&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;firm_types&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;instructions&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;load_text_file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;weekly_instructions.txt&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# Send the prompt to Gemini
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;global_search_prompt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;firms_list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;base_instructions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;# firms_list is a string with a list of firms to survey
+&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;# base_instructions is a string read in from a text file
+&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;# Construct the prompt
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;prompt&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;sa&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&quot;&quot;
+    &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;base_instructions&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;
+    
+    Search for Summer 2027 internships at the following &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;len&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;firms_list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; firms.
+    Return a JSON list of objects, one for each firm.
+    Each object must have:
+    - &quot;company&quot;: The name of the company. 
+    - &quot;location&quot;: The city where the internship is located.
+    - &quot;program_title&quot;: The title of the program (e.g., Quantitative Trading
+      Internship).
+    - &quot;description&quot;: A description of the firm, including what asset classes
+      they&apos;re most associated with and a summary of their market reputation. 
+      Also describe the internship program, and provide an explanation of the
+      score (see below).
+    - &quot;domestic&quot;: Boolean (true only if the posting explicitly does not sponsor
+      international applicants).
+    - &quot;score&quot;: A match score from 0-10. Be a harsh grader.
+    - &quot;posted&quot;: Boolean (true if the internship is currently taking applications.)
+
+    LIST OF FIRMS:
+    &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;firms_list&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;
+    &quot;&quot;&quot;&lt;/span&gt;
+    
+    &lt;span class=&quot;c1&quot;&gt;# Call the model
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;client&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;models&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;generate_content&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;gemini-2.5-flash&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;response_mime_type&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;application/json&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;contents&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;prompt&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;text&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;results&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;global_search_prompt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;instructions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;firm_lists&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;enumerate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;results&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    
+    &lt;span class=&quot;c1&quot;&gt;# this try-except block will print the results to a .txt in case Gemini
+&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;# messes up the json formatting (which happens from time to time)
+&lt;/span&gt;    &lt;span class=&quot;k&quot;&gt;try&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;df&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;read_json&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;df_sorted&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sort_values&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;by&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;score&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;domestic&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;posted&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ascending&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;False&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;df_sorted&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to_csv&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;sa&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;firm_types&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;_results.csv&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mode&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;a&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;except&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;with&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;open&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;sa&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;firm_types&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;_results.txt&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;a&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;write&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><category term="Technical" /><summary type="html">I think it&apos;s pretty neat.</summary></entry><entry><title type="html">Amortizing Bond Models Investigation, Part 3</title><link href="http://localhost:4000/technical/2026/03/15/amortizing-bond-model-intuition.html" rel="alternate" type="text/html" title="Amortizing Bond Models Investigation, Part 3" /><published>2026-03-15T00:00:00-04:00</published><updated>2026-03-15T00:00:00-04:00</updated><id>http://localhost:4000/technical/2026/03/15/amortizing-bond-model-intuition</id><content type="html" xml:base="http://localhost:4000/technical/2026/03/15/amortizing-bond-model-intuition.html">&lt;h2 id=&quot;the-code&quot;&gt;The Code&lt;/h2&gt;
 
 &lt;p&gt;After a long break, I’ve finally gotten back to my amortizing bond model investigation. The previous posts give the background on what I’m trying to accomplish here: let’s jump right in to the code.&lt;/p&gt;
 
@@ -382,7 +714,143 @@ quickly mock up a bond model with some simplified assumptions. Version one will
 let the user quickly build models like the ones I’ve been working with in this
 post series, with fixed growth rate revenue curves. Version two will expand that
 to allow arbitrary revenue curves with automatically calculated capitalized
-interest. Stay tuned.&lt;/p&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><category term="Technical" /><summary type="html">Wrapping up simple revenue curves &amp; developing heuristics.</summary></entry><entry><title type="html">Currency Markets Graphs</title><link href="http://localhost:4000/technical/2026/02/01/currency-graphs.html" rel="alternate" type="text/html" title="Currency Markets Graphs" /><published>2026-02-01T00:00:00-05:00</published><updated>2026-02-01T00:00:00-05:00</updated><id>http://localhost:4000/technical/2026/02/01/currency-graphs</id><content type="html" xml:base="http://localhost:4000/technical/2026/02/01/currency-graphs.html">&lt;p&gt;The US dollar hit a four-year low this month following some, uh, interesting policy coming from the White House as well as comments from the president indicating he doesn’t really mind the currency weakness. The New York Fed performed a &lt;a href=&quot;https://www.ft.com/content/0cff24f9-3c5e-4aff-966a-ff34ef448a2d&quot;&gt;rate check&lt;/a&gt; in Yen markets, pretty much the only major currency that hasn’t been gaining on the dollar.&lt;/p&gt;
+interest. Stay tuned.&lt;/p&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><category term="Technical" /><summary type="html">Wrapping up simple revenue curves &amp; developing heuristics.</summary></entry><entry><title type="html">What’s the Difference between Gambling and Investing?</title><link href="http://localhost:4000/personal/2026/03/15/gambling-or-investing.html" rel="alternate" type="text/html" title="What’s the Difference between Gambling and Investing?" /><published>2026-03-15T00:00:00-04:00</published><updated>2026-03-15T00:00:00-04:00</updated><id>http://localhost:4000/personal/2026/03/15/gambling-or-investing</id><content type="html" xml:base="http://localhost:4000/personal/2026/03/15/gambling-or-investing.html">&lt;p&gt;Like most universities, my college had a writing skills requirement but was a
+bit embarrassed about it. Rather than force the engineers to take actual liberal
+arts courses, they offered “current interest” courses which
+satisfied the requirement. One of mine was on fintech, which in 2020 mostly meant
+crypto.&lt;/p&gt;
+
+&lt;p&gt;One of the seminar sessions focused on the fundamental drivers of the price of
+bitcoin (or the lack thereof). One of the other students asked the professor,
+“isn’t this just gambling?”, to which he replied, “what do you think separates
+gambling from investing?”.&lt;/p&gt;
+
+&lt;p&gt;The question has stuck with me for a while, and I thought it’d be interesting to
+write a blog post about how my thoughts on the topic have evolved.&lt;/p&gt;
+
+&lt;h2 id=&quot;my-answer-at-the-time&quot;&gt;My Answer at the Time&lt;/h2&gt;
+
+&lt;p&gt;Gambling and investing both involve putting capital at risk, with some chance of
+“winning” and growing the capital and some chance of “losing” and reducing the
+capital.&lt;/p&gt;
+
+&lt;p&gt;My first thought was that what separated the two activities was &lt;strong&gt;positive
+expected value&lt;/strong&gt;. Most games at a casino have a house edge; over the long run,
+you expect to lose money. The things we typically think of as investing (fixed
+income and equities) have well-documented historic positive returns.
+&lt;a href=&quot;https://en.wikipedia.org/wiki/Investment&quot;&gt;Wikipedia&lt;/a&gt; agrees with my undergrad
+definition of investing:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Investment is traditionally defined as the “commitment of resources into something expected to gain value over time”.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;I’ve revisited the idea since taking the class, especially as I began my career
+in investment banking. When my team sells
+bonds, they’re usually financing public improvements like roadwork, utility line
+extensions, water and sewer, etc. The development increases the value of the
+parcel of land, and our investors get paid back from the subsequent increase in property
+taxes (or sales taxes or whatever else). It’s pretty classic investing - bondholders
+put up money today that is used to build some project, and they get
+paid back from part of the cash flow coming off of the project. My team sells
+muni bonds, so the cash flow stream is usually a tax stream, but this
+generalizes to other sorts of fixed income in a straightforward manner.&lt;/p&gt;
+
+&lt;p&gt;Investors are paid a steady stream of
+coupons which represent their return. There is some risk that the project
+doesn’t get built or the cash flows from it aren’t sufficient to pay off the
+bonds, and they’re compensated for those risks. The intent of all parties
+involved is for them to have a positive expected value.&lt;/p&gt;
+
+&lt;p&gt;Whether investors are being compensated appropriately for the risk they’re
+taking, in my eyes, doesn’t affect whether they’re engaged in investing or
+gambling. Risk-adjusted returns are a measure of how good they are at investing,
+not a determinant of whether they’re engaged in the activity.&lt;/p&gt;
+
+&lt;p&gt;Already, you’re probably seeing the problem with focusing on expected value.
+I’ll get to that, but first, let’s think about equities for a moment.&lt;/p&gt;
+
+&lt;p&gt;Equity investing is a bit different, but I think it feels like investing to most
+people for similar reasons. It’s well-documented that public equities have
+historically delivered positive returns to investors over most time horizons. If
+you take a 30,000 foot view, you could say that owning a bunch of different
+stocks which are exposed to many different aspects of the economy should more or
+less capture growth in the economy. Furthermore, owning a stock gives you an
+ownership claim over the company. You’re entitled to a share in the profits of
+the company, mediated through its leadership who may decide to invest back into
+the enterprise, issue a dividend, or do stock buybacks.&lt;/p&gt;
+
+&lt;h2 id=&quot;problems-with-the-definition&quot;&gt;Problems with the Definition&lt;/h2&gt;
+
+&lt;p&gt;The obvious question here is, how do you figure out if an activity has positive
+expected value?&lt;/p&gt;
+
+&lt;p&gt;First, let me defend my undergrad self just a bit. Clearly, traditional Vegas
+table games have a &lt;em&gt;negative&lt;/em&gt; expected value for the player; you can calculate the odds of different
+outcomes in a game of blackjack, for example, and realize that you’re not expected
+to win. So while it’s not easy to determine if a traditional investing
+activity has positive EV, you can label some things as gambling with this
+simple definition.&lt;/p&gt;
+
+&lt;p&gt;One more observation: casinos have a positive edge. So even in the most obvious
+example of gambling, one of the parties involved has positive EV. The problem is
+that not everyone does.&lt;/p&gt;
+
+&lt;p&gt;With that in mind, let’s complicate the definition: for an activity to be
+investing rather than gambling, everyone involved should have a positive
+expected value. The activity should be a &lt;strong&gt;positive sum game&lt;/strong&gt;, insofar as
+everyone involved thinks they’ll be better off for engaging in it.&lt;/p&gt;
+
+&lt;p&gt;Return to the example of debt financing for a real estate project. The developer
+expects to build their project and earn an acceptable return from it.
+The bond investor expects to invest their funds and earn an acceptable return
+from it. The money coming in to the system is from users of the project, who
+wouldn’t show up and spend their money if they didn’t feel like it was worth it.&lt;/p&gt;
+
+&lt;p&gt;Sounds like everybody wins. It’s easy to see that equity investing fits
+the bill, as well.&lt;/p&gt;
+
+&lt;h2 id=&quot;other-examples-what-counts-and-what-doesnt&quot;&gt;Other Examples: What Counts and What Doesn’t&lt;/h2&gt;
+
+&lt;p&gt;Consider a pro poker player sitting down at a table with a bunch of newbies. He
+or she has a positive expected value, while the rest of the table has a negative
+expected value. This should fit any reasonable definition of gambling, rather
+than investing. That’s an important point - you can engage in gambling with a
+positive EV, as long as your winnings are coming from others losing.&lt;/p&gt;
+
+&lt;p&gt;There’s a case to be made that sports betting could count as
+investing under this definition for a certain kind of bettor. There are people
+out there who develop good models for game outcomes or who find arbitrage
+opportunities between different sportsbooks. They can reasonably claim to have a
+positive expected value. The bets they place, arguably, represent a kind of
+ownership in the potential payoff if the bet goes their way. Predictions markets
+(which are mostly sportsbooks, by volume) look similar. Some market makers are
+beginning to &lt;a href=&quot;https://giftarticle.ft.com/giftarticle/actions/redeem/cb34168b-0d7d-466c-be5b-e856931e7b75&quot;&gt;wade into sports
+betting&lt;/a&gt;
+by way of prediction markets. This is a topic worthy of more discussion, but I
+don’t think it’s useful to write off sports betting or prediction markets as
+purely investing or gambling. There’re more interesting things going on in that
+space.&lt;/p&gt;
+
+&lt;p&gt;A high frequency trading shop also seems to be engaged in something other
+than investing. When you hold positions for an extremely short period of time,
+that just feels very different from buying an index fund or investing in a
+Treasury note. You don’t care about the long-term prospects of the business in
+the same way a traditional investor does. However, many HFT shops have done very well for themselves
+historically and we have no reason to think they won’t continue to do so. It’s
+not gambling either. I think it’s useful to think of short-term trading and
+market making activities as a third category.&lt;/p&gt;
+
+&lt;p&gt;Bitcoin and other crypto currencies present an interesting case. Many would
+argue that they have no fundamental value, or, more snarkily, that the correct
+price for these tokens is \$0.
+The market is clearly full of scams, too. Early investors in projects ride hype
+waves, wash trade to bring attention, then
+sell at the top. There’s no shortage of pundits who will tell you the whole thing is a ponzi
+scheme. For our purposes here, it’s sufficient to point out that there’s no
+economic activity at the bottom of most crypto projects. That doesn’t mean
+crypto isn’t interesting or useful, or that there’s no money to be made there. I
+just don’t think it’s quite right to say you’re “invested in crypto”.&lt;/p&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><category term="Personal" /><summary type="html">Like most universities, my college had a writing skills requirement but was a bit embarrassed about it. Rather than force the engineers to take actual liberal arts courses, they offered “current interest” courses which satisfied the requirement. One of mine was on fintech, which in 2020 mostly meant crypto.</summary></entry><entry><title type="html">Currency Markets Graphs</title><link href="http://localhost:4000/technical/2026/02/01/currency-graphs.html" rel="alternate" type="text/html" title="Currency Markets Graphs" /><published>2026-02-01T00:00:00-05:00</published><updated>2026-02-01T00:00:00-05:00</updated><id>http://localhost:4000/technical/2026/02/01/currency-graphs</id><content type="html" xml:base="http://localhost:4000/technical/2026/02/01/currency-graphs.html">&lt;p&gt;The US dollar hit a four-year low this month following some, uh, interesting policy coming from the White House as well as comments from the president indicating he doesn’t really mind the currency weakness. The New York Fed performed a &lt;a href=&quot;https://www.ft.com/content/0cff24f9-3c5e-4aff-966a-ff34ef448a2d&quot;&gt;rate check&lt;/a&gt; in Yen markets, pretty much the only major currency that hasn’t been gaining on the dollar.&lt;/p&gt;
 
 &lt;p&gt;All of this has had me thinking more about currencies, one of the markets I know comparatively less about. One common way to display currency markets at a glance is a cross rates table showing conversion rates between major currencies. Here’s an example from &lt;a href=&quot;https://www.bloomberg.com/markets/currencies/cross-rates&quot;&gt;Bloomberg&lt;/a&gt;.&lt;/p&gt;
 
@@ -1384,95 +1852,4 @@ many epidemiologists are extremely excited about the potential of the technique.
 Some economists have said it will pay for itself from reduced healthcare costs
 and avoided lost working hours as a result of infection. The WHO still needs to
 reccomend the intervention, but lots of people have high hopes, and now some of
-the evidence to justify it.&lt;/p&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><category term="Personal" /><summary type="html">Hi! This here is what I’m going to start calling “quick posts”: just sharing some things I’ve found interesting lately with a minimal amount of commentary. Enjoy!</summary></entry><entry><title type="html">Covid Post, II</title><link href="http://localhost:4000/personal/2020/08/30/COVID-post-two.html" rel="alternate" type="text/html" title="Covid Post, II" /><published>2020-08-30T00:00:00-04:00</published><updated>2020-08-30T00:00:00-04:00</updated><id>http://localhost:4000/personal/2020/08/30/COVID-post-two</id><content type="html" xml:base="http://localhost:4000/personal/2020/08/30/COVID-post-two.html">&lt;p&gt;It’s been nine days since I tested positive for COVID-19, and since I’ve been
-completely asymptomatic, that means tomorrow I’m allowed back on campus. The
-university isn’t retesting, and in fact will now exclude me from surveillance
-testing, meaning I won’t be retested unless I’m showing symptoms.&lt;/p&gt;
-
-&lt;p&gt;There’s two findings about COVID tests that inform my point of view on that
-policy. First, most test methods are very specific but not very sensitive. 
-That means it’s much more likely to give a false negative than a false positive.
-However, and this is the second finding, a positive test merely states that you 
-have genetic material from the virus in the nose and throat. The test results
-are a simple yes/no on if such material is present, even if it is in very small
-amounts. This means many people who test positive may not be contagious. Moving
-to the armchair for a second, I wonder if that may be a part of the perception
-that most cases are asymptomatic. Of course, it can’t explain all the findings
-about how COVID-19 affects different individuals, but it’s interesting
-nonetheless.&lt;/p&gt;
-
-&lt;p&gt;Here are links to the sources for those two findings:
-&lt;a href=&quot;https://www.health.harvard.edu/blog/which-test-is-best-for-covid-19-2020081020734&quot;&gt;accuracy&lt;/a&gt;
-&lt;a href=&quot;https://www.nytimes.com/2020/08/29/health/coronavirus-testing.html&quot;&gt;meaning of positive tests&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;thoughts-on-isolation&quot;&gt;Thoughts on Isolation&lt;/h3&gt;
-&lt;p&gt;The first few days of being in isolation weren’t a big deal at all, really. I
-live alone, I had plenty of food on hand, and all of my classes were available
-online to me in the first week anyways. It only really started to grate about
-halfway through. I found myself getting restless, walking around in circles and
-sweeping constantly looking for excuses to be standing up. In my first two years
-of college, I picked up a habit of not really relaxing very often. Rather than
-moving between being fully ‘on’ and relaxing, I spent most of my time at some
-medium level of stress and anxiety. That made it harder to sustain intense focus
-for short periods of time. Instead, I’d constantly find myself flitting between
-assignments and readings and etc., spending way too much time just thinking
-about how much I had to do. Being isolated brought some of that back to me:
-I actually reached the point where I had all of my assignments and readings and
-etc. done, and couldn’t shake a feeling of guilt when I took time off to watch
-Netflix or play some video games. Normally, spending time with my friends
-releases me from that guilt. For whatever reason, when I’m by myself I always
-feel like I should be getting &lt;em&gt;something&lt;/em&gt; done.&lt;/p&gt;
-
-&lt;p&gt;I’m  trying to combat that by scheduling more intentionally. For example, after
-classes were done on Thursday I wrote a list of what I wanted to get done that
-night. I worked on some of it, then took a break guilt-free knowing I had
-plenty of time to get the rest of it done after 7. The work got done, but then I
-started to feel like maybe I had been underambitious in my todo list. There are
-certainly some kinks to work out, especially once I start getting long-term
-projects assigned.&lt;/p&gt;
-
-&lt;p&gt;Moving away from that conversation, I started to fully appreciate the reality of
-living in a studio apartment. Since everything’s always in your immediate
-vicinity, I’ve been forced to clean more often than I might have were the
-kitchen or bedroom not in view. I honestly like that part of it – having a
-smaller space makes it easier to intentionally use all parts of it. At this
-point, I’m shopping for some art for my one blank wall, but otherwise I’m happy
-with my first real place. Having a space I like and that was already set up for
-remote activity made isolation much easier than it would have been if I were at
-home with my family or if I had roommates.&lt;/p&gt;
-
-&lt;h3 id=&quot;fun-quarantine-activites-part-two&quot;&gt;Fun Quarantine Activites, Part Two&lt;/h3&gt;
-&lt;p&gt;I baked more! I made a bunch of cookies and proudly showed my mom and grandma,
-and today I made a coffee cake again. There’s definitely something to be said
-for varying the type of work you do throughout the day – I look forward to
-whisking and measuring and the sort because it’s so menial when compared to
-doing my physics or probability homework, for example. A nice mix of reading,
-writing, thinking, and just moving around is becoming an apparent necessity for
-me, as I’m sure it is for many others.&lt;/p&gt;
-
-&lt;p&gt;I also have been much more consistent about doing some sort of exercise every
-day, funnily enough. The lack of walking made the idea of giving my legs
-something to do much more attractive than it typically is. It also gave me a
-good way to take a measured break - 20-30 minutes of exercise and stretching,
-then 10-15 to shower and change is a pretty consistent way to wind down from
-being in class. The moving around between sessions at the computer seems to do
-something comparable to walking between class and the library and home like I
-got used to last year.&lt;/p&gt;
-
-&lt;h3 id=&quot;closing-thoughts&quot;&gt;Closing Thoughts&lt;/h3&gt;
-&lt;p&gt;I know I teased talking about Algorithms and Accounting last time, but
-unfortunately the first week of class is never the most exciting one to write
-about (unless you’re particularly into syllabuses). I also joked last time about
-the language often used to describe what’s going on in the world right now. What
-I think I’ve realized is that much of what is happening, at least for me, has
-some amount of precedent. While going to class on zoom is pretty different from
-in person, the content of Intro to Algorithms hasn’t changed at all. While the
-modality is different, the meat of the matter is exactly the same. Learning to
-work within a new context always has a ramp-up time, but perhaps because I’m a
-college student, adapting to the new honestly just isn’t too bad. Perhaps
-because I don’t have the well-defined long term vision of someone outside of
-their early 20’s, I’m not as shaken by what the future will look like given
-today. I currently have a lot to be excited about in the second half of my
-college career and beyond. A pretty important part of the second half of college
-is developing some of that long term vision, both for myself and the corner of
-the world in which I belong. With all that in mind, it’s hard not to be excited.&lt;/p&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><category term="Personal" /><summary type="html">It’s been nine days since I tested positive for COVID-19, and since I’ve been completely asymptomatic, that means tomorrow I’m allowed back on campus. The university isn’t retesting, and in fact will now exclude me from surveillance testing, meaning I won’t be retested unless I’m showing symptoms.</summary></entry></feed>
+the evidence to justify it.&lt;/p&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><category term="Personal" /><summary type="html">Hi! This here is what I’m going to start calling “quick posts”: just sharing some things I’ve found interesting lately with a minimal amount of commentary. Enjoy!</summary></entry></feed>

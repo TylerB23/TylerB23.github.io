@@ -94,4 +94,10 @@ var store = [{
         "tags": [],
         "url": "/personal/2026/03/15/gambling-or-investing.html",
         "teaser": null
+      },{
+        "title": "I Built an AI Job Scout",
+        "excerpt":"Project Overview There are a lot of different job posting sites out there, and keeping up with them all can be annoying. I thought it’d be a fun weekend project to build an AI-enabled script to look at job postings for me. This project uses some cool python packages to...","categories": ["Technical"],
+        "tags": [],
+        "url": "/technical/2026/04/24/AI-job-scout.html",
+        "teaser": null
       }]

@@ -1,0 +1,952 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.27.3 by Michael Rose
+  Copyright 2013-2025 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+
+<html lang="en-US" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>I Built an AI Job Scout - Tyler’s Blog</title>
+<meta name="description" content="I think it’s pretty neat.">
+
+
+  <meta name="author" content="Tyler Burleyson">
+  
+  <meta property="article:author" content="Tyler Burleyson">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Tyler&#39;s Blog">
+<meta property="og:title" content="I Built an AI Job Scout">
+<meta property="og:url" content="http://localhost:4000/technical/2026/04/24/AI-job-scout.html">
+
+
+  <meta property="og:description" content="I think it’s pretty neat.">
+
+
+
+  <meta property="og:image" content="http://localhost:4000/assets/AI_job_scout/AI_job_scout.jpg">
+
+
+
+
+
+  <meta property="article:published_time" content="2026-04-24T00:00:00-04:00">
+
+
+
+
+
+
+<link rel="canonical" href="http://localhost:4000/technical/2026/04/24/AI-job-scout.html">
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Tyler's Blog Feed">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+  window.enable_copy_code_button = true;
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--post wide" dir="ltr">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          Tyler&#39;s Blog
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a
+                href="/simple-model-app/"
+                
+                
+              >Bond Model App</a>
+            </li><li class="masthead__menu-item">
+              <a
+                href="/technical-posts/"
+                
+                
+              >Technical Posts</a>
+            </li><li class="masthead__menu-item">
+              <a
+                href="/personal-posts/"
+                
+                
+              >Personal Blog</a>
+            </li><li class="masthead__menu-item">
+              <a
+                href="/about/"
+                
+                
+              >About</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+  
+
+
+
+
+
+
+
+<div class="page__hero--overlay"
+  style=" background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('/assets/AI_job_scout/AI_job_scout.jpg');"
+>
+  
+    <div class="wrapper">
+      <h1 id="page-title" class="page__title" itemprop="headline">
+        
+          I Built an AI Job Scout
+
+        
+      </h1>
+      
+        <p class="page__lead">I think it’s pretty neat.
+</p>
+      
+      
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2026-04-24T00:00:00-04:00">April 24, 2026</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          12 minute read
+        
+      </span>
+    
+  </p>
+
+
+      
+    </div>
+  
+  
+</div>
+
+
+
+
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person" class="h-card">
+
+  
+
+  <div class="author__content">
+    <h3 class="author__name p-name" itemprop="name">
+      <a class="u-url" rel="me" href="http://localhost:4000/" itemprop="url">Tyler Burleyson</a>
+    </h3>
+    
+      <div class="author__bio p-note" itemprop="description">
+        <p>Welcome to my blog!</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+
+      
+        
+          
+            <li><a href="https://github.com/TylerB23" rel="nofollow noopener noreferrer me" itemprop="sameAs"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">Github</span></a></li>
+          
+        
+          
+            <li><a href="https://linkedin.com/in/tyler-burleyson" rel="nofollow noopener noreferrer me" itemprop="sameAs"><i class="fa-brands fa-linkedin" aria-hidden="true"></i><span class="label">LinkedIn</span></a></li>
+          
+        
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:tylerburleyson23@gmail.com" rel="me" class="u-email">
+            <meta itemprop="email" content="tylerburleyson23@gmail.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span>
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer me">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="I Built an AI Job Scout">
+    <meta itemprop="description" content="I think it’s pretty neat.">
+    <meta itemprop="datePublished" content="2026-04-24T00:00:00-04:00">
+    
+
+    <div class="page__inner-wrap">
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right ">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#project-overview">Project Overview</a><ul><li><a href="#scrape-pulling-job-descriptions-with-playwright">Scrape: Pulling Job Descriptions with Playwright</a></li><li><a href="#analyze-crafting-the-prompt-for-gemini">Analyze: Crafting the Prompt for Gemini</a></li><li><a href="#notify-putting-it-all-together">Notify: Putting It All Together</a><ul><li><a href="#building-the-prompt--calling-the-function">Building the Prompt &amp; Calling the Function</a></li><li><a href="#texting-myself-with-ntfy">Texting Myself with ntfy</a></li><li><a href="#github-actions-workflow">Github Actions Workflow</a></li></ul></li></ul></li><li><a href="#bonus-script-to-gather-internship-programs">Bonus: Script to Gather Internship Programs</a></li></ul>
+            </nav>
+          </aside>
+        
+        <p>24 Apr 2026</p>
+
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+
+<script type="text/x-mathjax-config">
+
+    MathJax.Hub.Config({
+
+    tex2jax: {
+
+    inlineMath: [['$','$'], ['\\(','\\)']],
+
+    processEscapes: true},
+
+    jax: ["input/TeX","input/MathML","input/AsciiMath","output/CommonHTML"],
+
+    extensions:
+    ["tex2jax.js","mml2jax.js","asciimath2jax.js","MathMenu.js","MathZoom.js","AssistiveMML.js",
+    "[Contrib]/a11y/accessibility-menu.js"],
+
+    TeX: {
+
+    extensions: ["AMSmath.js","AMSsymbols.js","noErrors.js","noUndefined.js"],
+
+    equationNumbers: {
+
+    autoNumber: "AMS"
+
+    }
+
+    }
+
+    });
+
+</script>
+
+
+
+
+<h1 id="project-overview">Project Overview</h1>
+
+<p>There are a lot of different job posting sites out there, and keeping up with
+them all can be annoying. I thought it’d be a fun weekend project to build an
+AI-enabled script to look at job postings for me. This project uses some cool
+python packages to pull job descriptions from websites and feed them to
+Google Gemini, which evaluates the job based on a pre-baked prompt and sends a
+notification to my phone if it’s something I’d be interested in. I used Github
+Actions to run it automatically throughout the week.</p>
+
+<p>This was a fun way to learn some new python tools and to play around with
+AI tools. It’s not very practical yet - it only looks at
+one website for job postings and doesn’t have any feedback mechanisms to improve
+over time - but putting it together was a worthwhile exercise that’s already
+given me ideas for future projects.</p>
+
+<p>This project is made up of just a few simple files:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">scrape_sites.py</code>, a python script using the Playwright package to pull job
+descriptions from a job posting site.</li>
+  <li><code class="language-plaintext highlighter-rouge">gemini_call.py</code>, a python script which takes that list of job descriptions
+and sends it in a pre-baked prompt to gemini-2.5-flash for evaluation.
+    <ul>
+      <li>Why gemini-2.5-flash? Because I’m using the free tier of Gemini and I don’t
+want the AI doing the thinking for me. It’s literally job applications.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">script.py</code>, a python script which calls the functions in the other scripts.
+This is the script where all the action happens, including the code to send
+interesting job postings directly to my phone.</li>
+  <li><code class="language-plaintext highlighter-rouge">instructions.txt</code> and <code class="language-plaintext highlighter-rouge">examples.txt</code>, text files for the Gemini prompt
+containing the basic instructions for the AI and some example job descriptions
+to give it some guidance.</li>
+  <li><code class="language-plaintext highlighter-rouge">job_scout.yml</code>, a config file that sets up the Github Action which runs the
+script at predetermined times on a virtual machine.</li>
+</ul>
+
+<p>The remainder of this post provides a brief overview of each of these, with the
+code.</p>
+
+<h2 id="scrape-pulling-job-descriptions-with-playwright">Scrape: Pulling Job Descriptions with Playwright</h2>
+
+<p>First, we need a way to pull the job descriptions off of the job posting
+website. <a href="https://playwright.dev/python/">Playwright</a> is a neat python package which can do exactly that.</p>
+
+<p>Playwright is a full suite of browser automation tools aimed
+towards site testing. It boots up test browsers and takes actions like clicking
+or hovering over web elements in a way that feels very intuitive.</p>
+
+<p>Here’s the outline of my workflow:</p>
+
+<ol>
+  <li>Open an instance of chromium, and open the webpage I want to pull job
+descriptions from.</li>
+  <li>Create a list of the page elements that contain the individual job
+descriptions.</li>
+  <li>Iterate through that, saving down each job description.</li>
+  <li>Return a list of the job descriptions.</li>
+</ol>
+
+<p>(for an overview of how Playwright works, you should check out its
+<a href="https://playwright.dev/python/docs/intro">documentation</a> directly.)</p>
+
+<p>The best thing about the package is the intuitive debugging: by inserting pauses in
+the script and running it in headed mode (i.e., with the test browser visible),
+it’s easy to identify what is and isn’t working. It has a GUI tool which pops
+up and lets you hover over elements on the webpage to identify the code
+you need to interact with that web element in your script. Here’s an example:</p>
+
+<p><img src="/assets/AI_job_scout/playwright_gui.png" alt="playwright gui" /></p>
+
+<p>The <code class="language-plaintext highlighter-rouge">test_example.py</code> script is in the top left, above the tmux pane which is
+running it via <a href="https://docs.pytest.org/en/stable/">pytest</a>.
+The Playwright Inspector GUI tool is
+below that, open to the python code currently running when we hit the
+<code class="language-plaintext highlighter-rouge">page.pause()</code> command, which pauses execution of the script. I entered the “pick
+locator” mode, which lets you hover your mouse over a web page element and get
+the locator function that lets you interact with the element in the
+script.</p>
+
+<p>On OpenQuant, the employer logos can be accessed with <code class="language-plaintext highlighter-rouge">get_by_role("img",
+name="logo")</code> Adding <code class="language-plaintext highlighter-rouge">.all()</code> on the end of that creates a list of all
+those logos. Once I have that list, I can tell Playwright to click on each logo, wait for the
+job description to load, and put the text into a list.</p>
+
+<p>The screenshot shows some test code I put together to figure out how the package
+works. Here’s the full script:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">playwright.sync_api</span> <span class="kn">import</span> <span class="n">Page</span><span class="p">,</span> <span class="n">expect</span><span class="p">,</span> <span class="n">sync_playwright</span>
+
+<span class="k">def</span> <span class="nf">scrape_openquant</span><span class="p">():</span>
+    <span class="k">with</span> <span class="n">sync_playwright</span><span class="p">()</span> <span class="k">as</span> <span class="n">p</span><span class="p">:</span>
+        <span class="n">browser</span> <span class="o">=</span> <span class="n">p</span><span class="p">.</span><span class="n">chromium</span><span class="p">.</span><span class="n">launch</span><span class="p">(</span><span class="n">headless</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">page</span> <span class="o">=</span> <span class="n">browser</span><span class="p">.</span><span class="n">new_page</span><span class="p">()</span>
+        <span class="n">page</span><span class="p">.</span><span class="n">goto</span><span class="p">(</span><span class="s">"https://openquant.co/quant-trader-jobs"</span><span class="p">)</span>
+
+        <span class="c1"># Creates a list of the company logos on the page
+</span>        <span class="n">job_cards</span> <span class="o">=</span> <span class="n">page</span><span class="p">.</span><span class="n">get_by_role</span><span class="p">(</span><span class="s">"img"</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">"logo"</span><span class="p">).</span><span class="nb">all</span><span class="p">()</span>
+
+        <span class="c1"># The function returns this list of job descriptions
+</span>        <span class="n">job_des</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">card</span> <span class="ow">in</span> <span class="n">job_cards</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">card</span><span class="p">.</span><span class="n">scroll_into_view_if_needed</span><span class="p">()</span>
+                <span class="n">card</span><span class="p">.</span><span class="n">click</span><span class="p">()</span>
+
+                <span class="c1"># this selector grabs all of the description text
+</span>                <span class="n">des_selector</span> <span class="o">=</span> <span class="s">".prose"</span>
+                <span class="n">page</span><span class="p">.</span><span class="n">wait_for_selector</span><span class="p">(</span><span class="n">des_selector</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
+
+                <span class="n">des_text</span> <span class="o">=</span> <span class="n">page</span><span class="p">.</span><span class="n">locator</span><span class="p">(</span><span class="n">des_selector</span><span class="p">).</span><span class="n">inner_text</span><span class="p">()</span>
+
+                <span class="c1"># Add the job description to the list
+</span>                <span class="n">job_des</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">des_text</span><span class="p">)</span>
+
+                <span class="c1">#click again to collapse the current job card
+</span>                <span class="c1"># Otherwise, the first description will print repeatedly
+</span>                <span class="n">card</span><span class="p">.</span><span class="n">click</span><span class="p">()</span>
+
+            <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Could not expand card: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+
+        <span class="n">browser</span><span class="p">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">job_des</span>
+</code></pre></div></div>
+
+<p>The GUI interface was super helpful for figuring out how to reference each of the
+job posting elements on the site. I couldn’t make heads or tails of the site
+structure just poking around in inspect element, so this was crucial in getting
+the script to work.</p>
+
+<p>You might point out that I could just ask Gemini to pull jobs from a specific
+website for me. And you’d be right, but I have a few reasons for choosing to do
+it this way. For one, I learned a new tool while setting this up which may come
+in handy on future projects. Doing it this way, I also know for a fact I’m
+reviewing all the jobs on a specific site that I know will have good leads. AI
+is famously a black box, so this way of doing things helps me maintain some
+control.</p>
+
+<h2 id="analyze-crafting-the-prompt-for-gemini">Analyze: Crafting the Prompt for Gemini</h2>
+
+<p>Once I gather the job descriptions, I want to use Gemini to evaluate them for
+me. Gemini should “read” each of the job descriptions to (i) summarize it, and 
+(ii) give it a 0-10 “match score” for how well it fits what I’m looking for.</p>
+
+<p>To facilitate that, I provide it with a description of myself and what I’m
+interested in. I also provide it with several example job
+postings to get it started.</p>
+
+<p>This provides an informal feedback
+mechanism; if I find more job postings I’m really interested in, I can add them
+to the examples for the prompt and dial it in over time. What I’d really like to
+do is give it feedback after each run on how well it scored each of the job
+opportunities. If I end up adding that feature, I’ll write a follow up to this
+post.</p>
+
+<p>Google Gemini has an easy to use python package you can use to automatically
+send prompts. It requires an API key, but Google’s free tier is generous enough
+to let me run this prompt regularly without needing to upgrade to a paid
+account.</p>
+
+<p>I’m batching the job descriptions into one, long prompt in order
+to make fewer requests. In testing this project, I made four requests peaking at
+about 11k tokens per minute. That compares to a daily limit of 20 requests and
+a rate limit of 250k tokens per minute on the free tier at time of writing.
+The prompt is wordy but it doesn’t require the fancy, expensive models.
+It’s a pretty light lift.</p>
+
+<p>Here’s the code:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">google</span> <span class="kn">import</span> <span class="n">genai</span>
+<span class="kn">from</span> <span class="nn">google.genai</span> <span class="kn">import</span> <span class="n">types</span>
+
+<span class="c1"># provide my Gemini API key
+# In practice, this is set up as a Github Secret
+</span><span class="n">client</span> <span class="o">=</span> <span class="n">genai</span><span class="p">.</span><span class="n">Client</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="n">os</span><span class="p">.</span><span class="n">environ</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">"GEMINI_API_KEY"</span><span class="p">))</span>
+
+<span class="k">def</span> <span class="nf">evaluate_jobs_with_gemini</span><span class="p">(</span><span class="n">job_descriptions</span><span class="p">,</span> <span class="n">base_instructions</span><span class="p">,</span> <span class="n">examples</span><span class="p">):</span>
+    <span class="c1"># job_descriptions is a list of strings containing job descriptions
+</span>    <span class="c1"># base_instructions is a string read in from a text file
+</span>    <span class="c1"># examples is a stirng read in from a text file
+</span>
+    <span class="n">formatted_jobs</span> <span class="o">=</span> <span class="s">"</span><span class="se">\n\n</span><span class="s">"</span><span class="p">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s">"JOB#</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s">:</span><span class="se">\n</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s">"</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">text</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">job_descriptions</span><span class="p">)])</span>
+
+    <span class="c1"># Construct the prompt
+</span>    <span class="n">prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s">"""
+    </span><span class="si">{</span><span class="n">base_instructions</span><span class="si">}</span><span class="s">
+
+    Here are some examples of jobs I like:
+    </span><span class="si">{</span><span class="n">examples</span><span class="si">}</span><span class="s">
+
+    Please evaluate the following </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">job_descriptions</span><span class="p">)</span><span class="si">}</span><span class="s"> job postings.
+    return a JSON list of objects Each object must have:
+    - "opportunity": The name of the company and the title of the role (e.g.,
+      "Jane Street Trading Internship - Summer 2027")
+    - "score": A match score from 0-10. The long-run average score should be 5.
+    - "reasoning": An explanation for the score.
+    - "should_notify": Boolean (true if score &gt; 6).
+
+    JOBS TO EVALUATE:
+    </span><span class="si">{</span><span class="n">formatted_jobs</span><span class="si">}</span><span class="s">
+    """</span>
+
+    <span class="c1"># 3. Call the model
+</span>    <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="n">models</span><span class="p">.</span><span class="n">generate_content</span><span class="p">(</span>
+        <span class="n">model</span><span class="o">=</span><span class="s">"gemini-2.5-flash"</span><span class="p">,</span>
+        <span class="n">config</span><span class="o">=</span><span class="p">{</span><span class="s">"response_mime_type"</span><span class="p">:</span> <span class="s">"application/json"</span><span class="p">},</span>
+        <span class="n">contents</span><span class="o">=</span><span class="n">prompt</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">response</span><span class="p">.</span><span class="n">text</span>
+</code></pre></div></div>
+
+<p>The output is formatted in JSON. I set it up that way to make it easy to access
+the <code class="language-plaintext highlighter-rouge">should_notify</code> boolean later on, where it’s used to decide whether or not
+to send a notification to my phone about the posting.</p>
+
+<h2 id="notify-putting-it-all-together">Notify: Putting It All Together</h2>
+
+<h3 id="building-the-prompt--calling-the-function">Building the Prompt &amp; Calling the Function</h3>
+
+<p>In the code above, I’m passing my instructions into the prompt as arguments.
+I did that so I can make tweaks to the specifics of the prompt without having to
+edit the actual script. That keeps the code separate while letting me
+make small tweaks in a simple .txt file.</p>
+
+<p>Loading those in is pretty simple with <code class="language-plaintext highlighter-rouge">open()</code> when I run the script locally.
+Here’s how I read in the text files:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
+<span class="c1"># set the base directory explicitly
+# this is necessary once the code is on github
+</span><span class="n">BASE_DIR</span> <span class="o">=</span> <span class="n">PATH</span><span class="p">(</span><span class="n">__name__</span><span class="p">).</span><span class="n">resolve</span><span class="p">().</span><span class="n">parent</span>
+
+<span class="k">def</span> <span class="nf">load_text_file</span><span class="p">(</span><span class="n">file_name</span><span class="p">):</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">BASE_DIR</span> <span class="o">/</span> <span class="n">file_name</span>
+    <span class="k">return</span> <span class="n">path</span><span class="p">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s">"utf-8"</span><span class="p">)</span>
+
+<span class="c1"># Make sure instructions.txt and examples.text are saved in the same folder 
+# as the script running this code.
+</span><span class="n">instructions</span> <span class="o">=</span> <span class="n">load_text_file</span><span class="p">(</span><span class="s">"instructions.txt"</span><span class="p">)</span>
+<span class="n">examples</span> <span class="o">=</span> <span class="n">load_text_file</span><span class="p">(</span><span class="s">"examples.txt"</span><span class="p">)</span>
+
+</code></pre></div></div>
+
+<p>Next, call our functions:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">scrape_sites</span> <span class="c1"># this is the file with the function to pull job descriptions
+</span><span class="kn">import</span> <span class="nn">gemini_call</span> <span class="c1"># this is the file with the function that calls Gemini
+</span>
+<span class="n">jobs_list</span> <span class="o">=</span> <span class="n">scrape_sites</span><span class="p">.</span><span class="n">scrape_openquant</span><span class="p">()</span>
+<span class="n">raw_json</span> <span class="o">=</span> <span class="n">gemini_call</span><span class="p">.</span><span class="n">evaluate_jobs_with_gemini</span><span class="p">(</span><span class="n">jobs_list</span><span class="p">,</span> <span class="n">instructions</span><span class="p">,</span> <span class="n">examples</span><span class="p">)</span>
+<span class="n">evaluations</span> <span class="o">=</span> <span class="n">json</span><span class="p">.</span><span class="n">loads</span><span class="p">(</span><span class="n">raw_json</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="texting-myself-with-ntfy">Texting Myself with ntfy</h3>
+
+<p>Gemini recommended I use <a href="https://ntfy.sh/">nfty.sh</a>, a nifty tool for sending
+push notifications to its related iPhone app. It’s a beautifully simple tool:
+you set a topic name and then use your favorite programming language (or even just curl) to send a
+message to anyone who subscribes to that topic. I subscribed to my topic name on
+the app on my phone, so I get a notification every time the script sends me a
+job posting.</p>
+
+<p>The topic names are not password-protected, so anyone can send anything to any
+topic name they know. I set up my topic name as a Github Secret for that reason.</p>
+
+<p>Here’s the full script to pull the job descriptions, send them to Gemini, and
+then send the best ones according to Gemini directly to your phone:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">gemini_call</span>
+<span class="kn">import</span> <span class="nn">scrape_sites</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="n">ntfy_topic</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">environ</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">"NTFY_TOPIC"</span><span class="p">)</span>
+
+<span class="n">BASE_DIR</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">__name__</span><span class="p">).</span><span class="n">resolve</span><span class="p">().</span><span class="n">parent</span>
+
+<span class="k">def</span> <span class="nf">load_text_file</span><span class="p">(</span><span class="n">file_name</span><span class="p">):</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">BASE_DIR</span> <span class="o">/</span> <span class="n">file_name</span>
+    <span class="k">return</span> <span class="n">path</span><span class="p">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s">"utf-8"</span><span class="p">)</span>
+
+<span class="n">instructions</span> <span class="o">=</span> <span class="n">load_text_file</span><span class="p">(</span><span class="s">"instructions.txt"</span><span class="p">)</span>
+<span class="n">examples</span> <span class="o">=</span> <span class="n">load_text_file</span><span class="p">(</span><span class="s">"examples.txt"</span><span class="p">)</span>
+
+<span class="n">jobs_list</span> <span class="o">=</span> <span class="n">scrape_sites</span><span class="p">.</span><span class="n">scrape_openquant</span><span class="p">()</span>
+
+<span class="n">raw_json</span> <span class="o">=</span> <span class="n">gemini_call</span><span class="p">.</span><span class="n">evaluate_jobs_with_gemini</span><span class="p">(</span><span class="n">jobs_list</span><span class="p">,</span> <span class="n">instructions</span><span class="p">,</span> <span class="n">examples</span><span class="p">)</span>
+<span class="n">evaluations</span> <span class="o">=</span> <span class="n">json</span><span class="p">.</span><span class="n">loads</span><span class="p">(</span><span class="n">raw_json</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">eva</span> <span class="ow">in</span> <span class="n">evaluations</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">eva</span><span class="p">[</span><span class="s">'should_notify'</span><span class="p">]:</span>
+        <span class="n">requests</span><span class="p">.</span><span class="n">post</span><span class="p">(</span><span class="sa">f</span><span class="s">"https://ntfy.sh/</span><span class="si">{</span><span class="n">ntfy_topic</span><span class="si">}</span><span class="s">"</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">eva</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>And here’s what the notification looks like on my phone:</p>
+
+<p><img src="/assets/AI_job_scout/ntfy_screenshot.jpg" alt="phone screenshot" /></p>
+
+<p>I redacted the channel name so you can’t spam me with notifications, and
+Gemini’s summary of the role to keep what I’m looking for close to the
+chest.</p>
+
+<h3 id="github-actions-workflow">Github Actions Workflow</h3>
+
+<p>With what we’ve described so far, I can run the script manually on my own
+machine. I’d like to have it run automatically on a schedule - otherwise, I may
+as well just check the job board myself.</p>
+
+<p>One easy, free tool for this is <a href="https://docs.github.com/en/actions">Github Actions</a>.
+All I needed to do was:</p>
+
+<ol>
+  <li>Create a private github repo, and add my Gemini API key and ntfy.sh topic as
+secrets.</li>
+  <li>Put together a workflow file, a set of instructions for Github Actions in
+YAML format. It needs to be saved in /.github/workflow for Github Actions to
+work.</li>
+  <li>Push my scripts, text files, and workflow file to the repo.</li>
+</ol>
+
+<p>Here’s my full script, which is almost unchanged from what Gemini gave me. I did
+have to change the timing to the early morning in the Eastern time zone; I
+initially set it at 9am ET, which resulted in the job failing due to too many
+requests going to Gemini at that time (surprise surprise).</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Name</span><span class="pi">:</span> <span class="s">AI Job Scout</span>
+
+<span class="na">on</span><span class="pi">:</span>
+  <span class="na">schedule</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">cron</span><span class="pi">:</span> <span class="s1">'</span><span class="s">11</span><span class="nv"> </span><span class="s">10</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">1,3,5'</span> <span class="c1"># runs at 10:11am UTC (5:11am ET) on Mon, Wed, Fri</span>
+  <span class="na">workflow_dispatch</span><span class="pi">:</span> <span class="c1"># allows the job to be run manually</span>
+
+<span class="c1"># This section sets the job parameters</span>
+<span class="na">jobs</span><span class="pi">:</span>
+  <span class="na">scrape_and_analyze</span><span class="pi">:</span>
+    <span class="na">runs-on</span><span class="pi">:</span> <span class="s">ubuntu-latest</span>
+    <span class="na">steps</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Checkout code</span>
+        <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/checkout@v4</span>
+
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Set up Python</span>
+        <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/setup-python@v5</span>
+        <span class="na">with</span><span class="pi">:</span>
+          <span class="na">python-version</span><span class="pi">:</span> <span class="s1">'</span><span class="s">3.11'</span>
+
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Install dependencies</span>
+        <span class="na">run</span><span class="pi">:</span> <span class="pi">|</span>
+          <span class="s">python -m pip install --upgrade pip</span>
+          <span class="s">pip install -r requirements.txt</span>
+
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Install Playwright Browsers</span>
+        <span class="na">run</span><span class="pi">:</span> <span class="pi">|</span>
+          <span class="s">python -m playwright install --with-deps chromium</span>
+
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Run Job Scout</span>
+        <span class="na">env</span><span class="pi">:</span>
+          <span class="na">GEMINI_API_KEY</span><span class="pi">:</span> <span class="s">$</span>
+          <span class="na">NTFY_TOPIC</span><span class="pi">:</span> <span class="s">$</span>
+        <span class="na">run</span><span class="pi">:</span> <span class="pi">|</span>
+          <span class="s">python script.py</span>
+</code></pre></div></div>
+
+<p>And with that, we’re done. The script will run automatically three times
+a week, sending me notifications for any interesting job postings. This’ll
+become very useful once I’m searching for internships and full time positions.
+In the meantime, it’ll help me keep up with what’s on offer.</p>
+
+<h1 id="bonus-script-to-gather-internship-programs">Bonus: Script to Gather Internship Programs</h1>
+
+<p>I keep a tracker of companies I may be interested in applying to in a google
+doc. While all of the above gives me a good way to pull job postings from
+curated websites I know I want to review, it leaves plenty of blind spots. I’m
+supplementing it with an AI-enabled script to survey my full lists of potential
+employers and gather info on their internship programs. It’s not that useful
+right now, since most programs haven’t posted the applications, but I expect
+it’ll come in handy this summer and fall.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="kn">from</span> <span class="nn">google</span> <span class="kn">import</span> <span class="n">genai</span>
+<span class="kn">from</span> <span class="nn">google.genai</span> <span class="kn">import</span> <span class="n">types</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+
+<span class="c1"># provide my Gemini API key and ntfy topic
+# these are stored either in my local environment (if run locally),
+# or as github secrets (if run by Github Actions)
+</span><span class="n">client</span> <span class="o">=</span> <span class="n">genai</span><span class="p">.</span><span class="n">Client</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="n">os</span><span class="p">.</span><span class="n">environ</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">"GEMINI_API_KEY"</span><span class="p">))</span>
+<span class="n">ntfy_topic</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">environ</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">"NTFY_TOPIC"</span><span class="p">)</span>
+
+<span class="c1"># Load in the text files
+</span><span class="n">BASE_DIR</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">__name__</span><span class="p">).</span><span class="n">resolve</span><span class="p">().</span><span class="n">parent</span>
+
+<span class="k">def</span> <span class="nf">load_text_file</span><span class="p">(</span><span class="n">file_name</span><span class="p">):</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">BASE_DIR</span> <span class="o">/</span> <span class="n">file_name</span>
+    <span class="k">return</span> <span class="n">path</span><span class="p">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s">"utf-8"</span><span class="p">)</span>
+
+<span class="c1"># there are four types of firms I'm tracking, written in this list
+</span><span class="n">firm_types</span> <span class="o">=</span> <span class="p">[</span><span class="s">'asset_mgmt'</span><span class="p">,</span> <span class="s">'hedge_funds'</span><span class="p">,</span> <span class="s">'prop_trading'</span><span class="p">,</span> <span class="s">'sell_side'</span><span class="p">]</span>
+
+<span class="n">firm_lists</span> <span class="o">=</span> <span class="p">[</span><span class="n">load_text_file</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s">.txt"</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">firm_types</span><span class="p">]</span>
+
+<span class="n">instructions</span> <span class="o">=</span> <span class="n">load_text_file</span><span class="p">(</span><span class="s">"weekly_instructions.txt"</span><span class="p">)</span>
+
+<span class="c1"># Send the prompt to Gemini
+</span><span class="k">def</span> <span class="nf">global_search_prompt</span><span class="p">(</span><span class="n">firms_list</span><span class="p">,</span> <span class="n">base_instructions</span><span class="p">):</span>
+    <span class="c1"># firms_list is a string with a list of firms to survey
+</span>    <span class="c1"># base_instructions is a string read in from a text file
+</span>
+    <span class="c1"># Construct the prompt
+</span>    <span class="n">prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s">"""
+    </span><span class="si">{</span><span class="n">base_instructions</span><span class="si">}</span><span class="s">
+    
+    Search for Summer 2027 internships at the following </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">firms_list</span><span class="p">)</span><span class="si">}</span><span class="s"> firms.
+    Return a JSON list of objects, one for each firm.
+    Each object must have:
+    - "company": The name of the company. 
+    - "location": The city where the internship is located.
+    - "program_title": The title of the program (e.g., Quantitative Trading
+      Internship).
+    - "description": A description of the firm, including what asset classes
+      they're most associated with and a summary of their market reputation. 
+      Also describe the internship program, and provide an explanation of the
+      score (see below).
+    - "domestic": Boolean (true only if the posting explicitly does not sponsor
+      international applicants).
+    - "score": A match score from 0-10. Be a harsh grader.
+    - "posted": Boolean (true if the internship is currently taking applications.)
+
+    LIST OF FIRMS:
+    </span><span class="si">{</span><span class="n">firms_list</span><span class="si">}</span><span class="s">
+    """</span>
+    
+    <span class="c1"># Call the model
+</span>    <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="n">models</span><span class="p">.</span><span class="n">generate_content</span><span class="p">(</span>
+        <span class="n">model</span><span class="o">=</span><span class="s">"gemini-2.5-flash"</span><span class="p">,</span>
+        <span class="n">config</span><span class="o">=</span><span class="p">{</span><span class="s">"response_mime_type"</span><span class="p">:</span> <span class="s">"application/json"</span><span class="p">},</span>
+        <span class="n">contents</span><span class="o">=</span><span class="n">prompt</span>
+    <span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">response</span><span class="p">.</span><span class="n">text</span>
+
+<span class="n">results</span> <span class="o">=</span> <span class="p">[</span><span class="n">global_search_prompt</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">instructions</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">firm_lists</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">results</span><span class="p">):</span>
+    
+    <span class="c1"># this try-except block will print the results to a .txt in case Gemini
+</span>    <span class="c1"># messes up the json formatting (which happens from time to time)
+</span>    <span class="k">try</span><span class="p">:</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">read_json</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">df_sorted</span> <span class="o">=</span> <span class="n">df</span><span class="p">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s">"score"</span><span class="p">,</span><span class="s">"domestic"</span><span class="p">,</span> <span class="s">"posted"</span><span class="p">],</span> <span class="n">ascending</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+        <span class="n">df_sorted</span><span class="p">.</span><span class="n">to_csv</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">firm_types</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s">_results.csv"</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s">'a'</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">firm_types</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s">_results.txt"</span><span class="p">,</span> <span class="s">"a"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</code></pre></div></div>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2026-04-24T00:00:00-04:00">April 24, 2026</time></p>
+
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/personal/2026/03/15/gambling-or-investing.html" class="pagination--pager" title="What’s the Difference between Gambling and Investing?">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+</div>
+
+      
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        
+
+<div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+          <li><a href="https://github.com/TylerB23" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> Github</a></li>
+        
+      
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+
+<div class="page__footer-copyright">&copy; 2026 <a href="http://localhost:4000">Tyler&#39;s Blog</a>. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/jekyll-themes/minimal-mistakes/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+  </body>
+</html>

@@ -38,4 +38,4 @@ At work, I build these sorts of models in Excel all the time. It's been very
 satisfying to relearn Python by working on a project where I'm so familiar with
 the goal and implementation. It's been especially helpful in transitioning from
 thinking in an Excel way (i.e., data-first) into a more traditional coding way
-(i.e., manipulating functions with objects and then observing the result).
+(i.e., manipulating objects with functions and then observing the result).

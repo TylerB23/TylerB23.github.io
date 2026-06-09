@@ -100,4 +100,10 @@ var store = [{
         "tags": [],
         "url": "/technical/2026/04/24/AI-job-scout.html",
         "teaser": null
+      },{
+        "title": "What I Tell Students about Investment Banking",
+        "excerpt":"Introduction There’s no shortage of advice on the internet about “breaking into” investment banking, or how to be a good intern or analyst. Over the past four years that hasn’t prevented me from getting asked for advice about once a month on average, especially around the time the college sophomores...","categories": ["Personal"],
+        "tags": [],
+        "url": "/personal/2026/06/09/investment-banking-advice.html",
+        "teaser": null
       }]

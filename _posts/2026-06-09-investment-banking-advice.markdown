@@ -1,0 +1,147 @@
+---
+layout: post
+categories: Personal
+title: "What I Tell Students about Investment Banking"
+header:
+    overlay_image: /assets/IB_Advice_Header.png
+    overlay_filter: 0.4
+excerpt: "Plus: advice on coffee chats"
+toc: true
+---
+
+## Introduction ##
+There’s no shortage of advice on the internet about “breaking into” investment banking, or how to be a good intern or analyst. Over the past four years that hasn’t prevented me from getting asked for advice about once a month on average, especially around the time the college sophomores start applying for their junior year internships.
+
+The recruiting cycle has become entirely too early (not a hot take, but a correct one). I’ve read hundreds of resumes from would-be interns and they all read about the same:
+
+- They major in business, finance, accounting, or some combination of those things;
+- They lead a vertical for their school’s investment club (where they get to allocate real money!);
+- They had a summer job in landscaping / as a caddy / in a restaurant, and it taught them the value of hard work / customer service / teamwork;
+- And recently it’s become in vogue to put your interests on your resume, which are usually the local sports team, watching movies, and something risque like whiskey or cigars, for the especially bold ones.
+
+Despite my natural cynicism, I don’t mean to be too hard on these kids. It’s really hard to get your first job, especially when you’re competing with a vast field for a slim number of positions. And the recruiting cycle kicking off while they’re still early into the second year of college does nobody any favors. They simply haven’t had the time to develop skills or have experiences that would differentiate them.
+
+I don’t have any “magic bullet” advice, because nothing like that exists. No one can tell you the exact right formula of resume builders and things to say in an interview that will land you the position. Frankly, there’s a numbers game going on here - even working at a regional bank in Cleveland, my team got over 100 applicants for one entry level analyst role. At that scale, it’s really hard to devote the time to really reviewing all the resumes. If you’re applying for an even more desirable role, you need to make peace with the fact that you may just get unlucky. HR may see your resume after seeing five better ones, and yours gets dropped; or, yours may be the first on the list and it’s good enough to move on. The hiring manager may have gone to your alma mater, and made the choice to interview you over the other (equally qualified) candidates just on that. Or they see someone else who’s in the same fraternity as them. Any number of things!
+
+Your goal in applying for entry level roles is, as one of my undergrad professors liked to say, to “create serendipity”. Open up the possibility for you to get lucky, and you eventually will. Luck plays a factor, but doesn’t diminish your accomplishments. I like [this](https://usefulfictions.substack.com/p/how-to-increase-your-surface-area) Substack post by Cate Hall on this topic.
+
+Anyways; I do think I’ve gained some insight through my early career that’s at least been well-received, and while that’s not necessarily a marker for quality, I like to think I’ve helped out some of the students who’ve hit up my LinkedIn DM’s for coffee chats.
+
+## Questions & Answers
+
+This post is formatted like an FAQ, after the questions I get asked most often.
+
+### Why did you choose to go into investment banking? ###
+In my sophomore year of college, I realized I had no career plan at all. I had decided to major in applied math because everyone told me I needed to major in engineering, but I couldn’t decide on a particular major. Math had always been my worst subject, so I figured if I could major in it, I’d be set up for anything.
+
+All my friends who were getting internships and the upperclassmen who were getting jobs were going into one of  software engineering, investment banking, or consulting. I knew I didn’t want to be a software engineer, so I figured I’d try out the business school.
+
+Case Western Reserve University (my alma mater) runs a program they call the Wall Street Trek, where they select candidates interested in IB or consulting to take to New York to meet alumni and some recruiting partners after a semester of weekly career prep seminars. There was a competitive application and interview process, which was exactly the sort of external validation I needed at that point in my life.
+
+I was selected for the program, but never got to go to New York because of the pandemic. The college scrambled to offer a fully online version of the Trek, which was how I met the KeyBanc recruiting team. CWRU’s in Cleveland, where Key is headquartered, so the institutions have a strong enough relationship to set up a Zoom panel discussion on short notice. I don’t know if I would have applied to Key if not for that.
+
+What attracted me to IB specifically was that it demanded an all-rounder skillset and involved “learning new things all the time”. I knew I got bored easily from working as a lifeguard in high school - standing on watch for 45-minute shifts drove me absolutely crazy. My fear with an office job was that it’d be kind of like that. I didn’t want to be doing the same thing over and over again, day in and day out. I also knew I didn’t really have any weak subjects, and with my math curriculum heating up, I was starting to miss reading and writing.
+
+I was also told that it was supposed to be really hard. I've always been
+attracted to challenge, so hearing professors warn us about the long hours and
+high expectations made me want to show them that I could do it. At that time the
+idea of a demanding career appealed to me - it still does. Who would want to do
+something easy and boring for the majority of their waking hours?
+
+I don’t think I would have verbalized this at the time, but I also craved the structure it offered. Growing up, I knew what came next at all times - middle school, high school, then college. But at this point, I had no idea what came next. The other students targeting IB all had the same, simple plan: get an internship at a bank, do your two years as an analyst, and then go to PE or VC, or stick around and move up the plainly laid out hierarchy.
+
+This was probably a benefit to me when I was just coming out of undergrad, but I’m at a very different place today. The structure may serve some well, but you run the risk of failing to develop your own agency. I don’t say this next part to the college students, but part of what has pushed me away from IB is that I can now so clearly see what my future would look like if I stuck with it. The experience of having the routes your life can take grow fewer in number is an essential part of being in your 20's. I wanted to get back to the passion I had discovered for mathematical modeling in undergrad, and was realizing that I wouldn't get that by staying in place.
+
+That’s a topic for another blog post. On to the next question.
+
+### Why did you choose Public Finance, specifically? ###
+Public Finance, for the unacquainted, is mostly about selling municipal bonds for state and local governments. That appealed to me when I was applying: there was a tangibility to “I help the city issue debt so it can build a bridge and buy fire trucks” that was missing from most of the other verticals. I was attracted to the public interest and political aspects, too.
+
+In my first year as an analyst, I went to a meeting with the finance director of a nearby suburb with my MD. On the drive over he pointed out a dozen projects he had helped finance: hotels and apartment buildings and retail. That’s still the coolest part of the job to me - you get to have a hand in the creation of our built environment.
+
+Working with fixed income works well with my brain, too. Equity investors have unlimited upside and capped downside, which is reflected in their attitudes. You need to be optimistic to work in equities, in my opinion, both on the buy-side and sell-side. After all, you only need one investment to do really well in order to wipe out losses on all the others. This is a very reasonable attitude to have, as ASU professor Hendrik Bessembinder has [shown](https://wpcarey.asu.edu/department-finance/faculty-research/do-stocks-outperform-treasury-bills).
+
+Bond investors, on the other hand, have capped upsides, and mostly generate their outperformance by suffering fewer losses. They’re by and large focused on what can go wrong, and what their recovery could be in the worst case scenario. A significant form of edge, at least in the sub-IG / non-rated space, is superior due diligence.
+
+I happen to work primarily with non-rated, incentive-based muni bond issuances. The archetypal deal is a real estate developer with a tax incentive from the local municipality, for which we get the cash flows projected and then structure a bond around them. It’s usually non-recourse to the developer (no mortgages, personal guarantees, or collateral other than a tax lien). This is a particularly risky area in Public Finance, which suits me well. Our investors are fundamentally fixed income buyers, with the mindset that entails, but the unique projects and incentive agreements allow my team to come up with bespoke structures and covenant packages to get across the finish line. It’s not as plug-and-play as typical investment grade muni issuances, which can be both more remunerative and a lot of fun.
+
+### What does your daily schedule look like? Or, what do you guys actually do? ###
+I like getting this question because I never worked up the courage to ask it. Shouldn’t I have already known that? (of course not, and even if I had some idea, it can only be helpful to ask).
+
+Broadly speaking, the tasks I’ve done as a junior banker fall into three buckets: (1) modeling, (2) preparing presentations and other materials, and (3) legal and compliance work.
+
+Modeling is what it sounds like. One of the first parts of a deal (often before we’re even hired) is figuring out either how much debt we can sell or how much a particular amount of borrowing is going to cost.
+
+Either way, my task is to structure a series of bonds within the revenue or size parameters we’ve been given, working with the team to decide on pricing, debt service coverage ratios, costs of issuance, any reserves investors will want to see, and so on. Actually building the model in Excel (or DBC, an industry standard software tool) is the easy part - once you get a handle of it, it’s pretty trivial to work up a model. The hard part is making intelligent decisions about all of the parameters that go into it. Does a strong development in an attractive market allow us to squeeze down the coverage ratio? Can we accommodate the client’s desire for an early repayment option in exchange for a higher yield? This is one of the most interesting parts of the job, in my opinion.
+
+Bucket two is the other quintessential IB analyst task. We put together pitchbooks to try to win business, written responses to Requests for Proposals, market updates for the client while a deal is ongoing, rating presentations for the rating agencies, investor roadshows when it’s time to market the bonds, internal presentations about our team’s product for other groups in the bank, marketing materials for conferences - the list goes on and on. This can be very rote work if you let it, and sometimes that’s the best return on your time invested. But it can also be an opportunity to be creative, and to put on your senior banker hat by thinking through how to message bad news to a client or how to best present the unique features of a project to an investor.
+
+In the third bucket, I’ve lumped together reviewing legal documents and filling out compliance forms - technically separate tasks, but I’ve cheated and put my least favorite parts of the job together.
+
+On the legal side, we have a seemingly endless supply of lawyers involved in a deal who do the actual drafting. Our job is to make sure the documents line up with the business understanding of the transaction. In practice, this is a lot of deciphering legalese and playing “spot the difference”.
+
+I once looked back at the compliance checklist for a deal my boss did back in 2005. It was laughably short compared to all of the paperwork we have to do today. On occasion, we have somewhat interesting regulatory questions to work through, but this is mostly busywork to make the SEC happy. The tricky thing with writing regulations is that you want the rules to be written vaguely enough to capture unforeseen situations, but in doing so you’ll inevitably create situations where having to comply with the rules feels stupid and unnecessary. 
+
+### What are the hours like? ###
+In my career, I worked about 40-50 hours a week on average, sometimes flexing up around 60 when things got busy. There are a lot of reasons for this, mostly coming down to the fact that I worked for a regional bank in Public Finance. Regional banks tend to demand fewer hours than the bulge brackets and boutiques, as a rule, and PubFin also tends to demand less time. This is because of the clients - the treasurer of a village in the middle of Ohio is not going to call you at 10pm with a dozen scenarios he wants to see tomorrow morning. In fact, he’s probably not talking to you after 4pm.
+
+Even our P3-style deals, where we have a private sector client, tend to be more relaxed. Our bonds tend to be a smaller component of the capital stack (something like 5% to 30%), so it’s just not as nerve wracking to them as, say, selling the family business. That translates to fewer late night conversations and more relaxed timelines.
+
+If you are doing an IB internship in a similar place to where I worked, don’t succumb to the social pressure to appear busy. Keep an eye on how long the analysts and other interns are there, for sure, but you shouldn’t feel like superman for being in the office an hour after everyone else has left, doing next to nothing, just so you can brag to your friends that you’re putting in 80+ hours a week. I think it’s lame, and it’s not making the impression that you think it is.
+
+### What can I do to make myself a more compelling candidate? ###
+This is a hard question because, as stated in the introduction, the recruiting timeline does no favors. That said, there is a general profile which I've seen have success - an all-rounder with a genuine interest in other people.
+
+Being technically proficient and good at modeling is great, but you also need to be able to convey your conclusions to clients. Being “emotionally intelligent” and easy to get along with is an underrated skill, but if you can’t build the models you won’t make it very far. You need to be able to mull over a situation and come up with a creative solution, but you also need to be able to think on your feet and react well to an unexpected (and often unpleasant) line of questioning.
+
+All of that is why I say the best candidates have well-rounded skillsets. If your skills are “spiky”, there are better career paths for you that will leverage your specific talents. The people best suited for investment banking are good enough at everything, even if they aren’t necessarily the best in any one domain. Another way you could think about it is as a field where your weaknesses can matter more than your strengths.
+
+The last ingredient is the hardest to cultivate because it’s a reflection of your personality and your values. At Key, I worked with a couple of “relationship guys”, people who had a freaky ability to remember faces and names. What tied them together was that they really enjoyed networking - they liked going to conferences and happy hours just to meet new people and catch up with old contacts. For them, networking isn’t work, but something that they just do naturally. A genuine interest in other people’s lives and motivations is what enables you to not just remember faces and names, but to remember everything from the projects they’re working on to what sport their daughter plays. I think this trait is a strong predictor of whether you’ll enjoy investment banking long-term.
+
+### What traits do you think make for a successful internship? ###
+I’ll tackle this one with bullet points:
+
+- **Don’t make the same mistake twice**
+
+You will make mistakes simply for the fact that you don’t know what you’re doing at first. It’s a waste of time to agonize over getting every single thing right the first time. Instead, ask questions of your mentors and colleagues to figure out the things you know that you don’t know. For those things you’ll mess up simply because you didn’t know any better, take notes. Write down the thing which, if you had known, you wouldn’t have made the mistake. Then the next time you’re working on the same or a similar task, you’ll get it right.
+
+- **Don’t expect to be perfect, and don’t take feedback personally**
+
+I’d much rather have an intern who asks a bunch of questions and is improving over time than an intern who starts out hot but repeats their mistakes. Interns are rarely net contributors to the team given the time it takes to train and monitor them. Instead of focusing on creating immediate value, focus on demonstrating your ability to improve over time. Be someone who you'd want to work with.
+
+- **Get to know everyone on the team (and people off your team, too)**
+
+Talk to everyone on the team you work on, even if it means walking up to them yourself when they don’t seem too busy. Learn their names and take an interest in their lives. At the end of your internship, your supervisor will ask everyone on the team for feedback on you, formally or informally, and you want as many positive impressions as possible. Again, an intern who gets along well with everyone and shows capacity for growth is a better long-term decision for the team than one who’s hard to talk to, even if they’re a hard worker. The best investment bankers are genuinely interested in other people; that’s what powers their relationships and leads to their success.
+
+### How should I prepare for a technical interview with your team? ###
+Here’s the little speech I give to candidates before we get into the technical questions in an interview:
+
+> We are much more interested in how you think than in what you know. So, these questions aren’t meant to be Gotcha’s; you shouldn’t be concerned if you don’t know the answers. Instead, walk us through how you approach the question and don’t be afraid to ask questions. We could have one candidate who has all the answers memorized, and another who gets them all wrong, and the latter might be our choice for the job if they demonstrate more thoughtfulness and intelligence.
+
+... With that being said, if you really want to take away some practical piece of knowledge that will help you, focus on the relationship between bond prices and yields. You may know they move inversely, but can you explain why?
+
+I’ve seen two approaches that I like: the comparative approach and the present value approach. For the former, imagine you issue a bond at par with a yield $x$. Over the course of a year, market yields increase up to $y$. If an investor can buy a par bond yielding $y$ today, they wouldn’t be willing to pay par for a bond yielding only $x$. Instead, they’d demand a discount. The argument works in reverse if $y < x$.
+
+For the latter, suppose a bond pays out a coupon of $x$. What it means for the bond to yield $x$ and be priced at par is that, if you discounted back all of the future coupons and principal repayment to today, you’d get exactly the par amount of the bonds. After all, discounted cash flows are how you price any financial asset. If market yields (which you use as the discount rate) go up, the present value of all those future cash flows will go down, below par. If market yields go down, the PV increases and the bond sells for a premium.
+
+## Conclusion: Some Coffee Chat Do’s & Dont’s ##
+
+Thanks to those of you who read this through to the very end. Let’s conclude with a few pointers for how to do a coffee chat or informational interview.
+
+- **Do: Show up on Time**
+
+You’d be surprised how many people have ghosted me after setting up a time to talk.
+
+- **Don’t: Glaze Me**
+
+I really hate hearing people say things like “thank you SO MUCH for your time, I know you’re EXTREMELY BUSY, I’m just so incredibly grateful to hear some of your knowledge and wisdom, etc., etc.”. Remember that whoever you’re talking to is also just a person. Be polite, say thank you for your time, but don’t lay it on too thick.
+
+- **Do: Show Some Personality**
+
+The people who’ve made a positive impression on me during one of these calls are the ones who, after the call, I could remember something about. Deviate from your script. Have your couple of questions written out to keep you organized (and hopefully not nervous; see below), but actually listen to the person you’re talking to and ask about the things they say that you’re interested in. Make it a conversation - you know how to have a conversation.
+
+- **Don’t: Be Nervous**
+
+A lot of people out there just need to calm down and have some confidence. Lower the stakes for yourself; you’re not in a job interview, you’re just talking to someone for a few minutes about their job, something that they almost certainly did themselves when they were in your shoes. Have some fun with it.
+
+

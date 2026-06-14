@@ -106,4 +106,10 @@ var store = [{
         "tags": [],
         "url": "/personal/2026/06/09/investment-banking-advice.html",
         "teaser": null
+      },{
+        "title": "Recreating the Reality Game",
+        "excerpt":"Introduction In this post, I recreate a model of an evolutionary game put forward by mathematical finance researchers in 2009. Their work suggests that, in systems where participants interact with one another to affect the probability of future outcomes, it can take a long time for steady state behavior to...","categories": ["Technical"],
+        "tags": [],
+        "url": "/technical/2026/06/14/reality-game.html",
+        "teaser": null
       }]

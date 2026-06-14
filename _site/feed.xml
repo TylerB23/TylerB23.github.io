@@ -1,4 +1,520 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2026-06-09T16:32:14-04:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Tyler’s Blog</title><subtitle>Welcome! | Tyler&apos;s Blog</subtitle><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><entry><title type="html">What I Tell Students about Investment Banking</title><link href="http://localhost:4000/personal/2026/06/09/investment-banking-advice.html" rel="alternate" type="text/html" title="What I Tell Students about Investment Banking" /><published>2026-06-09T00:00:00-04:00</published><updated>2026-06-09T00:00:00-04:00</updated><id>http://localhost:4000/personal/2026/06/09/investment-banking-advice</id><content type="html" xml:base="http://localhost:4000/personal/2026/06/09/investment-banking-advice.html">&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2026-06-14T11:23:32-04:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Tyler’s Blog</title><subtitle>Welcome! | Tyler&apos;s Blog</subtitle><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><entry><title type="html">Recreating the Reality Game</title><link href="http://localhost:4000/technical/2026/06/14/reality-game.html" rel="alternate" type="text/html" title="Recreating the Reality Game" /><published>2026-06-14T00:00:00-04:00</published><updated>2026-06-14T00:00:00-04:00</updated><id>http://localhost:4000/technical/2026/06/14/reality-game</id><content type="html" xml:base="http://localhost:4000/technical/2026/06/14/reality-game.html">&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
+
+&lt;p&gt;In this post, I recreate a model of an evolutionary game put forward by
+mathematical finance researchers in 2009. Their work suggests that, in systems
+where participants interact with one another to affect the probability of future
+outcomes, it can take a long time for steady state behavior to emerge. This has
+interesting implications for financial markets. For example, the interaction
+between hedge fund strategies can result  in inefficencies that persist for
+significantly longer than the Efficient Markets Hypothesis would suggest is
+possible. In the second half of the post, I extend their
+model slightly to see if the qualitative behavior persists.&lt;/p&gt;
+
+&lt;p&gt;First, some background on how I found the paper and why I found it so
+compelling.&lt;/p&gt;
+
+&lt;h3 id=&quot;background&quot;&gt;Background&lt;/h3&gt;
+
+&lt;p&gt;I’ve been working my way through a recommended reading list for those interested
+in quantitative trading by Kris Abdelmessih, a former options trader at SIG who
+writes the &lt;a href=&quot;https://moontower.substack.com/&quot;&gt;Moontower substack&lt;/a&gt;.
+So far I’ve read Howard Marks’ &lt;em&gt;The Most
+Important Thing&lt;/em&gt;, Agustin Lebron’s &lt;em&gt;The Laws of Trading&lt;/em&gt;, and Annie Duke’s
+&lt;em&gt;Thinking in Bets&lt;/em&gt;. I actually read another one of Annie Duke’s books, &lt;em&gt;Quit:
+The Power of Knowing When to Walking Away&lt;/em&gt;, a few years ago - her books are
+great reads.&lt;/p&gt;
+
+&lt;p&gt;The impetus for this post came from the list entry I’m currently reading, Andrew
+Lo’s &lt;em&gt;Adaptive Markets&lt;/em&gt;. It’s my favorite so far because it connects the
+mathematical biology I studied in undergrad with mathematical finance in
+surprising ways. Chapter 8’s discussion of market efficiency introduces J. Doyne
+Farmer, a polymath researcher who has contributed to chaos theory, biology, and
+mathematical research in addition to founding one of the first quantitative
+hedge funds, Prediction Company.&lt;/p&gt;
+
+&lt;p&gt;Lo cites a 2009 paper by Dmitriy Cherkashin, J. Doyne Farmer, and Seth Lloyd in support
+of the claim that market inefficiencies can persist for significant periods of
+time due to the interaction of trading strategies in the market. He draws an
+analogy to the Lotka-Volterra equations, a predator-prey model 
+illustrating how population sizes can oscillate over time rather than reaching a
+single fixed point.&lt;/p&gt;
+
+&lt;p&gt;I ran into the Lotka-Volterra equations for the first time in Darren Wilkinson’s textbook,
+&lt;em&gt;Stochastic Modeling for Systems Biology&lt;/em&gt;. The interaction between predators and
+prey introduces relatively simple non-linear terms, which, for the right initial
+conditions, lead to oscillating populations of both predator and prey. 
+The predators depend on the prey in order to eat and be able
+to reproduce; however, as the predators eat their prey, they drive the prey
+population down and the predator population up until there aren’t enough prey
+for the predators to survive and reproduce. At this point, the predator
+population decreases enough for the prey population to stabilize and grow. The
+cycle repeats infinitely. Doyne drew an analogy with hedge funds, where the
+interaction of market participants leads to boom and bust cycles for different strategies.&lt;/p&gt;
+
+&lt;p&gt;Returning to Cherkashin et. al.: their 2009 paper builds a simple betting game
+to show that interactions between strategies can cause inefficiencies to persist
+for long periods of time. They provide simulation data illustrating this
+behavior as well as an analytical breakdown of how the math leads to this
+behavior.&lt;/p&gt;
+
+&lt;h2 id=&quot;part-one-recreating-their-results&quot;&gt;Part One: Recreating Their Results&lt;/h2&gt;
+
+&lt;h3 id=&quot;introduction--notation&quot;&gt;Introduction &amp;amp; Notation&lt;/h3&gt;
+
+&lt;p&gt;The paper proceeds by setting up an evolutionary game called (rather fancifully)
+the Reality Game. They provide a general framework but focus on a coin flip
+where the probability of heads at each time step is determined by a function of
+the prior outcome referred to as the reality map. Players bet all of their
+wealth each round with no house take, and the winners receive a portion of
+the total pool relative to what they bet on the winning outcome
+(i.e., pari-mutuel betting).&lt;/p&gt;
+
+&lt;p&gt;Here’s some notation from the paper:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;$N$ agents place wagers on $L$ possible outcomes. For a coin toss, $L=2$.&lt;/li&gt;
+  &lt;li&gt;$s_i$ is the amount of player $i$’s total wealth he or she wagers on heads (so, $1-s_i$ is their wager on
+tails).&lt;/li&gt;
+  &lt;li&gt;$w_i$ is the portion of the total wealth pool that player $i$ holds. Wealth is
+normalized so $\sum_i w_i = 1$.&lt;/li&gt;
+  &lt;li&gt;$p = \sum_i s_i w_i$ is the total amount bet on heads. Of course, $1-p$ is the
+total bet on tails.&lt;/li&gt;
+  &lt;li&gt;Supposing heads wins, $\pi_i = \frac{s_i w_i}{p}$ is the payout to player $i$.
+if tails wins, $\pi_i = \frac{(1-s_i)w_i}{1-p}$ is the payout.&lt;/li&gt;
+  &lt;li&gt;$q$ is the probability that heads wins. The reality map is the function
+$q(p)$.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Here’s an interesting aside: if $q$ is a constant, the wealth updating rule is
+analogous to Bayesian inference. In the below, the subscript $\lambda$ refers to
+the winner of either heads or tails. So, $p_{\lambda} = p$ when heads wins and
+$1-p$ when tails wins.&lt;/p&gt;
+
+\[w_i^{(t+1)} = \frac{s_{i\lambda} w_i^{(t)}}{p_{\lambda}}\]
+
+&lt;p&gt;You can interpret the prior period wealth as the prior probability of heads and the next
+period wealth as the posterior probability. Just as Bayesian inference leads
+to more and more accurate estimates of the true probability distribution, this
+model causes players who probability match (i.e., they bet on each outcome
+proportionally to its probability) to eventually accrue all of the wealth.&lt;/p&gt;
+
+&lt;p&gt;More generally, reality maps are characterized according to how they vary with
+$p$:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Objective, where $q(p) = const.$. Previous results don’t affect the future
+probability of the game.&lt;/li&gt;
+  &lt;li&gt;Self-defeating, where $q’(p) &amp;lt; 0$. The more wealth bet on heads, the less
+likely it becomes in the next round.&lt;/li&gt;
+  &lt;li&gt;Self-reinforcing, where $q’(p) &amp;gt; 0$. The more wealth bet on heads, the more
+likely it becomes in the next round.
+    &lt;ul&gt;
+      &lt;li&gt;The special case of $q(p) = p$ is referred to as &lt;em&gt;purely subjective&lt;/em&gt;, i.e.,
+the future probability of heads is exactly equal to what was previously bet
+on heads.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;the-simulation&quot;&gt;The Simulation&lt;/h3&gt;
+
+&lt;p&gt;Using the notation defined above, it’s pretty simple to write a function which
+simulates rounds of betting. I follow the paper’s example of using 29 strategies
+evenly spaced over $[0,1]$, where a strategy is just a value for $s_i$, the
+portion of wealth bet on heads. The function returns the wealth distribution
+and the values of the reality map over time.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;random&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;numpy&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;matplotlib.pyplot&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;simulations&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;N&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;realityMap&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;# N is the number of strategies, evenly spaced over [0,1]
+&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;# T is the number of rounds to simulate
+&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;# realityMap is the reality map, a function defining q
+&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;# define strategies
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;strategies&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arange&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;N&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;N&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;# store wealth for each strategy
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;wealth&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;zeros&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;N&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;wealth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ones&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;N&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;N&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;# Initiate reality map
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;q&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;zeros&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;q&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.5&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+       &lt;span class=&quot;c1&quot;&gt;# Calculate outcome
+&lt;/span&gt;       &lt;span class=&quot;n&quot;&gt;outcome&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;random&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;random&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;q&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+
+       &lt;span class=&quot;c1&quot;&gt;# Update Wealth
+&lt;/span&gt;       &lt;span class=&quot;n&quot;&gt;betOnHeads&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;sum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;strategies&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;wealth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+       &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;outcome&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+           &lt;span class=&quot;n&quot;&gt;wealth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;strategies&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;wealth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;j&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;N&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;betOnHeads&lt;/span&gt;
+       &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+           &lt;span class=&quot;n&quot;&gt;wealth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;strategies&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;wealth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;j&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;N&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;betOnHeads&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+       &lt;span class=&quot;c1&quot;&gt;# update reality map
+&lt;/span&gt;       &lt;span class=&quot;n&quot;&gt;q&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;realityMap&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;betOnHeads&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;q&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;wealth&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The paper uses a family of arctangent-based functions for the reality maps,
+along with simple self-defeating and self-reinforcing examples. They chose that
+set of functions because it has a single parameter to control the degree of
+objectivity / self-reinforcement. The set of functions used in figure 1 are below:&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# figure (a)
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;selfDefeatingRM&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# figure (b)
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;figBRM&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.5&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arctan&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pi&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.5&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;**&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pi&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# figure (c)
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;subjectiveRM&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# figure (d)
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;figDRM&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.5&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arctan&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pi&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;1.5&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;**&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pi&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# figure (e)
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;multiModalRM&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;results--graphs&quot;&gt;Results &amp;amp; Graphs&lt;/h3&gt;
+
+&lt;p&gt;With our simulation function and the reality maps defined, we can
+recreate their Figure 1 showing how the reality maps $q(p)$ evolve.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# Run and plot the simulations
+&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;fig&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;figure&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;gs&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fig&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add_gridspec&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# Row 1
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ax_a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fig&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add_subplot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;gs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;ax_a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;set_title&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;1a (Self-Defeating)&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;ax_a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;set_ylim&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;ax_b&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fig&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add_subplot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;gs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sharey&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ax_a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;ax_b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;set_title&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;1b (alpha = 0.5)&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;ax_c&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fig&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add_subplot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;gs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sharey&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ax_a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;ax_c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;set_title&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;1c (Pure Subjective)&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# Row 2
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ax_d&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fig&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add_subplot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;gs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sharey&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ax_a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;ax_d&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;set_title&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;1d (alpha = 1.5)&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;ax_e&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fig&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add_subplot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;gs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sharey&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ax_a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;ax_e&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;set_title&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;1e (Multi-Modal)&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arange&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;x_e&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arange&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10_000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;30&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;a_q&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a_wealth&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;simulations&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;30&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;selfDefeatingRM&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;b_q&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b_wealth&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;simulations&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;30&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;figBRM&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;c_q&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c_wealth&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;simulations&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;30&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;subjectiveRM&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;d_q&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;d_wealth&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;simulations&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;30&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;figDRM&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;e_q&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;e_wealth&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;simulations&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;30&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10_000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;multiModalRM&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;ax_a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;plot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a_q&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;ax_b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;plot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b_q&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;ax_c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;plot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;c_q&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;ax_d&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;plot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;d_q&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;ax_e&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;plot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x_e&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;e_q&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;linewidth&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;linestyle&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;dotted&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tight_layout&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;show&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;In the figures below, the x-axis is the number of rounds that have been played
+and the y-axis is the value of $q(p)$. The different colored lines represent
+different simulation instances.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/realityGame/Figure_1.png&quot; alt=&quot;Figure 1&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;My results match the qualitative behavior shown in the paper. (a) and (b) show
+the probability moving towards the fixed point $q(p) = 0.5$, more quickly in (a)
+than in (b). For (a), the only fixed point for $q(p)$ is 0.5, but (b) also has 0
+and 1. Because (b) is only weakly self-reinforcing the early round fluctuations
+in wealth aren’t enough to push $q(p)$ towards 0 or 1.&lt;/p&gt;
+
+&lt;p&gt;Skipping ahead to (d), the stronger self-reinforcing reality map leads to larger
+early fluctuations which push $q(p)$ towards 0 or 1. The total wealth moves more
+quickly towards either those who bet more on heads or those who bet more on
+tails. Sometimes the convergence is very slow, like the orange line and dark
+green lines in the center of the graph.&lt;/p&gt;
+
+&lt;p&gt;(c) is interesting - the steady state is determined by the first
+several dice rolls, as they shift wealth towards a particular probability of
+heads which quickly cements itself as wealth concentrates in the strategies near
+that probability. In the purely subjective case, after a few rounds one of the players will
+amass enough of the wealth that they get to effectively shape reality - they
+command so much of the wealth that their strategy becomes the fixed point.&lt;/p&gt;
+
+&lt;p&gt;Its worth ruminating on the fact that in all of these scenarios, wealth
+concentrates one just one strategy. Once a particular player has a large portion
+of the wealth, their bets make up a large portion of the pot, so it’s very
+unlikely for them to go on a losing streak long enough to unseat them.&lt;/p&gt;
+
+&lt;p&gt;My multi-modal graph is difficult to read; I tried reducing the line width and
+making it dotted to make it easier, but the wild oscillations between 1 and 0
+give a result a bit like when I tried to mix paints in first grade - it just
+comes out muddy and unclear. Looking under the hood, however, I’m seeing the
+same behavior the paper reported. Wealth becomes concentrated at strategies $s =
+1/3$ and $s = 2/3$, the discontinuities in the reality map.&lt;/p&gt;
+
+&lt;h2 id=&quot;part-two-simple-extension&quot;&gt;Part Two: Simple Extension&lt;/h2&gt;
+
+&lt;p&gt;What if instead of a binary outcome (i.e., a coin toss), we had several possible
+outcomes? I used Cherkashin et. al.’s framework to develop a similar set of
+simulations, but for a dice roll.&lt;/p&gt;
+
+&lt;p&gt;Before jumping into this, I should explain why I did this. I didn’t think the
+extension would disagree with the paper’s results or even provide new results
+worth mulling over. Rather, this was a way to make sure I really understood the
+paper’s set up and central conjectures. It’s one thing to just read it and think
+about it, and a whole other thing to do some original work based on it.&lt;/p&gt;
+
+&lt;p&gt;In high school, my chemistry teacher told us that to really learn something we
+needed to encounter it multiple times in multiple formats. Read the textbook,
+listen in class, do your homework, study for the test, and then take the test.
+This is a good framework to which I’d add that one of those formats should take
+the form of original exploration. Even a trivial extension on the material will
+force you to grapple with the minutiae of whatever it is you’re studying.&lt;/p&gt;
+
+&lt;h3 id=&quot;notation&quot;&gt;Notation&lt;/h3&gt;
+
+&lt;p&gt;Here’s our updated notation:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;$N$ agents place wagers on $L$ possible outcomes. Here, $L=6$.&lt;/li&gt;
+  &lt;li&gt;$s_{il}$ is the amount of player $i$’s total wealth he or she wagers on the
+$l$th outcome. $s_i$ is now a vector with dimension $L$.&lt;/li&gt;
+  &lt;li&gt;$w_i$ is the portion of the total wealth pool that player $i$ holds. Wealth is
+normalized so $\sum_i w_i = 1$.&lt;/li&gt;
+  &lt;li&gt;$p_l = \sum_i s_{il} w_i$ is the total amount bet on outcome $l$.&lt;/li&gt;
+  &lt;li&gt;Player $i$ gets a payout of $\pi_{i\lambda} = \frac{s_{i\lambda}
+w_i}{p_{\lambda}}$ when outcome $\lambda$ wins.&lt;/li&gt;
+  &lt;li&gt;$q_l$ is the probability that outcome $l$ wins. $q$ is now a vector with
+dimension $L$. The reality map is the vector-valued function $q(p)$.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;We’ll need to keep in mind the dimensions of our vectors when we write the
+simulation function.&lt;/p&gt;
+
+&lt;h3 id=&quot;setting-the-strategies&quot;&gt;Setting the Strategies&lt;/h3&gt;
+
+&lt;p&gt;The paper uses 29 strategies evenly spaced over the space of probabilities of
+heads. I wanted the strategies for this extension to also be evenly spaced in
+some sense. To accomplish that, I wanted the following to be true:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Each player puts at least some money on each outcome;&lt;/li&gt;
+  &lt;li&gt;Each player puts a different amount of money on each outcome; and&lt;/li&gt;
+  &lt;li&gt;Overall, the strategies should be balanced between all the players so that
+there’s an equal amount of money being put on each outcome in the first
+round.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;To accomplish this, I set the strategies as all the possible orders of the
+numbers 1 - 6, divided by the sum of the range from 1 to 6 (which is 21). There
+are $6! = 720$ such strategies. Here’s the code, using the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;itertools&lt;/code&gt; package
+to get all the possible permutations:&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;itertools&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# define strategies
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;L&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arange&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;7&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;strategies&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;asarray&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;itertools&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;permutations&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;L&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;21&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;simulation-function&quot;&gt;Simulation Function&lt;/h3&gt;
+
+&lt;p&gt;The simulation function is pretty similar, but because there are more than two
+outcomes, everything’s a vector now. It’s a good excuse to practice our linear
+algebra.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;random&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;numpy&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;matplotlib.pyplot&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;matplotlib.animation&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;animation&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;itertools&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;simulations&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;realityMap&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;# T is the number of rounds to simulate
+&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;# realityMap is the reality map, a function defining q
+&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;# define strategies
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;L&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arange&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;7&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;strategies&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;asarray&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;itertools&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;permutations&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;L&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;21&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;# N is the number of strategies
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;N&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;strategies&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;shape&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;# store wealth for each strategy
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;wealth&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;zeros&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;N&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;wealth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ones&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;N&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;N&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;# Initiate reality map
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;q&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;zeros&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;q&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ones&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;6&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+       &lt;span class=&quot;c1&quot;&gt;# Calculate outcome
+&lt;/span&gt;       &lt;span class=&quot;n&quot;&gt;roll&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;random&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;choices&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;L&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;weights&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;q&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+       &lt;span class=&quot;n&quot;&gt;outcome&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;zeros&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+       &lt;span class=&quot;n&quot;&gt;outcome&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;roll&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+
+       &lt;span class=&quot;c1&quot;&gt;# Update Wealth
+&lt;/span&gt;       &lt;span class=&quot;n&quot;&gt;s_lambda&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;strategies&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;@&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;outcome&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# 720-by 6 * 6-by-1 = 720-by-1
+&lt;/span&gt;       &lt;span class=&quot;n&quot;&gt;p_lambda&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;s_lambda&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;wealth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# integer value
+&lt;/span&gt;
+       &lt;span class=&quot;n&quot;&gt;wealth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;eye&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;N&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s_lambda&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;@&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;wealth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p_lambda&lt;/span&gt;
+       
+       &lt;span class=&quot;c1&quot;&gt;# update reality map
+&lt;/span&gt;       &lt;span class=&quot;c1&quot;&gt;# p is the amount bet on each strategy (6 by 1 vector)
+&lt;/span&gt;       &lt;span class=&quot;n&quot;&gt;p&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;strategies&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;@&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;wealth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+       &lt;span class=&quot;n&quot;&gt;q&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;realityMap&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;q&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;wealth&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Where before we had an array, we now have an array of vectors, and where before
+we had a single value, we have a vector of values. I use the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;@&lt;/code&gt; symbol to
+multiply &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;strategies&lt;/code&gt;, which can be viewed as a 720-by-6 matrix, by the
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;outcome&lt;/code&gt; unit vector, which gives us $s_{\lambda}$. Similarly, $p_{\lambda}$
+is the dot product of $s_{\lambda}$ and $w$.&lt;/p&gt;
+
+&lt;p&gt;I’m pleased with how I updated
+player wealth: by casting $s_{\lambda}$ to a diagonal matrix, we can multiply it
+by the previous round’s wealth and normalize it by $p_{\lambda}$. The division
+happens entry-by-entry, so the total wealth still sums to one.&lt;/p&gt;
+
+&lt;h3 id=&quot;defining-the-reality-maps&quot;&gt;Defining the Reality Maps&lt;/h3&gt;
+
+&lt;p&gt;To keep things simple, I only used the pure self-defeating and pure subjective
+reality maps for this extension. Numpy handles arrays very neatly, so the
+reality map functions don’t need much updating. The subjective map remains the
+same, and the self-defeating map just needs to be normalized for the number of
+possible outcomes.&lt;/p&gt;
+
+&lt;p&gt;Suppose we have a vector $x$ such that $\sum_i^n x_i = 1$. We can “invert”
+each of the entries by subtracting them from one, but if we stop there, the new
+sum is $\sum_i^n 1 - x_i = \sum_i^n 1 - \sum_i^n x_i = n - 1$. We can normalize
+our new vector by dividing every entry by $n-1$. If that’s not immediately
+obvious, you can let $a$ be the normalizing constant and solve for it like
+below:&lt;/p&gt;
+
+\[\sum_i^n x_i = 1 \\
+\sum_i^n \frac{1-x_i}{a} = 1 \\
+\frac{1}{a}(\sum_i^n 1 - \sum_i^n x_i) = 1 \\
+\frac{1}{a}(n - 1) = 1 \\
+a = n - 1\]
+
+&lt;p&gt;Here’s the code:&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# define our reality maps
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;selfDefeatingRM&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;len&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;subjectiveRM&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;results--graphs-1&quot;&gt;Results &amp;amp; Graphs&lt;/h3&gt;
+
+&lt;p&gt;I simplified the graphing a bit below, and created an animation for the reality
+maps $q$. Below is the code, followed by a gif of the animation.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# Run and plot the simulations
+&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;fig&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;axs&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;subplots&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nrows&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ncols&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sharey&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;all&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arange&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1_000&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# number of rounds
+&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;axs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;set_title&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Self-Defeating&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;axs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;set_title&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Purely Subjective&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;axs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;set_xticks&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;axs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;set_xticks&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;axs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;set_xticklabels&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arange&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;len&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;axs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;set_xticklabels&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arange&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;len&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;axs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;set_ylim&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;sd_q&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sd_wealth&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;simulations&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;selfDefeatingRM&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;sub_q&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sub_wealth&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;simulations&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;subjectiveRM&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;sd_graph&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;axs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bar&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sd_q&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;axs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;axhline&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.16666&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;color&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;r&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;linestyle&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;--&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;sub_graph&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;axs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bar&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sub_q&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;axs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;axhline&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.16666&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;color&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;r&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;linestyle&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;--&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# Animate
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;animate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;y_sd&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sd_q&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;y_sub&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sub_q&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;enumerate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sd_graph&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;set_height&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y_sd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;enumerate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sub_graph&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;set_height&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y_sub&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;anim&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;animation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;FuncAnimation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fig&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;animate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+                               &lt;span class=&quot;n&quot;&gt;repeat&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;False&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;blit&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;False&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;frames&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;interval&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;50&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;anim&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;save&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;dice_roll.gif&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/realityGame/Figure_2.gif&quot; alt=&quot;Figure 2&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The red dashed line indicates even $\frac{1}{6}$ probabilities for each outcome.&lt;/p&gt;
+
+&lt;p&gt;As expected, this extension behaves exactly how the coin toss version of the
+model would predict.&lt;/p&gt;
+
+&lt;p&gt;The self-defeating map has a fixed point
+for $q(p)$ where the probability of each outcome is equal. The map hovers around
+that point in the gif above. My set up of the strategies means that no one
+player is betting exactly even amounts on each outcome, so unlike before, the
+wealth does not concentrate on a single player. Were we to introduce a rational
+player (as Cherkashin et. al. do), they would be able to eventually capture most
+of the wealth.&lt;/p&gt;
+
+&lt;p&gt;The pure subjective map is all fixed points, and
+shows much more fluctuation early on before settling out at one of the
+strategies, which as before, accumulates the lion’s share of the wealth. A key
+characteristic of the subjective case is that wealth accumulation leads to less
+volatility in the reality map.&lt;/p&gt;
+
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;Cherkashin et. al. go on to provide an analytic treatment of the game, showing
+that the approach to an equilibrium obeys a power law, and that the behavior is
+different when that equilibrium is not at one of the endpoints (0 or 1). They
+also introduce a rational, utility-maximizing player, the design of which is
+fascinating in itself. The key insight for understanding markets is that, early
+on when wealth isn’t concentrated and the oscillations in the reality map are
+larger, a rational player can make considerable profits. Those profits dwindle
+as the reality map approaches an equilibrium point.&lt;/p&gt;
+
+&lt;p&gt;The paper is worth a read for those of you interested in the self-reinforcing
+nature of markets. The authors suggest several future lines of inquiry bringing
+their game closer to real life markets in nature. This is the kind of thing that
+I love about applied math: the process of tweaking and expanding a model to make
+it more and more useful. It’s easy for me to enter a flow state playing around
+with these things, and the way your interpretations lead immediately to possible
+extensions is really exciting.&lt;/p&gt;
+
+&lt;p&gt;To end on a personal note, I’ve got
+about a month and a half until I start the Master in Computational Finance
+program at Carnegie-Mellon. Hopefully going back to school will mean getting to
+do a lot more stuff like this.&lt;/p&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><category term="Technical" /><summary type="html">Expanding on an interesting mathematical finance paper.</summary></entry><entry><title type="html">What I Tell Students about Investment Banking</title><link href="http://localhost:4000/personal/2026/06/09/investment-banking-advice.html" rel="alternate" type="text/html" title="What I Tell Students about Investment Banking" /><published>2026-06-09T00:00:00-04:00</published><updated>2026-06-09T00:00:00-04:00</updated><id>http://localhost:4000/personal/2026/06/09/investment-banking-advice</id><content type="html" xml:base="http://localhost:4000/personal/2026/06/09/investment-banking-advice.html">&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;There’s no shortage of advice on the internet about “breaking into” investment banking, or how to be a good intern or analyst. Over the past four years that hasn’t prevented me from getting asked for advice about once a month on average, especially around the time the college sophomores start applying for their junior year internships.&lt;/p&gt;
 
 &lt;p&gt;The recruiting cycle has become entirely too early (not a hot take, but a correct one). I’ve read hundreds of resumes from would-be interns and they all read about the same:&lt;/p&gt;
@@ -617,7 +1133,143 @@ it’ll come in handy this summer and fall.&lt;/p&gt;
     &lt;span class=&quot;k&quot;&gt;except&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
         &lt;span class=&quot;k&quot;&gt;with&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;open&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;sa&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;firm_types&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;_results.txt&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;a&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
             &lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;write&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><category term="Technical" /><summary type="html">I think it&apos;s pretty neat.</summary></entry><entry><title type="html">Amortizing Bond Models Investigation, Part 3</title><link href="http://localhost:4000/technical/2026/03/15/amortizing-bond-model-intuition.html" rel="alternate" type="text/html" title="Amortizing Bond Models Investigation, Part 3" /><published>2026-03-15T00:00:00-04:00</published><updated>2026-03-15T00:00:00-04:00</updated><id>http://localhost:4000/technical/2026/03/15/amortizing-bond-model-intuition</id><content type="html" xml:base="http://localhost:4000/technical/2026/03/15/amortizing-bond-model-intuition.html">&lt;h2 id=&quot;the-code&quot;&gt;The Code&lt;/h2&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><category term="Technical" /><summary type="html">I think it&apos;s pretty neat.</summary></entry><entry><title type="html">What’s the Difference between Gambling and Investing?</title><link href="http://localhost:4000/personal/2026/03/15/gambling-or-investing.html" rel="alternate" type="text/html" title="What’s the Difference between Gambling and Investing?" /><published>2026-03-15T00:00:00-04:00</published><updated>2026-03-15T00:00:00-04:00</updated><id>http://localhost:4000/personal/2026/03/15/gambling-or-investing</id><content type="html" xml:base="http://localhost:4000/personal/2026/03/15/gambling-or-investing.html">&lt;p&gt;Like most universities, my college had a writing skills requirement but was a
+bit embarrassed about it. Rather than force the engineers to take actual liberal
+arts courses, they offered “current interest” courses which
+satisfied the requirement. One of mine was on fintech, which in 2020 mostly meant
+crypto.&lt;/p&gt;
+
+&lt;p&gt;One of the seminar sessions focused on the fundamental drivers of the price of
+bitcoin (or the lack thereof). One of the other students asked the professor,
+“isn’t this just gambling?”, to which he replied, “what do you think separates
+gambling from investing?”.&lt;/p&gt;
+
+&lt;p&gt;The question has stuck with me for a while, and I thought it’d be interesting to
+write a blog post about how my thoughts on the topic have evolved.&lt;/p&gt;
+
+&lt;h2 id=&quot;my-answer-at-the-time&quot;&gt;My Answer at the Time&lt;/h2&gt;
+
+&lt;p&gt;Gambling and investing both involve putting capital at risk, with some chance of
+“winning” and growing the capital and some chance of “losing” and reducing the
+capital.&lt;/p&gt;
+
+&lt;p&gt;My first thought was that what separated the two activities was &lt;strong&gt;positive
+expected value&lt;/strong&gt;. Most games at a casino have a house edge; over the long run,
+you expect to lose money. The things we typically think of as investing (fixed
+income and equities) have well-documented historic positive returns.
+&lt;a href=&quot;https://en.wikipedia.org/wiki/Investment&quot;&gt;Wikipedia&lt;/a&gt; agrees with my undergrad
+definition of investing:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Investment is traditionally defined as the “commitment of resources into something expected to gain value over time”.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;I’ve revisited the idea since taking the class, especially as I began my career
+in investment banking. When my team sells
+bonds, they’re usually financing public improvements like roadwork, utility line
+extensions, water and sewer, etc. The development increases the value of the
+parcel of land, and our investors get paid back from the subsequent increase in property
+taxes (or sales taxes or whatever else). It’s pretty classic investing - bondholders
+put up money today that is used to build some project, and they get
+paid back from part of the cash flow coming off of the project. My team sells
+muni bonds, so the cash flow stream is usually a tax stream, but this
+generalizes to other sorts of fixed income in a straightforward manner.&lt;/p&gt;
+
+&lt;p&gt;Investors are paid a steady stream of
+coupons which represent their return. There is some risk that the project
+doesn’t get built or the cash flows from it aren’t sufficient to pay off the
+bonds, and they’re compensated for those risks. The intent of all parties
+involved is for them to have a positive expected value.&lt;/p&gt;
+
+&lt;p&gt;Whether investors are being compensated appropriately for the risk they’re
+taking, in my eyes, doesn’t affect whether they’re engaged in investing or
+gambling. Risk-adjusted returns are a measure of how good they are at investing,
+not a determinant of whether they’re engaged in the activity.&lt;/p&gt;
+
+&lt;p&gt;Already, you’re probably seeing the problem with focusing on expected value.
+I’ll get to that, but first, let’s think about equities for a moment.&lt;/p&gt;
+
+&lt;p&gt;Equity investing is a bit different, but I think it feels like investing to most
+people for similar reasons. It’s well-documented that public equities have
+historically delivered positive returns to investors over most time horizons. If
+you take a 30,000 foot view, you could say that owning a bunch of different
+stocks which are exposed to many different aspects of the economy should more or
+less capture growth in the economy. Furthermore, owning a stock gives you an
+ownership claim over the company. You’re entitled to a share in the profits of
+the company, mediated through its leadership who may decide to invest back into
+the enterprise, issue a dividend, or do stock buybacks.&lt;/p&gt;
+
+&lt;h2 id=&quot;problems-with-the-definition&quot;&gt;Problems with the Definition&lt;/h2&gt;
+
+&lt;p&gt;The obvious question here is, how do you figure out if an activity has positive
+expected value?&lt;/p&gt;
+
+&lt;p&gt;First, let me defend my undergrad self just a bit. Clearly, traditional Vegas
+table games have a &lt;em&gt;negative&lt;/em&gt; expected value for the player; you can calculate the odds of different
+outcomes in a game of blackjack, for example, and realize that you’re not expected
+to win. So while it’s not easy to determine if a traditional investing
+activity has positive EV, you can label some things as gambling with this
+simple definition.&lt;/p&gt;
+
+&lt;p&gt;One more observation: casinos have a positive edge. So even in the most obvious
+example of gambling, one of the parties involved has positive EV. The problem is
+that not everyone does.&lt;/p&gt;
+
+&lt;p&gt;With that in mind, let’s complicate the definition: for an activity to be
+investing rather than gambling, everyone involved should have a positive
+expected value. The activity should be a &lt;strong&gt;positive sum game&lt;/strong&gt;, insofar as
+everyone involved thinks they’ll be better off for engaging in it.&lt;/p&gt;
+
+&lt;p&gt;Return to the example of debt financing for a real estate project. The developer
+expects to build their project and earn an acceptable return from it.
+The bond investor expects to invest their funds and earn an acceptable return
+from it. The money coming in to the system is from users of the project, who
+wouldn’t show up and spend their money if they didn’t feel like it was worth it.&lt;/p&gt;
+
+&lt;p&gt;Sounds like everybody wins. It’s easy to see that equity investing fits
+the bill, as well.&lt;/p&gt;
+
+&lt;h2 id=&quot;other-examples-what-counts-and-what-doesnt&quot;&gt;Other Examples: What Counts and What Doesn’t&lt;/h2&gt;
+
+&lt;p&gt;Consider a pro poker player sitting down at a table with a bunch of newbies. He
+or she has a positive expected value, while the rest of the table has a negative
+expected value. This should fit any reasonable definition of gambling, rather
+than investing. That’s an important point - you can engage in gambling with a
+positive EV, as long as your winnings are coming from others losing.&lt;/p&gt;
+
+&lt;p&gt;There’s a case to be made that sports betting could count as
+investing under this definition for a certain kind of bettor. There are people
+out there who develop good models for game outcomes or who find arbitrage
+opportunities between different sportsbooks. They can reasonably claim to have a
+positive expected value. The bets they place, arguably, represent a kind of
+ownership in the potential payoff if the bet goes their way. Predictions markets
+(which are mostly sportsbooks, by volume) look similar. Some market makers are
+beginning to &lt;a href=&quot;https://giftarticle.ft.com/giftarticle/actions/redeem/cb34168b-0d7d-466c-be5b-e856931e7b75&quot;&gt;wade into sports
+betting&lt;/a&gt;
+by way of prediction markets. This is a topic worthy of more discussion, but I
+don’t think it’s useful to write off sports betting or prediction markets as
+purely investing or gambling. There’re more interesting things going on in that
+space.&lt;/p&gt;
+
+&lt;p&gt;A high frequency trading shop also seems to be engaged in something other
+than investing. When you hold positions for an extremely short period of time,
+that just feels very different from buying an index fund or investing in a
+Treasury note. You don’t care about the long-term prospects of the business in
+the same way a traditional investor does. However, many HFT shops have done very well for themselves
+historically and we have no reason to think they won’t continue to do so. It’s
+not gambling either. I think it’s useful to think of short-term trading and
+market making activities as a third category.&lt;/p&gt;
+
+&lt;p&gt;Bitcoin and other crypto currencies present an interesting case. Many would
+argue that they have no fundamental value, or, more snarkily, that the correct
+price for these tokens is \$0.
+The market is clearly full of scams, too. Early investors in projects ride hype
+waves, wash trade to bring attention, then
+sell at the top. There’s no shortage of pundits who will tell you the whole thing is a ponzi
+scheme. For our purposes here, it’s sufficient to point out that there’s no
+economic activity at the bottom of most crypto projects. That doesn’t mean
+crypto isn’t interesting or useful, or that there’s no money to be made there. I
+just don’t think it’s quite right to say you’re “invested in crypto”.&lt;/p&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><category term="Personal" /><summary type="html">Like most universities, my college had a writing skills requirement but was a bit embarrassed about it. Rather than force the engineers to take actual liberal arts courses, they offered “current interest” courses which satisfied the requirement. One of mine was on fintech, which in 2020 mostly meant crypto.</summary></entry><entry><title type="html">Amortizing Bond Models Investigation, Part 3</title><link href="http://localhost:4000/technical/2026/03/15/amortizing-bond-model-intuition.html" rel="alternate" type="text/html" title="Amortizing Bond Models Investigation, Part 3" /><published>2026-03-15T00:00:00-04:00</published><updated>2026-03-15T00:00:00-04:00</updated><id>http://localhost:4000/technical/2026/03/15/amortizing-bond-model-intuition</id><content type="html" xml:base="http://localhost:4000/technical/2026/03/15/amortizing-bond-model-intuition.html">&lt;h2 id=&quot;the-code&quot;&gt;The Code&lt;/h2&gt;
 
 &lt;p&gt;After a long break, I’ve finally gotten back to my amortizing bond model investigation. The previous posts give the background on what I’m trying to accomplish here: let’s jump right in to the code.&lt;/p&gt;
 
@@ -865,143 +1517,7 @@ quickly mock up a bond model with some simplified assumptions. Version one will
 let the user quickly build models like the ones I’ve been working with in this
 post series, with fixed growth rate revenue curves. Version two will expand that
 to allow arbitrary revenue curves with automatically calculated capitalized
-interest. Stay tuned.&lt;/p&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><category term="Technical" /><summary type="html">Wrapping up simple revenue curves &amp; developing heuristics.</summary></entry><entry><title type="html">What’s the Difference between Gambling and Investing?</title><link href="http://localhost:4000/personal/2026/03/15/gambling-or-investing.html" rel="alternate" type="text/html" title="What’s the Difference between Gambling and Investing?" /><published>2026-03-15T00:00:00-04:00</published><updated>2026-03-15T00:00:00-04:00</updated><id>http://localhost:4000/personal/2026/03/15/gambling-or-investing</id><content type="html" xml:base="http://localhost:4000/personal/2026/03/15/gambling-or-investing.html">&lt;p&gt;Like most universities, my college had a writing skills requirement but was a
-bit embarrassed about it. Rather than force the engineers to take actual liberal
-arts courses, they offered “current interest” courses which
-satisfied the requirement. One of mine was on fintech, which in 2020 mostly meant
-crypto.&lt;/p&gt;
-
-&lt;p&gt;One of the seminar sessions focused on the fundamental drivers of the price of
-bitcoin (or the lack thereof). One of the other students asked the professor,
-“isn’t this just gambling?”, to which he replied, “what do you think separates
-gambling from investing?”.&lt;/p&gt;
-
-&lt;p&gt;The question has stuck with me for a while, and I thought it’d be interesting to
-write a blog post about how my thoughts on the topic have evolved.&lt;/p&gt;
-
-&lt;h2 id=&quot;my-answer-at-the-time&quot;&gt;My Answer at the Time&lt;/h2&gt;
-
-&lt;p&gt;Gambling and investing both involve putting capital at risk, with some chance of
-“winning” and growing the capital and some chance of “losing” and reducing the
-capital.&lt;/p&gt;
-
-&lt;p&gt;My first thought was that what separated the two activities was &lt;strong&gt;positive
-expected value&lt;/strong&gt;. Most games at a casino have a house edge; over the long run,
-you expect to lose money. The things we typically think of as investing (fixed
-income and equities) have well-documented historic positive returns.
-&lt;a href=&quot;https://en.wikipedia.org/wiki/Investment&quot;&gt;Wikipedia&lt;/a&gt; agrees with my undergrad
-definition of investing:&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Investment is traditionally defined as the “commitment of resources into something expected to gain value over time”.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;I’ve revisited the idea since taking the class, especially as I began my career
-in investment banking. When my team sells
-bonds, they’re usually financing public improvements like roadwork, utility line
-extensions, water and sewer, etc. The development increases the value of the
-parcel of land, and our investors get paid back from the subsequent increase in property
-taxes (or sales taxes or whatever else). It’s pretty classic investing - bondholders
-put up money today that is used to build some project, and they get
-paid back from part of the cash flow coming off of the project. My team sells
-muni bonds, so the cash flow stream is usually a tax stream, but this
-generalizes to other sorts of fixed income in a straightforward manner.&lt;/p&gt;
-
-&lt;p&gt;Investors are paid a steady stream of
-coupons which represent their return. There is some risk that the project
-doesn’t get built or the cash flows from it aren’t sufficient to pay off the
-bonds, and they’re compensated for those risks. The intent of all parties
-involved is for them to have a positive expected value.&lt;/p&gt;
-
-&lt;p&gt;Whether investors are being compensated appropriately for the risk they’re
-taking, in my eyes, doesn’t affect whether they’re engaged in investing or
-gambling. Risk-adjusted returns are a measure of how good they are at investing,
-not a determinant of whether they’re engaged in the activity.&lt;/p&gt;
-
-&lt;p&gt;Already, you’re probably seeing the problem with focusing on expected value.
-I’ll get to that, but first, let’s think about equities for a moment.&lt;/p&gt;
-
-&lt;p&gt;Equity investing is a bit different, but I think it feels like investing to most
-people for similar reasons. It’s well-documented that public equities have
-historically delivered positive returns to investors over most time horizons. If
-you take a 30,000 foot view, you could say that owning a bunch of different
-stocks which are exposed to many different aspects of the economy should more or
-less capture growth in the economy. Furthermore, owning a stock gives you an
-ownership claim over the company. You’re entitled to a share in the profits of
-the company, mediated through its leadership who may decide to invest back into
-the enterprise, issue a dividend, or do stock buybacks.&lt;/p&gt;
-
-&lt;h2 id=&quot;problems-with-the-definition&quot;&gt;Problems with the Definition&lt;/h2&gt;
-
-&lt;p&gt;The obvious question here is, how do you figure out if an activity has positive
-expected value?&lt;/p&gt;
-
-&lt;p&gt;First, let me defend my undergrad self just a bit. Clearly, traditional Vegas
-table games have a &lt;em&gt;negative&lt;/em&gt; expected value for the player; you can calculate the odds of different
-outcomes in a game of blackjack, for example, and realize that you’re not expected
-to win. So while it’s not easy to determine if a traditional investing
-activity has positive EV, you can label some things as gambling with this
-simple definition.&lt;/p&gt;
-
-&lt;p&gt;One more observation: casinos have a positive edge. So even in the most obvious
-example of gambling, one of the parties involved has positive EV. The problem is
-that not everyone does.&lt;/p&gt;
-
-&lt;p&gt;With that in mind, let’s complicate the definition: for an activity to be
-investing rather than gambling, everyone involved should have a positive
-expected value. The activity should be a &lt;strong&gt;positive sum game&lt;/strong&gt;, insofar as
-everyone involved thinks they’ll be better off for engaging in it.&lt;/p&gt;
-
-&lt;p&gt;Return to the example of debt financing for a real estate project. The developer
-expects to build their project and earn an acceptable return from it.
-The bond investor expects to invest their funds and earn an acceptable return
-from it. The money coming in to the system is from users of the project, who
-wouldn’t show up and spend their money if they didn’t feel like it was worth it.&lt;/p&gt;
-
-&lt;p&gt;Sounds like everybody wins. It’s easy to see that equity investing fits
-the bill, as well.&lt;/p&gt;
-
-&lt;h2 id=&quot;other-examples-what-counts-and-what-doesnt&quot;&gt;Other Examples: What Counts and What Doesn’t&lt;/h2&gt;
-
-&lt;p&gt;Consider a pro poker player sitting down at a table with a bunch of newbies. He
-or she has a positive expected value, while the rest of the table has a negative
-expected value. This should fit any reasonable definition of gambling, rather
-than investing. That’s an important point - you can engage in gambling with a
-positive EV, as long as your winnings are coming from others losing.&lt;/p&gt;
-
-&lt;p&gt;There’s a case to be made that sports betting could count as
-investing under this definition for a certain kind of bettor. There are people
-out there who develop good models for game outcomes or who find arbitrage
-opportunities between different sportsbooks. They can reasonably claim to have a
-positive expected value. The bets they place, arguably, represent a kind of
-ownership in the potential payoff if the bet goes their way. Predictions markets
-(which are mostly sportsbooks, by volume) look similar. Some market makers are
-beginning to &lt;a href=&quot;https://giftarticle.ft.com/giftarticle/actions/redeem/cb34168b-0d7d-466c-be5b-e856931e7b75&quot;&gt;wade into sports
-betting&lt;/a&gt;
-by way of prediction markets. This is a topic worthy of more discussion, but I
-don’t think it’s useful to write off sports betting or prediction markets as
-purely investing or gambling. There’re more interesting things going on in that
-space.&lt;/p&gt;
-
-&lt;p&gt;A high frequency trading shop also seems to be engaged in something other
-than investing. When you hold positions for an extremely short period of time,
-that just feels very different from buying an index fund or investing in a
-Treasury note. You don’t care about the long-term prospects of the business in
-the same way a traditional investor does. However, many HFT shops have done very well for themselves
-historically and we have no reason to think they won’t continue to do so. It’s
-not gambling either. I think it’s useful to think of short-term trading and
-market making activities as a third category.&lt;/p&gt;
-
-&lt;p&gt;Bitcoin and other crypto currencies present an interesting case. Many would
-argue that they have no fundamental value, or, more snarkily, that the correct
-price for these tokens is \$0.
-The market is clearly full of scams, too. Early investors in projects ride hype
-waves, wash trade to bring attention, then
-sell at the top. There’s no shortage of pundits who will tell you the whole thing is a ponzi
-scheme. For our purposes here, it’s sufficient to point out that there’s no
-economic activity at the bottom of most crypto projects. That doesn’t mean
-crypto isn’t interesting or useful, or that there’s no money to be made there. I
-just don’t think it’s quite right to say you’re “invested in crypto”.&lt;/p&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><category term="Personal" /><summary type="html">Like most universities, my college had a writing skills requirement but was a bit embarrassed about it. Rather than force the engineers to take actual liberal arts courses, they offered “current interest” courses which satisfied the requirement. One of mine was on fintech, which in 2020 mostly meant crypto.</summary></entry><entry><title type="html">Currency Markets Graphs</title><link href="http://localhost:4000/technical/2026/02/01/currency-graphs.html" rel="alternate" type="text/html" title="Currency Markets Graphs" /><published>2026-02-01T00:00:00-05:00</published><updated>2026-02-01T00:00:00-05:00</updated><id>http://localhost:4000/technical/2026/02/01/currency-graphs</id><content type="html" xml:base="http://localhost:4000/technical/2026/02/01/currency-graphs.html">&lt;p&gt;The US dollar hit a four-year low this month following some, uh, interesting policy coming from the White House as well as comments from the president indicating he doesn’t really mind the currency weakness. The New York Fed performed a &lt;a href=&quot;https://www.ft.com/content/0cff24f9-3c5e-4aff-966a-ff34ef448a2d&quot;&gt;rate check&lt;/a&gt; in Yen markets, pretty much the only major currency that hasn’t been gaining on the dollar.&lt;/p&gt;
+interest. Stay tuned.&lt;/p&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><category term="Technical" /><summary type="html">Wrapping up simple revenue curves &amp; developing heuristics.</summary></entry><entry><title type="html">Currency Markets Graphs</title><link href="http://localhost:4000/technical/2026/02/01/currency-graphs.html" rel="alternate" type="text/html" title="Currency Markets Graphs" /><published>2026-02-01T00:00:00-05:00</published><updated>2026-02-01T00:00:00-05:00</updated><id>http://localhost:4000/technical/2026/02/01/currency-graphs</id><content type="html" xml:base="http://localhost:4000/technical/2026/02/01/currency-graphs.html">&lt;p&gt;The US dollar hit a four-year low this month following some, uh, interesting policy coming from the White House as well as comments from the president indicating he doesn’t really mind the currency weakness. The New York Fed performed a &lt;a href=&quot;https://www.ft.com/content/0cff24f9-3c5e-4aff-966a-ff34ef448a2d&quot;&gt;rate check&lt;/a&gt; in Yen markets, pretty much the only major currency that hasn’t been gaining on the dollar.&lt;/p&gt;
 
 &lt;p&gt;All of this has had me thinking more about currencies, one of the markets I know comparatively less about. One common way to display currency markets at a glance is a cross rates table showing conversion rates between major currencies. Here’s an example from &lt;a href=&quot;https://www.bloomberg.com/markets/currencies/cross-rates&quot;&gt;Bloomberg&lt;/a&gt;.&lt;/p&gt;
 
@@ -1890,76 +2406,4 @@ more often. At this point, the only two things I typically have open are Firefox
 and a few terminals, plus the occasional PDF reader if I’m annotating something.
 I’ve found this to be marginally quicker than using file explorers and other
 applications, but also much more satisfying. That’s for most of the same reasons
-I’ve come to enjoy scripting - this sense of freedom in personal control.&lt;/p&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><category term="Technical" /><summary type="html">I’m pretty sure I first got interested in linux around the same time Edward Snowden fled the US. I was 13 years old and captivated by how much one could determine from the metadata and other stuff the NSA was collecting. There was also some part of me that really, really hated the idea that someone out there knew what I was doing on the computer (again, I was 13, so that was mostly downloading Minecraft mods). While exploring ways to be more private online, I was introduced to the open source community and Linux.</summary></entry><entry><title type="html">Why Put _Anything_ Online?</title><link href="http://localhost:4000/personal/2021/04/02/why-put-anything-online.html" rel="alternate" type="text/html" title="Why Put _Anything_ Online?" /><published>2021-04-02T00:00:00-04:00</published><updated>2021-04-02T00:00:00-04:00</updated><id>http://localhost:4000/personal/2021/04/02/why-put-anything-online</id><content type="html" xml:base="http://localhost:4000/personal/2021/04/02/why-put-anything-online.html">&lt;p&gt;I haven’t written to this blog in &lt;em&gt;long&lt;/em&gt; while. There’s a few reasons for this.
-I made this at the tail end of two semesters of pretty much just math and CS
-courses, and desperately needed a creative outlet: now, my courseload is a good
-bit more balanced and the itch is scratched. Also, I’ve been struggling to come
-up with ideas to write about that merited being shared.&lt;/p&gt;
-
-&lt;p&gt;What could I possibly put up on the internet that would be of value to anyone? I
-don’t think what I’ve written is particularly interesting, entertaining, or
-informative to anyone who isn’t invested in me as a person. But at the same
-time, the posts I’ve written aren’t just for me - it’d be a bit strange to link
-to your dotfiles in diary. Instead, these posts have been in a middle ground:
-clearly written for an audience other than me, but that audience is not well
-defined.&lt;/p&gt;
-
-&lt;p&gt;I have two strains of thought writing this post. Firstly, that I don’t want to
-shout into the internet void simply to ‘build a brand’ or ‘market myself’. I
-read an excellent piece by Sean Blanda at 99U about the purported &lt;a href=&quot;https://99u.adobe.com/articles/55974/the-creative-worlds-bullshit-industrial-complex&quot;&gt;“Creative
-World’s Bullshit Industrial
-Complex”&lt;/a&gt;
-that got me thinking about what exactly this. Even if building a brand was part
-of my intention with this blog, how could I begin to do that without
-regurgitating learnings from elsewhere?&lt;/p&gt;
-
-&lt;p&gt;Secondly, I do write quite a bit just for myself. Most of this is frustrations
-with current events or things going on in my life, or structural changes I’d
-like to see, and the personal beliefs that underly either of those two. However,
-to be frank, I’m 21 years old and I know practically nothing. The chances that
-in 4-5 years I stand behind 100% of what I write today are slim to none - yet if
-I were to post those things today, and this blog were still around then or had
-been archived, the words attributed to me would be 100% the same then. What do I
-gain from going on the record publicly today?&lt;/p&gt;
-
-&lt;p&gt;Journalists and politicians write publicly all the time, but with purpose. It
-comes back to bite them in the ass regularly, but the risk:reward makes sense
-for them – communication is integral to their careers. People in both of those
-roles, though politicians much more so, often can’t afford to change their
-positions when presented with new information. The expectation is that they have
-thought this stuff out so well, and so thoroughly, and that they stand behind
-their beliefs so strongly, that any shift in opinion needs to have a great deal
-of impetus. So the question is, would that be (to any extent) my fate were I to
-publish what I’m thinking today?&lt;/p&gt;
-
-&lt;p&gt;These two concerns point towards a potential test for whether to post something:
-Is it original or transformative, and is it objective or low stakes? Let’s
-demonstrate this with some examples.&lt;/p&gt;
-
-&lt;p&gt;Say I were to post about implementing a pre-existing algorithm in a niche
-programming language. This is reasonably original, since if it has been done
-before, it is likely not a very common project. It’s also objective - the code
-either works or it doesn’t. If it doesn’t, then that’s embarrassing perhaps, but
-fixable with relative ease.&lt;/p&gt;
-
-&lt;p&gt;Say I were to post a collection of thoughts on the positions of a politician.
-This could very well be original, but it’s not objective. Is it low stakes?
-Maybe! Depends on what the positions are and what my thoughts are. Revealing
-myself as a radical communist (which I am not), for example, could be a very
-bad thing were I ever to run for office or attempt to exist in a political
-sphere. Providing my take on gun control may not win me any friends, but it also
-likely won’t get me fired. What is difficult here is that it’s not easy to gauge
-how others may react to what I have to say. This sort of post would be a
-judgement call.&lt;/p&gt;
-
-&lt;p&gt;Say, for a final example, that I were to get on here and repackage the
-entrepreneurship advice I’ve collected from listening to &lt;em&gt;The Knowledge Project&lt;/em&gt;
-(big plug for that podcast, by the way). That’s not original, and likely not
-transformative either. While it may be low stakes to post something like that,
-it’s intellectually lazy, and were I to do it enough, I’d start to sound like
-any one of the workfluencer grifters on LinkedIn.&lt;/p&gt;
-
-&lt;p&gt;All of this is to say, I’m probably overthinking the burden of having a personal
-blog. Regardless, since I’m the sort of person that likes a procedure to follow,
-I’m going to try to stick with that test of what deserves to be thrown up on the
-internet and attached to my name.&lt;/p&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><category term="Personal" /><summary type="html">I haven’t written to this blog in long while. There’s a few reasons for this. I made this at the tail end of two semesters of pretty much just math and CS courses, and desperately needed a creative outlet: now, my courseload is a good bit more balanced and the itch is scratched. Also, I’ve been struggling to come up with ideas to write about that merited being shared.</summary></entry></feed>
+I’ve come to enjoy scripting - this sense of freedom in personal control.&lt;/p&gt;</content><author><name>Tyler Burleyson</name><email>tylerburleyson23@gmail.com</email></author><category term="Technical" /><summary type="html">I’m pretty sure I first got interested in linux around the same time Edward Snowden fled the US. I was 13 years old and captivated by how much one could determine from the metadata and other stuff the NSA was collecting. There was also some part of me that really, really hated the idea that someone out there knew what I was doing on the computer (again, I was 13, so that was mostly downloading Minecraft mods). While exploring ways to be more private online, I was introduced to the open source community and Linux.</summary></entry></feed>

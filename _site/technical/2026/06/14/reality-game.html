@@ -1,0 +1,1000 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.27.3 by Michael Rose
+  Copyright 2013-2025 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+
+<html lang="en-US" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Recreating the Reality Game - Tyler’s Blog</title>
+<meta name="description" content="Expanding on an interesting mathematical finance paper.">
+
+
+  <meta name="author" content="Tyler Burleyson">
+  
+  <meta property="article:author" content="Tyler Burleyson">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Tyler&#39;s Blog">
+<meta property="og:title" content="Recreating the Reality Game">
+<meta property="og:url" content="http://localhost:4000/technical/2026/06/14/reality-game.html">
+
+
+  <meta property="og:description" content="Expanding on an interesting mathematical finance paper.">
+
+
+
+  <meta property="og:image" content="http://localhost:4000/assets/realityGame/roulette_header.jpg">
+
+
+
+
+
+  <meta property="article:published_time" content="2026-06-14T00:00:00-04:00">
+
+
+
+
+
+
+<link rel="canonical" href="http://localhost:4000/technical/2026/06/14/reality-game.html">
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Tyler's Blog Feed">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+  window.enable_copy_code_button = true;
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--post wide" dir="ltr">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          Tyler&#39;s Blog
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a
+                href="/simple-model-app/"
+                
+                
+              >Bond Model App</a>
+            </li><li class="masthead__menu-item">
+              <a
+                href="/technical-posts/"
+                
+                
+              >Technical Posts</a>
+            </li><li class="masthead__menu-item">
+              <a
+                href="/personal-posts/"
+                
+                
+              >Personal Blog</a>
+            </li><li class="masthead__menu-item">
+              <a
+                href="/about/"
+                
+                
+              >About</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+  
+
+
+
+
+
+
+
+<div class="page__hero--overlay"
+  style=" background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/assets/realityGame/roulette_header.jpg');"
+>
+  
+    <div class="wrapper">
+      <h1 id="page-title" class="page__title" itemprop="headline">
+        
+          Recreating the Reality Game
+
+        
+      </h1>
+      
+        <p class="page__lead">Expanding on an interesting mathematical finance paper.
+</p>
+      
+      
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        
+        <time datetime="2026-06-14T00:00:00-04:00">June 14, 2026</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          16 minute read
+        
+      </span>
+    
+  </p>
+
+
+      
+    </div>
+  
+  
+</div>
+
+
+
+
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person" class="h-card">
+
+  
+
+  <div class="author__content">
+    <h3 class="author__name p-name" itemprop="name">
+      <a class="u-url" rel="me" href="http://localhost:4000/" itemprop="url">Tyler Burleyson</a>
+    </h3>
+    
+      <div class="author__bio p-note" itemprop="description">
+        <p>Welcome to my blog!</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+
+      
+        
+          
+            <li><a href="https://github.com/TylerB23" rel="nofollow noopener noreferrer me" itemprop="sameAs"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">Github</span></a></li>
+          
+        
+          
+            <li><a href="https://linkedin.com/in/tyler-burleyson" rel="nofollow noopener noreferrer me" itemprop="sameAs"><i class="fa-brands fa-linkedin" aria-hidden="true"></i><span class="label">LinkedIn</span></a></li>
+          
+        
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:tylerburleyson23@gmail.com" rel="me" class="u-email">
+            <meta itemprop="email" content="tylerburleyson23@gmail.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span>
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer me">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Recreating the Reality Game">
+    <meta itemprop="description" content="Expanding on an interesting mathematical finance paper.">
+    <meta itemprop="datePublished" content="2026-06-14T00:00:00-04:00">
+    
+
+    <div class="page__inner-wrap">
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right ">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#introduction">Introduction</a><ul><li><a href="#background">Background</a></li></ul></li><li><a href="#part-one-recreating-their-results">Part One: Recreating Their Results</a><ul><li><a href="#introduction--notation">Introduction &amp; Notation</a></li><li><a href="#the-simulation">The Simulation</a></li><li><a href="#results--graphs">Results &amp; Graphs</a></li></ul></li><li><a href="#part-two-simple-extension">Part Two: Simple Extension</a><ul><li><a href="#notation">Notation</a></li><li><a href="#setting-the-strategies">Setting the Strategies</a></li><li><a href="#simulation-function">Simulation Function</a></li><li><a href="#defining-the-reality-maps">Defining the Reality Maps</a></li><li><a href="#results--graphs-1">Results &amp; Graphs</a></li></ul></li><li><a href="#conclusion">Conclusion</a></li></ul>
+            </nav>
+          </aside>
+        
+        <p>14 Jun 2026</p>
+
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+
+<script type="text/x-mathjax-config">
+
+    MathJax.Hub.Config({
+
+    tex2jax: {
+
+    inlineMath: [['$','$'], ['\\(','\\)']],
+
+    processEscapes: true},
+
+    jax: ["input/TeX","input/MathML","input/AsciiMath","output/CommonHTML"],
+
+    extensions:
+    ["tex2jax.js","mml2jax.js","asciimath2jax.js","MathMenu.js","MathZoom.js","AssistiveMML.js",
+    "[Contrib]/a11y/accessibility-menu.js"],
+
+    TeX: {
+
+    extensions: ["AMSmath.js","AMSsymbols.js","noErrors.js","noUndefined.js"],
+
+    equationNumbers: {
+
+    autoNumber: "AMS"
+
+    }
+
+    }
+
+    });
+
+</script>
+
+
+
+
+<h2 id="introduction">Introduction</h2>
+
+<p>In this post, I recreate a model of an evolutionary game put forward by
+mathematical finance researchers in 2009. Their work suggests that, in systems
+where participants interact with one another to affect the probability of future
+outcomes, it can take a long time for steady state behavior to emerge. This has
+interesting implications for financial markets. For example, the interaction
+between hedge fund strategies can result  in inefficencies that persist for
+significantly longer than the Efficient Markets Hypothesis would suggest is
+possible. In the second half of the post, I extend their
+model slightly to see if the qualitative behavior persists.</p>
+
+<p>First, some background on how I found the paper and why I found it so
+compelling.</p>
+
+<h3 id="background">Background</h3>
+
+<p>I’ve been working my way through a recommended reading list for those interested
+in quantitative trading by Kris Abdelmessih, a former options trader at SIG who
+writes the <a href="https://moontower.substack.com/">Moontower substack</a>.
+So far I’ve read Howard Marks’ <em>The Most
+Important Thing</em>, Agustin Lebron’s <em>The Laws of Trading</em>, and Annie Duke’s
+<em>Thinking in Bets</em>. I actually read another one of Annie Duke’s books, <em>Quit:
+The Power of Knowing When to Walking Away</em>, a few years ago - her books are
+great reads.</p>
+
+<p>The impetus for this post came from the list entry I’m currently reading, Andrew
+Lo’s <em>Adaptive Markets</em>. It’s my favorite so far because it connects the
+mathematical biology I studied in undergrad with mathematical finance in
+surprising ways. Chapter 8’s discussion of market efficiency introduces J. Doyne
+Farmer, a polymath researcher who has contributed to chaos theory, biology, and
+mathematical research in addition to founding one of the first quantitative
+hedge funds, Prediction Company.</p>
+
+<p>Lo cites a 2009 paper by Dmitriy Cherkashin, J. Doyne Farmer, and Seth Lloyd in support
+of the claim that market inefficiencies can persist for significant periods of
+time due to the interaction of trading strategies in the market. He draws an
+analogy to the Lotka-Volterra equations, a predator-prey model 
+illustrating how population sizes can oscillate over time rather than reaching a
+single fixed point.</p>
+
+<p>I ran into the Lotka-Volterra equations for the first time in Darren Wilkinson’s textbook,
+<em>Stochastic Modeling for Systems Biology</em>. The interaction between predators and
+prey introduces relatively simple non-linear terms, which, for the right initial
+conditions, lead to oscillating populations of both predator and prey. 
+The predators depend on the prey in order to eat and be able
+to reproduce; however, as the predators eat their prey, they drive the prey
+population down and the predator population up until there aren’t enough prey
+for the predators to survive and reproduce. At this point, the predator
+population decreases enough for the prey population to stabilize and grow. The
+cycle repeats infinitely. Doyne drew an analogy with hedge funds, where the
+interaction of market participants leads to boom and bust cycles for different strategies.</p>
+
+<p>Returning to Cherkashin et. al.: their 2009 paper builds a simple betting game
+to show that interactions between strategies can cause inefficiencies to persist
+for long periods of time. They provide simulation data illustrating this
+behavior as well as an analytical breakdown of how the math leads to this
+behavior.</p>
+
+<h2 id="part-one-recreating-their-results">Part One: Recreating Their Results</h2>
+
+<h3 id="introduction--notation">Introduction &amp; Notation</h3>
+
+<p>The paper proceeds by setting up an evolutionary game called (rather fancifully)
+the Reality Game. They provide a general framework but focus on a coin flip
+where the probability of heads at each time step is determined by a function of
+the prior outcome referred to as the reality map. Players bet all of their
+wealth each round with no house take, and the winners receive a portion of
+the total pool relative to what they bet on the winning outcome
+(i.e., pari-mutuel betting).</p>
+
+<p>Here’s some notation from the paper:</p>
+<ul>
+  <li>$N$ agents place wagers on $L$ possible outcomes. For a coin toss, $L=2$.</li>
+  <li>$s_i$ is the amount of player $i$’s total wealth he or she wagers on heads (so, $1-s_i$ is their wager on
+tails).</li>
+  <li>$w_i$ is the portion of the total wealth pool that player $i$ holds. Wealth is
+normalized so $\sum_i w_i = 1$.</li>
+  <li>$p = \sum_i s_i w_i$ is the total amount bet on heads. Of course, $1-p$ is the
+total bet on tails.</li>
+  <li>Supposing heads wins, $\pi_i = \frac{s_i w_i}{p}$ is the payout to player $i$.
+if tails wins, $\pi_i = \frac{(1-s_i)w_i}{1-p}$ is the payout.</li>
+  <li>$q$ is the probability that heads wins. The reality map is the function
+$q(p)$.</li>
+</ul>
+
+<p>Here’s an interesting aside: if $q$ is a constant, the wealth updating rule is
+analogous to Bayesian inference. In the below, the subscript $\lambda$ refers to
+the winner of either heads or tails. So, $p_{\lambda} = p$ when heads wins and
+$1-p$ when tails wins.</p>
+
+\[w_i^{(t+1)} = \frac{s_{i\lambda} w_i^{(t)}}{p_{\lambda}}\]
+
+<p>You can interpret the prior period wealth as the prior probability of heads and the next
+period wealth as the posterior probability. Just as Bayesian inference leads
+to more and more accurate estimates of the true probability distribution, this
+model causes players who probability match (i.e., they bet on each outcome
+proportionally to its probability) to eventually accrue all of the wealth.</p>
+
+<p>More generally, reality maps are characterized according to how they vary with
+$p$:</p>
+
+<ul>
+  <li>Objective, where $q(p) = const.$. Previous results don’t affect the future
+probability of the game.</li>
+  <li>Self-defeating, where $q’(p) &lt; 0$. The more wealth bet on heads, the less
+likely it becomes in the next round.</li>
+  <li>Self-reinforcing, where $q’(p) &gt; 0$. The more wealth bet on heads, the more
+likely it becomes in the next round.
+    <ul>
+      <li>The special case of $q(p) = p$ is referred to as <em>purely subjective</em>, i.e.,
+the future probability of heads is exactly equal to what was previously bet
+on heads.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="the-simulation">The Simulation</h3>
+
+<p>Using the notation defined above, it’s pretty simple to write a function which
+simulates rounds of betting. I follow the paper’s example of using 29 strategies
+evenly spaced over $[0,1]$, where a strategy is just a value for $s_i$, the
+portion of wealth bet on heads. The function returns the wealth distribution
+and the values of the reality map over time.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="k">def</span> <span class="nf">simulations</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">realityMap</span><span class="p">):</span>
+    <span class="c1"># N is the number of strategies, evenly spaced over [0,1]
+</span>    <span class="c1"># T is the number of rounds to simulate
+</span>    <span class="c1"># realityMap is the reality map, a function defining q
+</span>
+    <span class="c1"># define strategies
+</span>    <span class="n">strategies</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">N</span><span class="p">)</span> <span class="o">/</span> <span class="n">N</span>
+
+    <span class="c1"># store wealth for each strategy
+</span>    <span class="n">wealth</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">T</span><span class="p">,</span><span class="n">N</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">wealth</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">ones</span><span class="p">(</span><span class="n">N</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">N</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># Initiate reality map
+</span>    <span class="n">q</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+    <span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">T</span><span class="p">):</span>
+       <span class="c1"># Calculate outcome
+</span>       <span class="n">outcome</span> <span class="o">=</span> <span class="n">random</span><span class="p">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">q</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+       <span class="c1"># Update Wealth
+</span>       <span class="n">betOnHeads</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">strategies</span> <span class="o">*</span> <span class="n">wealth</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+       <span class="k">if</span> <span class="n">outcome</span><span class="p">:</span>
+           <span class="n">wealth</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">strategies</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">wealth</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">N</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span> <span class="o">/</span> <span class="n">betOnHeads</span>
+       <span class="k">else</span><span class="p">:</span>
+           <span class="n">wealth</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">1</span><span class="o">-</span><span class="n">strategies</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="o">*</span> <span class="n">wealth</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">N</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">betOnHeads</span><span class="p">)</span>
+
+       <span class="c1"># update reality map
+</span>       <span class="n">q</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">realityMap</span><span class="p">(</span><span class="n">betOnHeads</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">q</span><span class="p">,</span> <span class="n">wealth</span>
+</code></pre></div></div>
+
+<p>The paper uses a family of arctangent-based functions for the reality maps,
+along with simple self-defeating and self-reinforcing examples. They chose that
+set of functions because it has a single parameter to control the degree of
+objectivity / self-reinforcement. The set of functions used in figure 1 are below:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># figure (a)
+</span><span class="k">def</span> <span class="nf">selfDefeatingRM</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+    <span class="k">return</span> <span class="mi">1</span><span class="o">-</span><span class="n">p</span>
+
+<span class="c1"># figure (b)
+</span><span class="k">def</span> <span class="nf">figBRM</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+    <span class="k">return</span> <span class="mf">0.5</span> <span class="o">+</span> <span class="n">np</span><span class="p">.</span><span class="n">arctan</span><span class="p">((</span><span class="n">np</span><span class="p">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">p</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">))</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">p</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span> <span class="o">/</span> <span class="n">np</span><span class="p">.</span><span class="n">pi</span>
+
+<span class="c1"># figure (c)
+</span><span class="k">def</span> <span class="nf">subjectiveRM</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">p</span>
+
+<span class="c1"># figure (d)
+</span><span class="k">def</span> <span class="nf">figDRM</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+    <span class="k">return</span> <span class="mf">0.5</span> <span class="o">+</span> <span class="n">np</span><span class="p">.</span><span class="n">arctan</span><span class="p">((</span><span class="n">np</span><span class="p">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">p</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">))</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">p</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span> <span class="o">/</span> <span class="n">np</span><span class="p">.</span><span class="n">pi</span>
+
+<span class="c1"># figure (e)
+</span><span class="k">def</span> <span class="nf">multiModalRM</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">p</span><span class="p">)</span> <span class="o">%</span> <span class="mi">1</span> 
+</code></pre></div></div>
+
+<h3 id="results--graphs">Results &amp; Graphs</h3>
+
+<p>With our simulation function and the reality maps defined, we can
+recreate their Figure 1 showing how the reality maps $q(p)$ evolve.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Run and plot the simulations
+</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">gs</span> <span class="o">=</span> <span class="n">fig</span><span class="p">.</span><span class="n">add_gridspec</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span>
+
+<span class="c1"># Row 1
+</span><span class="n">ax_a</span> <span class="o">=</span> <span class="n">fig</span><span class="p">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">ax_a</span><span class="p">.</span><span class="n">set_title</span><span class="p">(</span><span class="s">"1a (Self-Defeating)"</span><span class="p">)</span>
+<span class="n">ax_a</span><span class="p">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="n">ax_b</span> <span class="o">=</span> <span class="n">fig</span><span class="p">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span><span class="mi">4</span><span class="p">],</span> <span class="n">sharey</span><span class="o">=</span><span class="n">ax_a</span><span class="p">)</span>
+<span class="n">ax_b</span><span class="p">.</span><span class="n">set_title</span><span class="p">(</span><span class="s">"1b (alpha = 0.5)"</span><span class="p">)</span>
+
+<span class="n">ax_c</span> <span class="o">=</span> <span class="n">fig</span><span class="p">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">:</span><span class="mi">6</span><span class="p">],</span> <span class="n">sharey</span><span class="o">=</span><span class="n">ax_a</span><span class="p">)</span>
+<span class="n">ax_c</span><span class="p">.</span><span class="n">set_title</span><span class="p">(</span><span class="s">"1c (Pure Subjective)"</span><span class="p">)</span>
+
+<span class="c1"># Row 2
+</span><span class="n">ax_d</span> <span class="o">=</span> <span class="n">fig</span><span class="p">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">],</span> <span class="n">sharey</span><span class="o">=</span><span class="n">ax_a</span><span class="p">)</span>
+<span class="n">ax_d</span><span class="p">.</span><span class="n">set_title</span><span class="p">(</span><span class="s">"1d (alpha = 1.5)"</span><span class="p">)</span>
+
+<span class="n">ax_e</span> <span class="o">=</span> <span class="n">fig</span><span class="p">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span><span class="mi">5</span><span class="p">],</span> <span class="n">sharey</span><span class="o">=</span><span class="n">ax_a</span><span class="p">)</span>
+<span class="n">ax_e</span><span class="p">.</span><span class="n">set_title</span><span class="p">(</span><span class="s">"1e (Multi-Modal)"</span><span class="p">)</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2000</span><span class="p">)</span>
+<span class="n">x_e</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10_000</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">30</span><span class="p">):</span>
+    <span class="n">a_q</span><span class="p">,</span> <span class="n">a_wealth</span> <span class="o">=</span> <span class="n">simulations</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">2000</span><span class="p">,</span> <span class="n">selfDefeatingRM</span><span class="p">)</span>
+    <span class="n">b_q</span><span class="p">,</span> <span class="n">b_wealth</span> <span class="o">=</span> <span class="n">simulations</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">2000</span><span class="p">,</span> <span class="n">figBRM</span><span class="p">)</span>
+    <span class="n">c_q</span><span class="p">,</span> <span class="n">c_wealth</span> <span class="o">=</span> <span class="n">simulations</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">2000</span><span class="p">,</span> <span class="n">subjectiveRM</span><span class="p">)</span>
+    <span class="n">d_q</span><span class="p">,</span> <span class="n">d_wealth</span> <span class="o">=</span> <span class="n">simulations</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">2000</span><span class="p">,</span> <span class="n">figDRM</span><span class="p">)</span>
+    <span class="n">e_q</span><span class="p">,</span> <span class="n">e_wealth</span> <span class="o">=</span> <span class="n">simulations</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">10_000</span><span class="p">,</span> <span class="n">multiModalRM</span><span class="p">)</span>
+
+    <span class="n">ax_a</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">a_q</span><span class="p">)</span>
+    <span class="n">ax_b</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">b_q</span><span class="p">)</span>
+    <span class="n">ax_c</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">c_q</span><span class="p">)</span>
+    <span class="n">ax_d</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">d_q</span><span class="p">)</span>
+    <span class="n">ax_e</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_e</span><span class="p">,</span><span class="n">e_q</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s">'dotted'</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="p">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>In the figures below, the x-axis is the number of rounds that have been played
+and the y-axis is the value of $q(p)$. The different colored lines represent
+different simulation instances.</p>
+
+<p><img src="/assets/realityGame/Figure_1.png" alt="Figure 1" /></p>
+
+<p>My results match the qualitative behavior shown in the paper. (a) and (b) show
+the probability moving towards the fixed point $q(p) = 0.5$, more quickly in (a)
+than in (b). For (a), the only fixed point for $q(p)$ is 0.5, but (b) also has 0
+and 1. Because (b) is only weakly self-reinforcing the early round fluctuations
+in wealth aren’t enough to push $q(p)$ towards 0 or 1.</p>
+
+<p>Skipping ahead to (d), the stronger self-reinforcing reality map leads to larger
+early fluctuations which push $q(p)$ towards 0 or 1. The total wealth moves more
+quickly towards either those who bet more on heads or those who bet more on
+tails. Sometimes the convergence is very slow, like the orange line and dark
+green lines in the center of the graph.</p>
+
+<p>(c) is interesting - the steady state is determined by the first
+several dice rolls, as they shift wealth towards a particular probability of
+heads which quickly cements itself as wealth concentrates in the strategies near
+that probability. In the purely subjective case, after a few rounds one of the players will
+amass enough of the wealth that they get to effectively shape reality - they
+command so much of the wealth that their strategy becomes the fixed point.</p>
+
+<p>Its worth ruminating on the fact that in all of these scenarios, wealth
+concentrates one just one strategy. Once a particular player has a large portion
+of the wealth, their bets make up a large portion of the pot, so it’s very
+unlikely for them to go on a losing streak long enough to unseat them.</p>
+
+<p>My multi-modal graph is difficult to read; I tried reducing the line width and
+making it dotted to make it easier, but the wild oscillations between 1 and 0
+give a result a bit like when I tried to mix paints in first grade - it just
+comes out muddy and unclear. Looking under the hood, however, I’m seeing the
+same behavior the paper reported. Wealth becomes concentrated at strategies $s =
+1/3$ and $s = 2/3$, the discontinuities in the reality map.</p>
+
+<h2 id="part-two-simple-extension">Part Two: Simple Extension</h2>
+
+<p>What if instead of a binary outcome (i.e., a coin toss), we had several possible
+outcomes? I used Cherkashin et. al.’s framework to develop a similar set of
+simulations, but for a dice roll.</p>
+
+<p>Before jumping into this, I should explain why I did this. I didn’t think the
+extension would disagree with the paper’s results or even provide new results
+worth mulling over. Rather, this was a way to make sure I really understood the
+paper’s set up and central conjectures. It’s one thing to just read it and think
+about it, and a whole other thing to do some original work based on it.</p>
+
+<p>In high school, my chemistry teacher told us that to really learn something we
+needed to encounter it multiple times in multiple formats. Read the textbook,
+listen in class, do your homework, study for the test, and then take the test.
+This is a good framework to which I’d add that one of those formats should take
+the form of original exploration. Even a trivial extension on the material will
+force you to grapple with the minutiae of whatever it is you’re studying.</p>
+
+<h3 id="notation">Notation</h3>
+
+<p>Here’s our updated notation:</p>
+<ul>
+  <li>$N$ agents place wagers on $L$ possible outcomes. Here, $L=6$.</li>
+  <li>$s_{il}$ is the amount of player $i$’s total wealth he or she wagers on the
+$l$th outcome. $s_i$ is now a vector with dimension $L$.</li>
+  <li>$w_i$ is the portion of the total wealth pool that player $i$ holds. Wealth is
+normalized so $\sum_i w_i = 1$.</li>
+  <li>$p_l = \sum_i s_{il} w_i$ is the total amount bet on outcome $l$.</li>
+  <li>Player $i$ gets a payout of $\pi_{i\lambda} = \frac{s_{i\lambda}
+w_i}{p_{\lambda}}$ when outcome $\lambda$ wins.</li>
+  <li>$q_l$ is the probability that outcome $l$ wins. $q$ is now a vector with
+dimension $L$. The reality map is the vector-valued function $q(p)$.</li>
+</ul>
+
+<p>We’ll need to keep in mind the dimensions of our vectors when we write the
+simulation function.</p>
+
+<h3 id="setting-the-strategies">Setting the Strategies</h3>
+
+<p>The paper uses 29 strategies evenly spaced over the space of probabilities of
+heads. I wanted the strategies for this extension to also be evenly spaced in
+some sense. To accomplish that, I wanted the following to be true:</p>
+
+<ol>
+  <li>Each player puts at least some money on each outcome;</li>
+  <li>Each player puts a different amount of money on each outcome; and</li>
+  <li>Overall, the strategies should be balanced between all the players so that
+there’s an equal amount of money being put on each outcome in the first
+round.</li>
+</ol>
+
+<p>To accomplish this, I set the strategies as all the possible orders of the
+numbers 1 - 6, divided by the sum of the range from 1 to 6 (which is 21). There
+are $6! = 720$ such strategies. Here’s the code, using the <code class="language-plaintext highlighter-rouge">itertools</code> package
+to get all the possible permutations:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">itertools</span>
+
+<span class="c1"># define strategies
+</span><span class="n">L</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">7</span><span class="p">)</span>
+<span class="n">strategies</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">asarray</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="p">.</span><span class="n">permutations</span><span class="p">(</span><span class="n">L</span><span class="p">)))</span> <span class="o">/</span> <span class="mi">21</span>
+</code></pre></div></div>
+
+<h3 id="simulation-function">Simulation Function</h3>
+
+<p>The simulation function is pretty similar, but because there are more than two
+outcomes, everything’s a vector now. It’s a good excuse to practice our linear
+algebra.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">matplotlib.animation</span> <span class="k">as</span> <span class="n">animation</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+
+<span class="k">def</span> <span class="nf">simulations</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">realityMap</span><span class="p">):</span>
+    <span class="c1"># T is the number of rounds to simulate
+</span>    <span class="c1"># realityMap is the reality map, a function defining q
+</span>
+    <span class="c1"># define strategies
+</span>    <span class="n">L</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">7</span><span class="p">)</span>
+    <span class="n">strategies</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">asarray</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="p">.</span><span class="n">permutations</span><span class="p">(</span><span class="n">L</span><span class="p">)))</span> <span class="o">/</span> <span class="mi">21</span>
+
+    <span class="c1"># N is the number of strategies
+</span>    <span class="n">N</span> <span class="o">=</span> <span class="n">strategies</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># store wealth for each strategy
+</span>    <span class="n">wealth</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">T</span><span class="p">,</span><span class="n">N</span><span class="p">])</span>
+    <span class="n">wealth</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">ones</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="o">/</span> <span class="n">N</span>
+
+    <span class="c1"># Initiate reality map
+</span>    <span class="n">q</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">T</span><span class="p">,</span> <span class="mi">6</span><span class="p">])</span>
+    <span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span> <span class="o">/</span> <span class="mi">6</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">T</span><span class="p">):</span>
+       <span class="c1"># Calculate outcome
+</span>       <span class="n">roll</span> <span class="o">=</span> <span class="n">random</span><span class="p">.</span><span class="n">choices</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">q</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+       <span class="n">outcome</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+       <span class="n">outcome</span><span class="p">[</span><span class="n">roll</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+       <span class="c1"># Update Wealth
+</span>       <span class="n">s_lambda</span> <span class="o">=</span> <span class="n">strategies</span> <span class="o">@</span> <span class="n">outcome</span> <span class="c1"># 720-by 6 * 6-by-1 = 720-by-1
+</span>       <span class="n">p_lambda</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">s_lambda</span><span class="p">,</span> <span class="n">wealth</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="c1"># integer value
+</span>
+       <span class="n">wealth</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">eye</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="o">*</span> <span class="n">s_lambda</span><span class="p">)</span> <span class="o">@</span> <span class="n">wealth</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">p_lambda</span>
+       
+       <span class="c1"># update reality map
+</span>       <span class="c1"># p is the amount bet on each strategy (6 by 1 vector)
+</span>       <span class="n">p</span> <span class="o">=</span> <span class="n">strategies</span><span class="p">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">wealth</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+       <span class="n">q</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">realityMap</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">q</span><span class="p">,</span> <span class="n">wealth</span>
+</code></pre></div></div>
+<p>Where before we had an array, we now have an array of vectors, and where before
+we had a single value, we have a vector of values. I use the <code class="language-plaintext highlighter-rouge">@</code> symbol to
+multiply <code class="language-plaintext highlighter-rouge">strategies</code>, which can be viewed as a 720-by-6 matrix, by the
+<code class="language-plaintext highlighter-rouge">outcome</code> unit vector, which gives us $s_{\lambda}$. Similarly, $p_{\lambda}$
+is the dot product of $s_{\lambda}$ and $w$.</p>
+
+<p>I’m pleased with how I updated
+player wealth: by casting $s_{\lambda}$ to a diagonal matrix, we can multiply it
+by the previous round’s wealth and normalize it by $p_{\lambda}$. The division
+happens entry-by-entry, so the total wealth still sums to one.</p>
+
+<h3 id="defining-the-reality-maps">Defining the Reality Maps</h3>
+
+<p>To keep things simple, I only used the pure self-defeating and pure subjective
+reality maps for this extension. Numpy handles arrays very neatly, so the
+reality map functions don’t need much updating. The subjective map remains the
+same, and the self-defeating map just needs to be normalized for the number of
+possible outcomes.</p>
+
+<p>Suppose we have a vector $x$ such that $\sum_i^n x_i = 1$. We can “invert”
+each of the entries by subtracting them from one, but if we stop there, the new
+sum is $\sum_i^n 1 - x_i = \sum_i^n 1 - \sum_i^n x_i = n - 1$. We can normalize
+our new vector by dividing every entry by $n-1$. If that’s not immediately
+obvious, you can let $a$ be the normalizing constant and solve for it like
+below:</p>
+
+\[\sum_i^n x_i = 1 \\
+\sum_i^n \frac{1-x_i}{a} = 1 \\
+\frac{1}{a}(\sum_i^n 1 - \sum_i^n x_i) = 1 \\
+\frac{1}{a}(n - 1) = 1 \\
+a = n - 1\]
+
+<p>Here’s the code:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># define our reality maps
+</span><span class="k">def</span> <span class="nf">selfDefeatingRM</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">p</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">subjectiveRM</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">p</span>
+</code></pre></div></div>
+
+<h3 id="results--graphs-1">Results &amp; Graphs</h3>
+
+<p>I simplified the graphing a bit below, and created an animation for the reality
+maps $q$. Below is the code, followed by a gif of the animation.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Run and plot the simulations
+</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="s">'all'</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span>
+<span class="n">T</span> <span class="o">=</span> <span class="mi">1_000</span> <span class="c1"># number of rounds
+</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">set_title</span><span class="p">(</span><span class="s">"Self-Defeating"</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">set_title</span><span class="p">(</span><span class="s">"Purely Subjective"</span><span class="p">)</span>
+
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.5</span><span class="p">)</span>
+
+<span class="n">sd_q</span><span class="p">,</span> <span class="n">sd_wealth</span> <span class="o">=</span> <span class="n">simulations</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">selfDefeatingRM</span><span class="p">)</span>
+<span class="n">sub_q</span><span class="p">,</span> <span class="n">sub_wealth</span> <span class="o">=</span> <span class="n">simulations</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">subjectiveRM</span><span class="p">)</span>
+
+<span class="n">sd_graph</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">bar</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">sd_q</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="mf">0.16666</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">'r'</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s">'--'</span><span class="p">)</span>
+
+<span class="n">sub_graph</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">bar</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">sub_q</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="mf">0.16666</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">'r'</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s">'--'</span><span class="p">)</span>
+
+<span class="c1"># Animate
+</span><span class="k">def</span> <span class="nf">animate</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+    <span class="n">y_sd</span> <span class="o">=</span> <span class="n">sd_q</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="n">y_sub</span> <span class="o">=</span> <span class="n">sub_q</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sd_graph</span><span class="p">):</span>
+        <span class="n">b</span><span class="p">.</span><span class="n">set_height</span><span class="p">(</span><span class="n">y_sd</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sub_graph</span><span class="p">):</span>
+        <span class="n">b</span><span class="p">.</span><span class="n">set_height</span><span class="p">(</span><span class="n">y_sub</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+<span class="n">anim</span> <span class="o">=</span> <span class="n">animation</span><span class="p">.</span><span class="n">FuncAnimation</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">animate</span><span class="p">,</span>
+                               <span class="n">repeat</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">blit</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">frames</span><span class="o">=</span><span class="n">T</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+
+<span class="n">anim</span><span class="p">.</span><span class="n">save</span><span class="p">(</span><span class="s">'dice_roll.gif'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><img src="/assets/realityGame/Figure_2.gif" alt="Figure 2" /></p>
+
+<p>The red dashed line indicates even $\frac{1}{6}$ probabilities for each outcome.</p>
+
+<p>As expected, this extension behaves exactly how the coin toss version of the
+model would predict.</p>
+
+<p>The self-defeating map has a fixed point
+for $q(p)$ where the probability of each outcome is equal. The map hovers around
+that point in the gif above. My set up of the strategies means that no one
+player is betting exactly even amounts on each outcome, so unlike before, the
+wealth does not concentrate on a single player. Were we to introduce a rational
+player (as Cherkashin et. al. do), they would be able to eventually capture most
+of the wealth.</p>
+
+<p>The pure subjective map is all fixed points, and
+shows much more fluctuation early on before settling out at one of the
+strategies, which as before, accumulates the lion’s share of the wealth. A key
+characteristic of the subjective case is that wealth accumulation leads to less
+volatility in the reality map.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+<p>Cherkashin et. al. go on to provide an analytic treatment of the game, showing
+that the approach to an equilibrium obeys a power law, and that the behavior is
+different when that equilibrium is not at one of the endpoints (0 or 1). They
+also introduce a rational, utility-maximizing player, the design of which is
+fascinating in itself. The key insight for understanding markets is that, early
+on when wealth isn’t concentrated and the oscillations in the reality map are
+larger, a rational player can make considerable profits. Those profits dwindle
+as the reality map approaches an equilibrium point.</p>
+
+<p>The paper is worth a read for those of you interested in the self-reinforcing
+nature of markets. The authors suggest several future lines of inquiry bringing
+their game closer to real life markets in nature. This is the kind of thing that
+I love about applied math: the process of tweaking and expanding a model to make
+it more and more useful. It’s easy for me to enter a flow state playing around
+with these things, and the way your interpretations lead immediately to possible
+extensions is really exciting.</p>
+
+<p>To end on a personal note, I’ve got
+about a month and a half until I start the Master in Computational Finance
+program at Carnegie-Mellon. Hopefully going back to school will mean getting to
+do a lot more stuff like this.</p>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2026-06-14T00:00:00-04:00">June 14, 2026</time></p>
+
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/personal/2026/06/09/investment-banking-advice.html" class="pagination--pager" title="What I Tell Students about Investment Banking">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+</div>
+
+      
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        
+
+<div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+          <li><a href="https://github.com/TylerB23" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> Github</a></li>
+        
+      
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+
+<div class="page__footer-copyright">&copy; 2026 <a href="http://localhost:4000">Tyler&#39;s Blog</a>. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/jekyll-themes/minimal-mistakes/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+  </body>
+</html>

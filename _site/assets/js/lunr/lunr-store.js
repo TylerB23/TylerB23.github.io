@@ -30,21 +30,21 @@ var store = [{
         "teaser": null
       },{
         "title": "COVID Posts, I",
-        "excerpt":"Seemingly on cue, as soon as I started writing weekly posts I ended up in the final sprint of my summer research project. That took away most of the time for writing I had each week, so I neglected to update the blog until today. Which may not be such...","categories": ["Personal"],
+        "excerpt":"Seemingly on cue, as soon as I started writing weekly posts I ended up in the final sprint of my summer research project. That took away most of the time for writing I had each week, so I neglected to update the blog until today. Which may not be such...","categories": [],
         "tags": [],
-        "url": "/personal/2020/08/22/COVID-post-one.html",
+        "url": "/2020/08/22/COVID-post-one.html",
         "teaser": null
       },{
         "title": "Covid Post, II",
-        "excerpt":"It’s been nine days since I tested positive for COVID-19, and since I’ve been completely asymptomatic, that means tomorrow I’m allowed back on campus. The university isn’t retesting, and in fact will now exclude me from surveillance testing, meaning I won’t be retested unless I’m showing symptoms. There’s two findings...","categories": ["Personal"],
+        "excerpt":"It’s been nine days since I tested positive for COVID-19, and since I’ve been completely asymptomatic, that means tomorrow I’m allowed back on campus. The university isn’t retesting, and in fact will now exclude me from surveillance testing, meaning I won’t be retested unless I’m showing symptoms. There’s two findings...","categories": [],
         "tags": [],
-        "url": "/personal/2020/08/30/COVID-post-two.html",
+        "url": "/2020/08/30/COVID-post-two.html",
         "teaser": null
       },{
         "title": "Quick Post: Some Good News",
-        "excerpt":"Hi! This here is what I’m going to start calling “quick posts”: just sharing some things I’ve found interesting lately with a minimal amount of commentary. Enjoy! “Africa Declared Free from Polio”, from Nature link The polio vaccine was probably the first example of a vaccine that I was taught...","categories": ["Personal"],
+        "excerpt":"Hi! This here is what I’m going to start calling “quick posts”: just sharing some things I’ve found interesting lately with a minimal amount of commentary. Enjoy! “Africa Declared Free from Polio”, from Nature link The polio vaccine was probably the first example of a vaccine that I was taught...","categories": [],
         "tags": [],
-        "url": "/personal/2020/09/01/some-good-news.html",
+        "url": "/2020/09/01/some-good-news.html",
         "teaser": null
       },{
         "title": "Why Put _Anything_ Online?",

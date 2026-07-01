@@ -24,6 +24,7 @@ are download buttons at the bottom to download csv's for those two tables.
   ></iframe>
 </div>
 
+
 For version three, I'm planning to add even more features:
 - Arbitrary pricing scale inputs, including serial/term bond structures;
 - TIC and arb yield calculations;
@@ -31,10 +32,11 @@ For version three, I'm planning to add even more features:
 - Warning messages pointing out common structuring issues.
 
 I may shift some of those into a version 2.5, depending on how tricky the
-implementation is. In particular, coming up with helpful and comprehensive
-warning messages will be time-consuming.
+implementation is. Coming up with helpful and comprehensive
+warning messages will be particularly time-consuming.
 
-At work, I build these sorts of models in Excel all the time. It's been very
+When I worked in investment banking, I built these sorts of models in Excel all
+the time. It's been very
 satisfying to relearn Python by working on a project where I'm so familiar with
 the goal and implementation. It's been especially helpful in transitioning from
 thinking in an Excel way (i.e., data-first) into a more traditional coding way

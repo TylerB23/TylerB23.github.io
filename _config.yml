@@ -48,9 +48,9 @@ author:
   email: "tylerburleyson23@gmail.com"
   bio: "Welcome to my blog!"
   links:
-#   - label: "Resume"
-#     icon: "fas fa-fw fa-file-pdf"
-#     url: "/assets/resume-tyler-burleyson.pdf"
+    - label: "Download My Resume"
+      icon: "fas fa-fw fa-file-pdf"
+      url: "/assets/resume-tyler-burleyson.pdf"
     - label: "Github"
       icon: "fab fa-fw fa-github"
       url: "https://github.com/TylerB23"

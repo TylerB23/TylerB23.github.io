@@ -1,7 +1,10 @@
 ---
 layout: post
+categories: Projects
 title: "Simple Amortizing Bond Model App"
+excerpt: "Simple Bond Model App"
 permalink: /simple-model-app/
+author_profile: true
 ---
 
 I built a simple amortizing bond model application using python and Streamlit.

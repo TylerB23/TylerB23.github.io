@@ -4,7 +4,7 @@ main:
     url: /technical-posts/
   - title: "Personal Blog"
     url: /personal-posts/
-  - title: "Bond Model App"
-    url: /simple-model-app/
+  - title: "Projects"
+    url: /projects/
   - title: "About"
     url: /about/

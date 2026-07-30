@@ -22,7 +22,7 @@ are download buttons at the bottom to download csv's for those two tables.
 
 <div class="streamlit-wrapper">
   <iframe
-    src="https://simple-amortizing-bond-model.streamlit.app/?embed=true"
+    src="https://tyler-simple-bond-model.duckdns.org/?embed=true"
     style="width:100%; height:800px; border:none;"
   ></iframe>
 </div>
